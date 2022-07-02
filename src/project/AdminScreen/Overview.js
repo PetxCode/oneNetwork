@@ -14,6 +14,8 @@ const Overview = () => {
 	const newURL = myURL[0].url;
 	const [members, setMembers] = useState({});
 	const [audioContent, setAudioContent] = useState({});
+	const [announcement, setAnnouncement] = useState({});
+	const [announcementOne, setAnnouncementOne] = useState({});
 
 	const getAllMembers = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
@@ -33,14 +35,40 @@ const Overview = () => {
 			.get(url)
 			.then((res) => {
 				setAudioContent(res.data.data);
-				console.log("Members: ", audioContent);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const getAllAnnouncement = async () => {
+		const newURL = `http://localhost:2233`;
+
+		const url = `${newURL}/api/announcement/${user?._id}`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setAnnouncement(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const getAllAnnouncementOne = async () => {
+		const newURL = `http://localhost:2233`;
+
+		const url = `${newURL}/api/announcement/${user?._id}/one`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setAnnouncementOne(res.data.data);
 			})
 			.catch((err) => console.log(err.message));
 	};
 
 	useEffect(() => {
+		getAllAnnouncementOne();
 		getAllMembers();
 		getAllAudio();
+		getAllAnnouncement();
+		console.log(announcementOne);
 	}, []);
 
 	return (
@@ -52,11 +80,12 @@ const Overview = () => {
 							<Notice>
 								<NoticeTitle>Welcome Back {user.fullName} 🎉</NoticeTitle>
 								<Space />
-								<NoticeMessage>
-									You have done 72% 🤩 more sales today. Check your new raising
-									badge in your profile.
-								</NoticeMessage>
-								<Date>Date</Date>
+								{announcementOne?.announcement?.map((props) => (
+									<div key={props._id}>
+										<NoticeMessage>{props.message}</NoticeMessage>
+										<Date>{props.createdAt}</Date>
+									</div>
+								))}
 							</Notice>
 							<Cartoon>
 								<ImagePix src={pix} />
@@ -151,32 +180,57 @@ const Overview = () => {
 					</MinCardHolder>
 				</Card>
 
-				<TableCard>
-					<TableHolder>
-						<TopTitle>Top 5 newly registeres Member</TopTitle>
-						{members?.member?.length < 5 ? (
-							<div>
-								{members?.member.map((props) => (
-									<Detail key={props._id}>
-										{props?.avatar ? (
-											<Image src={props.avatar} />
-										) : (
-											<DemiImage>ONE</DemiImage>
-										)}
-										<DetailHolder>
-											<Name>{props.fullName}</Name>
-											{props?.DisplayName ? (
-												<DisplayName>{props.didsplayName}</DisplayName>
+				<Card>
+					<TableCard>
+						<TableHolder>
+							<TopTitle>Top 5 newly registeres Member</TopTitle>
+							{members?.member?.length < 5 ? (
+								<div>
+									{members?.member.map((props) => (
+										<Detail key={props._id}>
+											{props?.avatar ? (
+												<Image src={props.avatar} />
 											) : (
-												<DisplayName>No displayName yet!</DisplayName>
+												<DemiImage>ONE</DemiImage>
 											)}
-										</DetailHolder>
-									</Detail>
-								))}
-							</div>
-						) : null}
-					</TableHolder>
-				</TableCard>
+											<DetailHolder>
+												<Name>{props.fullName}</Name>
+												{props?.DisplayName ? (
+													<DisplayName>{props.didsplayName}</DisplayName>
+												) : (
+													<DisplayName>No displayName yet!</DisplayName>
+												)}
+											</DetailHolder>
+										</Detail>
+									))}
+								</div>
+							) : null}
+						</TableHolder>
+					</TableCard>
+
+					<TableCard1>
+						<TableHolder>
+							<TopTitle>Top 5 Latest Announcemnet</TopTitle>
+							{announcement?.announcement?.length < 5 ? (
+								<div>
+									{announcement?.announcement.map((props) => (
+										<Detail1 key={props._id}>
+											{props?.avatar ? (
+												<Image src={props.avatar} />
+											) : (
+												<DemiImage>ONE</DemiImage>
+											)}
+											<DetailHolder1>
+												<Name>{props.title}</Name>
+												<DisplayName>{props.message}</DisplayName>
+											</DetailHolder1>
+										</Detail1>
+									))}
+								</div>
+							) : null}
+						</TableHolder>
+					</TableCard1>
+				</Card>
 			</Wrapper>
 		</Container>
 	);
@@ -307,6 +361,10 @@ const Name = styled.div`
 	font-weight: 700;
 `;
 
+const DetailHolder1 = styled.div`
+	width: 90%;
+`;
+
 const DetailHolder = styled.div``;
 
 const DemiImage = styled.div`
@@ -333,10 +391,23 @@ const Image = styled.img`
 	margin-right: 10px;
 `;
 
+const Detail1 = styled.div`
+	display: flex;
+	align-items: center;
+	margin: 15px 0;
+	transition: all 350ms;
+	padding: 10px;
+	:hover {
+		background-color: #f5f7fc;
+		cursor: crosshair;
+	}
+`;
+
 const Detail = styled.div`
 	display: flex;
 	align-items: center;
 	margin: 15px 0;
+	transition: all 350ms;
 `;
 
 const TopTitle = styled.div`
@@ -349,6 +420,22 @@ const TableHolder = styled.div`
 	margin: 20px 0;
 `;
 
+const TableCard1 = styled.div`
+	width: 500px;
+	min-height: 200px;
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+	border-radius: 5px;
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	margin: 10px;
+
+	@media screen and (max-width: 768px) {
+		width: 80%;
+	}
+`;
+
 const TableCard = styled.div`
 	width: 300px;
 	height: 200px;
@@ -358,6 +445,7 @@ const TableCard = styled.div`
 	margin-top: 20px;
 	display: flex;
 	justify-content: center;
+	margin: 10px;
 `;
 
 const BCard = styled.div`

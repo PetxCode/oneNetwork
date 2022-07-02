@@ -14,17 +14,23 @@ import axios from "axios";
 import pix1 from "./pix.jpeg";
 import pix from "./pii.png";
 import moment from "moment";
-import { addToCart } from "../../compoents/Global/Global";
+import { addToCart, createBook } from "../../compoents/Global/Global";
+import Swal from "sweetalert2";
+import { v4 as uuidv4 } from "uuid";
+import { usePaystackPayment } from "react-paystack";
 
 const Product = () => {
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
+	const book = useSelector((state) => state.book);
 	const [audio, setAudio] = useState(true);
 	const [eBook, setEBook] = useState(false);
 
 	const [audioContent, setAudioContent] = useState({});
 	const [eBookContent, setEBookContent] = useState({});
 	const [productDisplay, setProductDisplay] = useState({});
+	const [eBookDisplay, setEBookDisplay] = useState({});
+	const [announcementOne, setAnnouncementOne] = useState({});
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
@@ -62,6 +68,19 @@ const Product = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const getAlleBookProducts = async () => {
+		console.log(user.admin);
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `http://localhost:2233/api/ebook/${user.admin}`;
+
+		await axios
+			.get(url)
+			.then((res) => {
+				setEBookDisplay(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
 	const likeProduct = async (content) => {
 		console.log(user.admin);
 		// const url = `${newURL}/api/admin/${user._id}`;
@@ -88,9 +107,40 @@ const Product = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const getAllAnnouncementOne = async () => {
+		const newURL = `http://localhost:2233`;
+
+		const url = `${newURL}/api/announcement/${user?.admin}/one`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setAnnouncementOne(res.data.data);
+				console.log("announcement: ", announcementOne);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const config = {
+		reference: uuidv4(),
+		email: user.email,
+		amount: book.cost * 100,
+		publicKey: "pk_test_d632bf4b9aa1e74745eb158cec8034961dc13b18",
+	};
+
+	const onSuccess = (reference) => {
+		console.log(reference);
+	};
+
+	const onClose = () => {
+		console.log("closed");
+	};
+
+	const initializePayment = usePaystackPayment(config);
+
 	useEffect(() => {
 		// getAllAudio();
-		// getAllEbook();
+		getAllAnnouncementOne();
+		getAlleBookProducts();
 		getAllProducts();
 	}, []);
 
@@ -105,11 +155,12 @@ const Product = () => {
 							<Notice>
 								<NoticeTitle>Welcome Back {user.fullName} 🎉</NoticeTitle>
 								<Space />
-								<NoticeMessage>
-									You have done 72% 🤩 more sales today. Check your new raising
-									badge in your profile.
-								</NoticeMessage>
-								<Date>Date</Date>
+								{announcementOne?.announcement?.map((props) => (
+									<div>
+										<NoticeMessage>{props.message}</NoticeMessage>
+										<Dated>{props.createdAt}</Dated>
+									</div>
+								))}
 							</Notice>
 							<Cartoon>
 								<ImagePix src={pix} />
@@ -245,7 +296,7 @@ const Product = () => {
 					</CardHolder24>
 				) : eBook ? (
 					<CardHolder24>
-						{eBookContent?.eBookContent?.map((props) => (
+						{eBookDisplay?.eBookContent?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
 									<Image src={pix} />
@@ -256,36 +307,77 @@ const Product = () => {
 										<ImageAvatarMe>One</ImageAvatarMe>
 									)}
 								</ImageHolder>
-								<Tile>{props.title}</Tile>
-								<Date>
-									created: <span>{moment(props.createdAt).fromNow()}</span>
-								</Date>
+								<DisplayHolder>
+									<TitleCart>
+										<Tile>{props.title}</Tile>
+										<Cost>#{props.cost}.00</Cost>
+									</TitleCart>
+
+									<Date>
+										created: <span>{moment(props.createdAt).fromNow()}</span>
+									</Date>
+								</DisplayHolder>
 
 								<Holder>
 									<IconHolder>
-										<IconStart>
-											<Icon />
-										</IconStart>
-										<Text>{0}</Text>
+										{props.like.includes(user._id) ? (
+											<IconStart>
+												<Icon
+													onClick={() => {
+														unlikeProduct(props._id);
+													}}
+												/>
+											</IconStart>
+										) : (
+											<IconStart>
+												<UnIcon
+													onClick={() => {
+														likeProduct(props._id);
+													}}
+												/>
+											</IconStart>
+										)}
+
+										<Text> {props.like.length}</Text>
 									</IconHolder>
 
-									<IconHolder>
-										<IconStart>
-											<EyeIcon />
-										</IconStart>
-										<Text>{0}</Text>
-									</IconHolder>
+									{/* <IconHolder>
+									<IconStart>
+										<EyeIcon />
+									</IconStart>
+									<Text>View: {0}</Text>
+								</IconHolder> */}
 
 									<IconHolder>
 										<IconStart>
 											<SartIcon />
 										</IconStart>
-										<Text>{0}</Text>
+										<Text> {4.5}</Text>
 									</IconHolder>
 
 									<Space />
 
-									{/* <Button>Purchase</Button> */}
+									<Button
+										onClick={() => {
+											dispatch(createBook(props));
+											Swal.fire({
+												title: props.title,
+												text: "You are about to place an order for this book, could you like to continue?",
+												imageUrl: pix,
+												imageWidth: 400,
+												imageHeight: 200,
+												imageAlt: props.title,
+												showCancelButton: true,
+												cancelButtonColor: "#d33",
+												confirmButtonText: "Yes, Please!",
+											}).then(() => {
+												console.log("Order Completed");
+												initializePayment(onSuccess, onClose);
+											});
+										}}
+									>
+										Place Order
+									</Button>
 								</Holder>
 							</Card>
 						))}
@@ -391,9 +483,18 @@ const IconBuild = styled.div`
 	}
 `;
 
+const Dated = styled.div`
+	font-size: 12px;
+	font-weight: 700;
+	margin-bottom: 10px;
+	font-style: italic;
+`;
+
 const Date = styled.div`
 	font-size: 10px;
 	width: 90%;
+	margin-bottom: 10px;
+
 	span {
 		font-weight: 700;
 		margin-bottom: 10px;
@@ -410,11 +511,13 @@ const ImagePix = styled.img`
 const NoticeMessage = styled.div`
 	margin-bottom: 20px;
 	width: 90%;
+	margin-top: 10px;
 `;
 const NoticeTitle = styled.div`
 	font-size: 25px;
 	font-weight: 700;
 	margin-top: 20px;
+	line-height: 1.1;
 `;
 
 const NoticeHolder = styled.div`
@@ -432,16 +535,7 @@ const Notice = styled.div`
 	width: 90%;
 	display: flex;
 	flex-direction: column;
-`;
-
-const DisplayName = styled.div`
-	font-size: 11px;
-	width: 100%;
-	color: gray;
-`;
-const Name = styled.div`
-	font-size: 14px;
-	font-weight: 700;
+	padding-bottom: 20px;
 `;
 
 const Card1 = styled.div`
@@ -465,7 +559,7 @@ const SiderSider = styled.div`
 
 const TopSider = styled.div`
 	width: 100%;
-	height: 200px;
+	min-height: 200px;
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 3px;

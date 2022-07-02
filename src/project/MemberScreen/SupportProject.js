@@ -22,7 +22,7 @@ const SupportProjects = () => {
 		reference: new Date().getTime().toString(),
 		email: user.email,
 		amount: amount * 100,
-		publicKey: "pk_test_dsdfghuytfd2345678gvxxxxxxxxxx",
+		publicKey: "pk_test_d632bf4b9aa1e74745eb158cec8034961dc13b18",
 	};
 
 	const onSuccess = (reference) => {

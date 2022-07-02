@@ -1,48 +1,71 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-
+import one from "./one.png";
 const ViewMembers = () => {
+	const user = useSelector((state) => state.user);
+	const [members, setMembers] = useState({});
+
+	const getMembers = async () => {
+		const url = "http://localhost:2233";
+		const newURL = `${url}/api/admin/${user.admin}`;
+
+		await axios
+			.get(newURL)
+			.then((res) => {
+				setMembers(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	useEffect(() => {
+		getMembers();
+	}, []);
+
 	return (
 		<Container>
-			<Wrapper></Wrapper>
-
 			<TableHolder>
 				<MyTable>
 					<HeaderTable bg>
 						<Title bl>User</Title>
 						<Email bl>Email</Email>
 						<Role bl>Role</Role>
+						<Role bl>Phone No</Role>
 						<Status bl>Status</Status>
 					</HeaderTable>
+					{members?.member?.map((props) => (
+						<HeaderTable key={props._id}>
+							<Title1>
+								{props?.avatar ? (
+									<Image scr={props.avatar} />
+								) : (
+									<Image src={one} />
+								)}
+								<TitleHolder>
+									<Name>{props.fullName}</Name>
+									{props.DisplayName ? (
+										<DisplayName>{props.displayName}</DisplayName>
+									) : (
+										<DisplayName>No displayName yet</DisplayName>
+									)}
+								</TitleHolder>
+							</Title1>
+							<Email>{props.email}</Email>
+							<Role>{props.status}</Role>
 
-					<HeaderTable>
-						<Title1>
-							<Image />
-							<TitleHolder>
-								<Name>Name</Name>
-								<DisplayName>DisplayName</DisplayName>
-							</TitleHolder>
-						</Title1>
-						<Email>chatherleighn@washington.edu</Email>
-						<Role>Memeber</Role>
-						<Status>
-							<Active>Active</Active>
-						</Status>
-					</HeaderTable>
-					<HeaderTable>
-						<Title1>
-							<Image />
-							<TitleHolder>
-								<Name>Name</Name>
-								<DisplayName>DisplayName</DisplayName>
-							</TitleHolder>
-						</Title1>
-						<Email>chatherleighn@washington.edu</Email>
-						<Role>Memeber</Role>
-						<Status>
-							<Active>Active</Active>
-						</Status>
-					</HeaderTable>
+							{props.phone ? (
+								<Role> {props.phone}</Role>
+							) : (
+								<Role> No Phone Numb. yet</Role>
+							)}
+
+							<Status>
+								<Active>Active</Active>
+							</Status>
+						</HeaderTable>
+					))}
 				</MyTable>
 			</TableHolder>
 		</Container>
@@ -86,7 +109,7 @@ const Title1 = styled.div`
 	vertical-align: top;
 `;
 
-const Image = styled.div`
+const Image = styled.img`
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
@@ -117,6 +140,9 @@ const Email = styled.div`
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
 	width: 250px;
 	padding-left: 10px;
+	font-size: 12px;
+	font-weight: 500;
+	margin-left: ${({ ml }) => (ml ? "20px" : "")};
 `;
 
 const Role = styled.div`
@@ -125,6 +151,8 @@ const Role = styled.div`
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
 	width: 150px;
 	padding-left: 10px;
+	margin-left: ${({ ml }) => (ml ? "20px" : "")};
+	font-size: 13px;
 `;
 
 const Status = styled.div`
@@ -138,14 +166,10 @@ const Status = styled.div`
 const HeaderTable = styled.div`
 	display: inline-block;
 	background-color: ${({ bg }) => (bg ? "rgba(0, 0, 0, 0.1)" : "#f9fafc")};
-	/* background-color: #f9fafc; */
 	border-bottom: 1px solid silver;
 	padding: 10px 0;
 	transition: all 350ms;
 	vertical-align: auto;
-	/* overflow-x: scroll; */
-	/* overflow-y: hidden; */
-	/* white-space: nowrap; */
 	width: 100%;
 	:hover {
 		background-color: rgba(0, 0, 0, 0.05);
@@ -165,8 +189,6 @@ const MyTable = styled.div`
 
 const Wrapper = styled.div`
 	margin-top: 30px;
-	/* width: 700px; */
-	/* background-color: white; */
 	border-radius: 5px;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	display: flex;

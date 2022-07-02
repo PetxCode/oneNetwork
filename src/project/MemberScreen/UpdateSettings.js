@@ -13,6 +13,7 @@ import right from "./Right.png";
 import { useSelector } from "react-redux";
 
 import pix from "./pix.jpeg";
+import one from "./one.png";
 
 const UpdateSettings = () => {
 	const navigate = useNavigate();
@@ -27,8 +28,7 @@ const UpdateSettings = () => {
 	const [image, setImage] = useState(pix);
 	const [avatar, setAvatar] = useState("");
 
-	const [imageLogo, setImageLogo] = useState(pix);
-	const [avatarLogo, setAvatarLogo] = useState("");
+	const [imageLogo, setImageLogo] = useState(one);
 
 	const onHandleImage = (e) => {
 		const file = e.target.files[0];
@@ -37,21 +37,10 @@ const UpdateSettings = () => {
 		setAvatar(file);
 	};
 
-	const onHandleImageLogo = (e) => {
-		const file = e.target.files[0];
-		const save = URL.createObjectURL(file);
-		setImageLogo(save);
-		setAvatarLogo(file);
-	};
-
-	const onHandle = (e) => {
-		e.preventDefault();
-	};
-
 	const yupSchema = yup.object().shape({
-		churchName: yup.string().required("Please enter your Church Name!"),
+		displayName: yup.string().required("Please enter your Display Name!"),
 		fullName: yup.string().required("Please enter your Full Name!"),
-		careLine: yup.string().required("Please enter your Church care-line!"),
+		phoneNumber: yup.string().required("Please enter your Phone Number!"),
 	});
 
 	const {
@@ -62,7 +51,7 @@ const UpdateSettings = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		const url = "http://localhost:2233";
-		const newURL = `${url}/api/admin/${user._id}/`;
+		const newURL = `${url}/api/member/${user._id}/`;
 
 		await axios
 			.post(newURL, value)
@@ -72,18 +61,18 @@ const UpdateSettings = () => {
 		Swal.fire({
 			position: "center",
 			icon: "success",
-			title: "Please check your email for account verification",
+			title: "Your profile has been updated",
 			showConfirmButton: false,
 			timer: 2500,
 		}).then(() => {
-			navigate("/confirmChurch");
+			navigate("/");
 		});
 	});
 
 	const onSubmitImage = async (e) => {
 		e.preventDefault();
 		const url = "http://localhost:2233";
-		const newURL = `${url}/api/admin/${user._id}/image`;
+		const newURL = `${url}/api/member/${user._id}/image`;
 
 		const formData = new FormData();
 		formData.append("avatar", avatar);
@@ -100,35 +89,7 @@ const UpdateSettings = () => {
 		Swal.fire({
 			position: "center",
 			icon: "success",
-			title: "Church Logo Uploaded",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/");
-		});
-	};
-
-	const onSubmitLogo = async (e) => {
-		e.preventDefault();
-		const url = "http://localhost:2233";
-		const newURL = `${url}/api/admin/${user._id}/logo`;
-
-		const formData = new FormData();
-		formData.append("logo", avatarLogo);
-
-		const config = {
-			"Content-Type": "multipart/form-data",
-		};
-
-		await axios
-			.patch(newURL, formData, config)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Church Logo Uploaded",
+			title: "Your Avatar has been Uploaded",
 			showConfirmButton: false,
 			timer: 2500,
 		}).then(() => {
@@ -149,17 +110,7 @@ const UpdateSettings = () => {
 						setMyImage(false);
 					}}
 				>
-					Church Detail
-				</Nav>
-				<Nav
-					bg={myRecord ? "bg" : null}
-					onClick={() => {
-						setMyLogo(false);
-						setMyRecord(true);
-						setMyImage(false);
-					}}
-				>
-					Church Logo
+					Personal Detail
 				</Nav>
 
 				<Nav
@@ -170,7 +121,7 @@ const UpdateSettings = () => {
 						setMyImage(true);
 					}}
 				>
-					My Image
+					My Avatar
 				</Nav>
 			</DisplayOption>
 
@@ -189,21 +140,27 @@ const UpdateSettings = () => {
 							<br />
 							<br />
 							<InputHolder>
-								<Label>Church Name</Label>
-								<Input placeholder="Church Name" {...register("churchName")} />
-								<Error>{errors?.churchName?.message}</Error>
+								<Label>Full Name</Label>
+								<Input placeholder="Full Name" {...register("fullName")} />
+								<Error>{errors?.fullName?.message}</Error>
 							</InputHolder>
 
 							<InputRow>
 								<InputHolder1>
-									<Label>Full Name</Label>
-									<Input placeholder="Full Name" {...register("fullName")} />
-									<Error>{errors?.fullName?.message}</Error>
+									<Label>Display Name</Label>
+									<Input
+										placeholder="Display Name"
+										{...register("displayName")}
+									/>
+									<Error>{errors?.displayName?.message}</Error>
 								</InputHolder1>
 								<InputHolder2>
-									<Label>Care Line</Label>
-									<Input placeholder="Care Line" {...register("careLine")} />
-									<Error>{errors?.careLine?.message}</Error>
+									<Label>Phone Number</Label>
+									<Input
+										placeholder="Phone Number"
+										{...register("phoneNumber")}
+									/>
+									<Error>{errors?.phoneNumber?.message}</Error>
 								</InputHolder2>
 							</InputRow>
 
@@ -219,12 +176,13 @@ const UpdateSettings = () => {
 					<Wrapper>
 						<Card>
 							<Title>
-								<TitleHead>Church/Out-Reach Logo</TitleHead>
+								<TitleHead>My Aavatar</TitleHead>
 								<br />
 								<TitleSub>
-									Use the Church/Out-Reach <span>LOGO</span>, for a proper
-									representation of the
-									<span>MINISTRY</span>. <span>God </span>Bless you!
+									Use the <span>AVATAR</span>, for a proper representation of
+									the
+									<span>YOU</span> across this Platform. <span>God </span>Bless
+									you!
 								</TitleSub>
 							</Title>
 							<br />
@@ -238,48 +196,14 @@ const UpdateSettings = () => {
 									name="myImage"
 									accept="image/x-png,image/gif,image/jpeg"
 								/>
-								<LogoImageLabel htmlFor="pix">Choose your Logo</LogoImageLabel>
+								<LogoImageLabel htmlFor="pix">
+									Choose your Avatar
+								</LogoImageLabel>
 							</LogoImageHolder>
 
 							<ButtonHolder>
 								<BUtton type="submit" bg onClick={onSubmitImage}>
 									Upload
-								</BUtton>
-								<Div>{errorState}</Div>
-							</ButtonHolder>
-						</Card>
-					</Wrapper>
-				) : myImage ? (
-					<Wrapper>
-						<Card>
-							<Title>
-								<TitleHead>Church/Out-Reach Logo💸</TitleHead>
-								<br />
-								<TitleSub>
-									Use the Church/Out-Reach <span>LOGO</span>, for a proper
-									representation of the
-									<span>MINISTRY</span>. <span>God </span>Bless you!
-								</TitleSub>
-							</Title>
-							<br />
-
-							<LogoImageHolder>
-								<LogoImage src={imageLogo} />
-								<LogoImageInput
-									id="pix"
-									onChange={onHandleImageLogo}
-									type="file"
-									name="myImage"
-									accept="image/x-png,image/gif,image/jpeg"
-								/>
-								<LogoImageLabel htmlFor="pix">
-									Change Profile Pix
-								</LogoImageLabel>
-							</LogoImageHolder>
-
-							<ButtonHolder>
-								<BUtton type="submit" bg onClick={onSubmitLogo}>
-									Upload DP
 								</BUtton>
 								<Div>{errorState}</Div>
 							</ButtonHolder>
@@ -395,6 +319,7 @@ const Mini = styled.div`
 	width: 100%;
 	display: flex;
 	margin-top: 50px;
+	margin-left: 50px;
 `;
 
 const WrapperHolder = styled.div`

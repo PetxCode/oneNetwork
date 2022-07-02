@@ -5,6 +5,7 @@ const initialState = {
 	toggle: true,
 	material: [],
 	materialCart: [],
+	book: {},
 };
 
 const Global = createSlice({
@@ -28,6 +29,10 @@ const Global = createSlice({
 
 		createMaterial: (state, { payload }) => {
 			state.material = payload;
+		},
+
+		createBook: (state, { payload }) => {
+			state.book = payload;
 		},
 
 		addToCart: (state, { payload }) => {
@@ -82,6 +87,7 @@ export const {
 	logOut,
 	onToggleFalse,
 	onToggleTrue,
+	createBook,
 } = Global.actions;
 
 export default Global.reducer;

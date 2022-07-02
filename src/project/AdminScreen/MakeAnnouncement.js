@@ -24,6 +24,7 @@ const MakeAnnouncement = () => {
 	const user = useSelector((state) => state.user);
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
+	const [announcementOne, setAnnouncementOne] = useState({});
 
 	const yupSchema = yup.object().shape({
 		announcement: yup.string().required("You haven't say anything yet...!"),
@@ -38,7 +39,7 @@ const MakeAnnouncement = () => {
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
 		const url = "http://localhost:2233";
-		const newURL = `${url}/api/admin/reset`;
+		const newURL = `${url}/api/announcement/${user._id}/create`;
 
 		await axios
 			.post(newURL, value)

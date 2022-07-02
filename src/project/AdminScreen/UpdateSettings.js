@@ -44,10 +44,6 @@ const UpdateSettings = () => {
 		setAvatarLogo(file);
 	};
 
-	const onHandle = (e) => {
-		e.preventDefault();
-	};
-
 	const yupSchema = yup.object().shape({
 		churchName: yup.string().required("Please enter your Church Name!"),
 		fullName: yup.string().required("Please enter your Full Name!"),
@@ -72,11 +68,11 @@ const UpdateSettings = () => {
 		Swal.fire({
 			position: "center",
 			icon: "success",
-			title: "Please check your email for account verification",
+			title: "Your Profile has been updated successfully",
 			showConfirmButton: false,
 			timer: 2500,
 		}).then(() => {
-			navigate("/confirmChurch");
+			navigate("/");
 		});
 	});
 
@@ -100,7 +96,7 @@ const UpdateSettings = () => {
 		Swal.fire({
 			position: "center",
 			icon: "success",
-			title: "Church Logo Uploaded",
+			title: "Your Image has been Uploaded",
 			showConfirmButton: false,
 			timer: 2500,
 		}).then(() => {
