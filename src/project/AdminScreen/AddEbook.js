@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { usePaystackPayment } from "react-paystack";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
-import left from "./left.png";
-import right from "./Right.png";
 import { useSelector } from "react-redux";
 
 import pix from "./pix.jpeg";
@@ -21,54 +18,10 @@ const AddEbook = () => {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
 
+	const [eBookFile, setEBookFile] = useState("");
 	const [errorState, setErrorState] = useState("");
-
-	const [myLogo, setMyLogo] = useState(true);
-	const [myRecord, setMyRecord] = useState(false);
-	const [myImage, setMyImage] = useState(false);
-
-	const [image, setImage] = useState("");
 	const [imageBook, setImageBook] = useState("");
 	const [avatar, setAvatar] = useState("");
-
-	const [audioFile, setAudioFile] = useState("");
-	const [eBookFile, setEBookFile] = useState("");
-
-	const onHandleImage = (e) => {
-		const file = e.target.files[0];
-		const save = URL.createObjectURL(file);
-		setImage(save);
-		setAvatar(file);
-	};
-
-	const handleAudioUpload = (e) => {
-		const file = e.target.files[0];
-		const save = URL.createObjectURL(file);
-		setImage(save);
-		setAvatar(file);
-
-		const storageRef = ref(storage, "/pitchDeck" + file.name);
-
-		const uploadTask = uploadBytesResumable(storageRef, file);
-
-		uploadTask.on(
-			"state_changed",
-			(snapshot) => {
-				const progress =
-					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-				console.log("Upload is " + progress + "% done");
-			},
-			(error) => {
-				console.log(error.message);
-			},
-			() => {
-				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-					console.log("File available at", downloadURL);
-					setAudioFile(downloadURL);
-				});
-			}
-		);
-	};
 
 	const handleEbookUpload = (e) => {
 		const file = e.target.files[0];
@@ -99,12 +52,6 @@ const AddEbook = () => {
 		);
 	};
 
-	const yupSchema = yup.object().shape({
-		title: yup.string().required("Please enter your Title!"),
-		description: yup.string().required("Please enter your Description!"),
-		cost: yup.number().required("Please enter your Cost!"),
-	});
-
 	const yupSchemaEbook = yup.object().shape({
 		eBookTitle: yup.string().required("Please enter your Title!"),
 		eBookDescription: yup.string().required("Please enter your Description!"),
@@ -115,31 +62,7 @@ const AddEbook = () => {
 		handleSubmit,
 		register,
 		formState: { errors },
-	} = useForm({ resolver: yupResolver(yupSchema) });
-
-	const onSubmitAudio = handleSubmit(async (value) => {
-		const { title, description, cost, audioFile } = value;
-
-		console.log(value);
-
-		const url = "http://localhost:2233";
-		const newURL = `${url}/api/content/${user._id}/create`;
-
-		await axios
-			.post(newURL, { title, description, cost, audioFile: audioFile })
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Audio Message has been created...",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/product");
-		});
-	});
+	} = useForm({ resolver: yupResolver(yupSchemaEbook) });
 
 	const onSubmitEbook = handleSubmit(async (value) => {
 		const { eBookDescription, eBookTitle, eBookCost } = value;
@@ -172,172 +95,71 @@ const AddEbook = () => {
 
 	return (
 		<Container>
-			<Mini>Change Details</Mini>
-
-			<DisplayOption>
-				<Nav
-					bg={myLogo ? "bg" : null}
-					onClick={() => {
-						setMyLogo(true);
-						setMyRecord(false);
-						setMyImage(false);
-					}}
-				>
-					Add Audio Content
-				</Nav>
-				<Nav
-					bg={myRecord ? "bg" : null}
-					onClick={() => {
-						setMyLogo(false);
-						setMyRecord(true);
-						setMyImage(false);
-					}}
-				>
-					Add eBook Content
-				</Nav>
-			</DisplayOption>
-
 			<WrapperHolder>
-				{myLogo ? (
-					<Wrapper>
-						<Card onSubmit={onSubmitAudio}>
-							<Title>
-								<TitleHead>Adding Audio Message</TitleHead>
-								<br />
-								<TitleSub>
-									We are <span>GLAD</span>, You've considered giving to Our{" "}
-									<span>MINISTRY</span>. <br /> <span>God </span>please you!
-								</TitleSub>
-							</Title>
+				<Wrapper>
+					<Card onSubmit={onSubmitEbook}>
+						<Title>
+							<TitleHead>Adding eBook</TitleHead>
 							<br />
-							<br />
+							<TitleSub>
+								We are <span>GLAD</span>, You've considered giving to Our{" "}
+								<span>MINISTRY</span>. <br /> <span>God </span>please you!
+							</TitleSub>
+						</Title>
+						<br />
+						<br />
 
-							<LogoImageHolder>
-								{image === "" ? (
-									<LogoImage src={pix} br />
-								) : (
-									<LogoImageAudio>Audio File Loaded</LogoImageAudio>
-								)}
-								<LogoImageInput
-									id="pix"
-									onChange={handleAudioUpload}
-									type="file"
-									accept=".mp3,audio/*"
-								/>
-								<LogoImageLabel htmlFor="pix">
-									Choose the Message
-								</LogoImageLabel>
-							</LogoImageHolder>
+						<LogoImageHolder>
+							{imageBook === "" ? (
+								<LogoImage src={pix} />
+							) : (
+								<LogoImageAudio>eBook File Loaded</LogoImageAudio>
+							)}
 
-							<InputRow>
-								<InputHolder1>
-									<Label>Title</Label>
-									<Input placeholder="Title" {...register("title")} />
-									<Error>{errors?.title?.message}</Error>
-								</InputHolder1>
-								<InputHolder2>
-									<Label>Cost</Label>
-									<Input placeholder="Cost" {...register("cost")} />
-									<Error>{errors?.cost?.message}</Error>
-								</InputHolder2>
-							</InputRow>
+							<LogoImageInput
+								id="pix"
+								onChange={handleEbookUpload}
+								type="file"
+								accept="application/pdf,application/msword"
+							/>
+							<LogoImageLabel htmlFor="pix">Choose the eBook</LogoImageLabel>
+						</LogoImageHolder>
+						<InputRow>
+							<InputHolder1>
+								<Label>Title</Label>
+								<Input placeholder="Title" {...register("eBookTitle")} />
+								<Error>{errors?.eBookTitle?.message}</Error>
+							</InputHolder1>
+							<InputHolder2>
+								<Label>Cost</Label>
+								<Input placeholder="Cost" {...register("eBookCost")} />
+								<Error>{errors?.eBookCost?.message}</Error>
+							</InputHolder2>
+						</InputRow>
 
-							<InputHolderArea>
-								<Label>Brief Description</Label>
-								<InputArea
-									placeholder="Description"
-									{...register("description")}
-								/>
-								<Error>{errors?.description?.message}</Error>
-							</InputHolderArea>
+						<InputHolderArea>
+							<Label>Brief Description</Label>
+							<InputArea
+								placeholder="Description"
+								{...register("eBookDescription")}
+							/>
+							<Error>{errors?.eBookDescription?.message}</Error>
+						</InputHolderArea>
 
-							<ButtonHolder>
-								<BUtton
-									type="submit"
-									bg
-									onClick={() => {
-										console.log("clicked 2");
-									}}
-								>
-									Upload Message
-								</BUtton>
-								<Div>{errorState}</Div>
-							</ButtonHolder>
-						</Card>
-					</Wrapper>
-				) : myRecord ? (
-					<Wrapper>
-						<Card onSubmit={onSubmitEbook}>
-							<Title>
-								<TitleHead>Adding eBook</TitleHead>
-								<br />
-								<TitleSub>
-									We are <span>GLAD</span>, You've considered giving to Our{" "}
-									<span>MINISTRY</span>. <br /> <span>God </span>please you!
-								</TitleSub>
-							</Title>
-							<br />
-							<br />
-
-							<LogoImageHolder>
-								{imageBook === "" ? (
-									<LogoImage src={pix} />
-								) : (
-									<LogoImageAudio>eBook File Loaded</LogoImageAudio>
-								)}
-
-								<LogoImageInput
-									id="pix"
-									onChange={handleEbookUpload}
-									type="file"
-									accept="application/pdf,application/msword"
-								/>
-								<LogoImageLabel htmlFor="pix">Choose the eBook</LogoImageLabel>
-							</LogoImageHolder>
-							<InputRow>
-								<InputHolder1>
-									<Label>Title</Label>
-									<Input placeholder="Title" {...register("eBookTitle")} />
-									<Error>{errors?.eBookTitle?.message}</Error>
-								</InputHolder1>
-								<InputHolder2>
-									<Label>Cost</Label>
-									<Input placeholder="Cost" {...register("eBookCost")} />
-									<Error>{errors?.eBookCost?.message}</Error>
-								</InputHolder2>
-							</InputRow>
-
-							<InputHolderArea>
-								<Label>Brief Description</Label>
-								<InputArea
-									placeholder="Description"
-									{...register("eBookDescription")}
-								/>
-								<Error>{errors?.eBookDescription?.message}</Error>
-							</InputHolderArea>
-
-							<ButtonHolder>
-								<BUtton type="submit" bg>
-									Upload eBook
-								</BUtton>
-								<Div>{errorState}</Div>
-							</ButtonHolder>
-						</Card>
-					</Wrapper>
-				) : null}
+						<ButtonHolder>
+							<BUtton type="submit" bg>
+								Upload eBook
+							</BUtton>
+							<Div>{errorState}</Div>
+						</ButtonHolder>
+					</Card>
+				</Wrapper>
 			</WrapperHolder>
-
-			<Holder>
-				<Left src={left} />
-				<Right src={right} />
-			</Holder>
 		</Container>
 	);
 };
 
 export default AddEbook;
-
-// const LogoImageLabel = styled.div``;
 
 const LogoImageLabel = styled.label`
 	padding: 15px 20px;
@@ -387,29 +209,6 @@ const LogoImageHolder = styled.div`
 	margin-bottom: 10px;
 `;
 
-const Nav = styled.div`
-	margin: 10px;
-	padding: 15px 20px;
-	background-color: ${({ bg }) => (bg ? "#742e9d" : "gray")};
-	color: white;
-	font-weight: 700;
-	border-radius: 3px;
-	transition: all 350ms;
-
-	:hover {
-		cursor: pointer;
-		transform: scale(1.02);
-		box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-	}
-`;
-
-const DisplayOption = styled.div`
-	display: flex;
-	width: 100%;
-	justify-content: center;
-	margin: 10px 0;
-`;
-
 const InputRow = styled.div`
 	display: flex;
 `;
@@ -439,21 +238,11 @@ const InputHolder1 = styled.div`
 	color: #742e9d;
 `;
 
-const Mini = styled.div`
-	color: #742e9d;
-	font-size: 20px;
-	text-transform: uppercase;
-	font-weight: bold;
-	width: 100%;
-	display: flex;
-	margin-top: 50px;
-`;
-
 const WrapperHolder = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	margin-top: 30px;
+	margin-top: 130px;
 `;
 
 const ButtonHolder = styled.div`
@@ -554,18 +343,6 @@ const InputHolderArea = styled.div`
 	padding-top: 10px;
 `;
 
-const InputHolder = styled.div`
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	margin-bottom: 35px;
-	border: 1px solid #742e9d;
-	width: 100%;
-	height: 40px;
-	border-radius: 5px;
-	color: #742e9d;
-`;
-
 const TitleSub = styled.div`
 	color: lightgray;
 	font-weight: 500;
@@ -611,35 +388,6 @@ const Wrapper = styled.div`
 		display: flex;
 		justify-content: center;
 	}
-`;
-
-const Right = styled.img`
-	width: 200px;
-	height: 300px;
-	object-fit: cover;
-	@media screen and (max-width: 500px) {
-		display: none;
-	}
-`;
-
-const Left = styled.img`
-	width: 248px;
-	height: 185px;
-	object-fit: cover;
-`;
-
-const Holder = styled.div`
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	background-image: url("https://demos.themeselection.com/materio-mui-react-nextjs-admin-template-free/images/pages/auth-v1-mask-light.png");
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: cover;
-	margin-top: 60px;
-	position: absolute;
-	bottom: 0px;
-	z-index: -10;
 `;
 
 const Container = styled.div`

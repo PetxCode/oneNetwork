@@ -1,7 +1,31 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import pix from "./pii.png";
 
 const ViewMembers = () => {
+	const user = useSelector((state) => state.user);
+	const [viewMembers, setViewMembers] = useState({});
+
+	const getMembers = async () => {
+		const newURL = `http://localhost:2233/api/admin/${user._id}`;
+		await axios
+			.get(newURL)
+			.then((res) => {
+				setViewMembers(res.data.data);
+			})
+			.then((err) => {
+				return console.log(err);
+			});
+	};
+
+	useEffect(() => {
+		getMembers();
+		console.log(viewMembers);
+	}, []);
+
 	return (
 		<Container>
 			<Wrapper></Wrapper>
@@ -15,34 +39,31 @@ const ViewMembers = () => {
 						<Status bl>Status</Status>
 					</HeaderTable>
 
-					<HeaderTable>
-						<Title1>
-							<Image />
-							<TitleHolder>
-								<Name>Name</Name>
-								<DisplayName>DisplayName</DisplayName>
-							</TitleHolder>
-						</Title1>
-						<Email>chatherleighn@washington.edu</Email>
-						<Role>Memeber</Role>
-						<Status>
-							<Active>Active</Active>
-						</Status>
-					</HeaderTable>
-					<HeaderTable>
-						<Title1>
-							<Image />
-							<TitleHolder>
-								<Name>Name</Name>
-								<DisplayName>DisplayName</DisplayName>
-							</TitleHolder>
-						</Title1>
-						<Email>chatherleighn@washington.edu</Email>
-						<Role>Memeber</Role>
-						<Status>
-							<Active>Active</Active>
-						</Status>
-					</HeaderTable>
+					{viewMembers?.member?.map((props) => (
+						<HeaderTable key={props._id}>
+							<Title1>
+								{props?.avatar ? (
+									<Image src={props?.avatar} />
+								) : (
+									<Image1 src={pix} />
+								)}
+								<TitleHolder>
+									<Name>{props.fullName}</Name>
+
+									{props?.displayName ? (
+										<DisplayName>{props.displayName}</DisplayName>
+									) : (
+										<DisplayName>No displayName yet</DisplayName>
+									)}
+								</TitleHolder>
+							</Title1>
+							<Email1>{props.email}</Email1>
+							<Role>{props.status}</Role>
+							<Status>
+								<Active>Active</Active>
+							</Status>
+						</HeaderTable>
+					))}
 				</MyTable>
 			</TableHolder>
 		</Container>
@@ -64,7 +85,7 @@ const Active = styled.div`
 `;
 
 const DisplayName = styled.div`
-	font-size: 13px;
+	font-size: 12px;
 `;
 const Name = styled.div`
 	margin-bottom: 5px;
@@ -86,7 +107,18 @@ const Title1 = styled.div`
 	vertical-align: top;
 `;
 
-const Image = styled.div`
+const Image1 = styled.img`
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: #742e9d;
+	object-fit: contain;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 10px;
+`;
+
+const Image = styled.img`
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
@@ -111,6 +143,15 @@ const Title = styled.div`
 	padding-left: 10px;
 `;
 
+const Email1 = styled.div`
+	display: inline-block;
+	margin: 10px;
+	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
+	width: 250px;
+	padding-left: 10px;
+	font-size: 12px;
+	font-weight: 500;
+`;
 const Email = styled.div`
 	display: inline-block;
 	margin: 10px;

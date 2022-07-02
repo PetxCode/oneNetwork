@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { usePaystackPayment } from "react-paystack";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -16,6 +15,7 @@ import pix from "./pix.jpeg";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./base";
+import AddEbook from "./AddEbook";
 
 const AddProducts = () => {
 	const navigate = useNavigate();
@@ -70,45 +70,10 @@ const AddProducts = () => {
 		);
 	};
 
-	const handleEbookUpload = (e) => {
-		const file = e.target.files[0];
-		const save = URL.createObjectURL(file);
-		setImageBook(save);
-		setAvatar(file);
-
-		const storageRef = ref(storage, "/pitchDeck" + file.name);
-
-		const uploadTask = uploadBytesResumable(storageRef, file);
-
-		uploadTask.on(
-			"state_changed",
-			(snapshot) => {
-				const progress =
-					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-				console.log("Upload is " + progress + "% done");
-			},
-			(error) => {
-				console.log(error.message);
-			},
-			() => {
-				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-					console.log("File available at", downloadURL);
-					setEBookFile(downloadURL);
-				});
-			}
-		);
-	};
-
 	const yupSchema = yup.object().shape({
 		title: yup.string().required("Please enter your Title!"),
 		description: yup.string().required("Please enter your Description!"),
 		cost: yup.number().required("Please enter your Cost!"),
-	});
-
-	const yupSchemaEbook = yup.object().shape({
-		eBookTitle: yup.string().required("Please enter your Title!"),
-		eBookDescription: yup.string().required("Please enter your Description!"),
-		eBookCost: yup.number().required("Please enter your Cost!"),
 	});
 
 	const {
@@ -127,35 +92,6 @@ const AddProducts = () => {
 
 		await axios
 			.post(newURL, { title, description, cost, audioFile: audioFile })
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Audio Message has been created...",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/product");
-		});
-	});
-
-	const onSubmitEbook = handleSubmit(async (value) => {
-		const { eBookDescription, eBookTitle, eBookCost } = value;
-
-		console.log(value);
-
-		const url = "http://localhost:2233";
-		const newURL = `${url}/api/eBook/${user._id}/create`;
-
-		await axios
-			.post(newURL, {
-				description: eBookDescription,
-				title: eBookTitle,
-				cost: eBookCost,
-				eBook: eBookFile,
-			})
 			.then((res) => {})
 			.catch((error) => console.log(error));
 
@@ -266,64 +202,7 @@ const AddProducts = () => {
 						</Card>
 					</Wrapper>
 				) : myRecord ? (
-					<Wrapper>
-						<Card onSubmit={onSubmitEbook}>
-							<Title>
-								<TitleHead>Adding eBook</TitleHead>
-								<br />
-								<TitleSub>
-									We are <span>GLAD</span>, You've considered giving to Our{" "}
-									<span>MINISTRY</span>. <br /> <span>God </span>please you!
-								</TitleSub>
-							</Title>
-							<br />
-							<br />
-
-							<LogoImageHolder>
-								{imageBook === "" ? (
-									<LogoImage src={pix} />
-								) : (
-									<LogoImageAudio>eBook File Loaded</LogoImageAudio>
-								)}
-
-								<LogoImageInput
-									id="pix"
-									onChange={handleEbookUpload}
-									type="file"
-									accept="application/pdf,application/msword"
-								/>
-								<LogoImageLabel htmlFor="pix">Choose the eBook</LogoImageLabel>
-							</LogoImageHolder>
-							<InputRow>
-								<InputHolder1>
-									<Label>Title</Label>
-									<Input placeholder="Title" {...register("eBookTitle")} />
-									<Error>{errors?.eBookTitle?.message}</Error>
-								</InputHolder1>
-								<InputHolder2>
-									<Label>Cost</Label>
-									<Input placeholder="Cost" {...register("eBookCost")} />
-									<Error>{errors?.eBookCost?.message}</Error>
-								</InputHolder2>
-							</InputRow>
-
-							<InputHolderArea>
-								<Label>Brief Description</Label>
-								<InputArea
-									placeholder="Description"
-									{...register("eBookDescription")}
-								/>
-								<Error>{errors?.eBookDescription?.message}</Error>
-							</InputHolderArea>
-
-							<ButtonHolder>
-								<BUtton type="submit" bg>
-									Upload eBook
-								</BUtton>
-								<Div>{errorState}</Div>
-							</ButtonHolder>
-						</Card>
-					</Wrapper>
+					<AddEbook />
 				) : null}
 			</WrapperHolder>
 
@@ -336,8 +215,6 @@ const AddProducts = () => {
 };
 
 export default AddProducts;
-
-// const LogoImageLabel = styled.div``;
 
 const LogoImageLabel = styled.label`
 	padding: 15px 20px;
@@ -408,6 +285,7 @@ const DisplayOption = styled.div`
 	width: 100%;
 	justify-content: center;
 	margin: 10px 0;
+	z-index: 1;
 `;
 
 const InputRow = styled.div`
@@ -444,8 +322,9 @@ const Mini = styled.div`
 	font-size: 20px;
 	text-transform: uppercase;
 	font-weight: bold;
-	width: 100%;
 	display: flex;
+	/* justify-content: flex-start; */
+	width: 90%;
 	margin-top: 50px;
 `;
 
@@ -554,18 +433,6 @@ const InputHolderArea = styled.div`
 	padding-top: 10px;
 `;
 
-const InputHolder = styled.div`
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	margin-bottom: 35px;
-	border: 1px solid #742e9d;
-	width: 100%;
-	height: 40px;
-	border-radius: 5px;
-	color: #742e9d;
-`;
-
 const TitleSub = styled.div`
 	color: lightgray;
 	font-weight: 500;
@@ -651,7 +518,6 @@ const Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 	min-height: 91.5vh;
-	/* background-color: red; */
 
 	@media screen and (max-width: 768px) {
 		width: 100%;

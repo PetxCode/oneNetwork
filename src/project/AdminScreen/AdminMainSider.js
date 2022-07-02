@@ -67,10 +67,16 @@ const AdminMainSider = () => {
 
 	return (
 		<Container>
-			<LogoHolder to="/">
+			<LogoHolder
+				to="/"
+				id="cancel"
+				onClick={() => {
+					dismissMeun();
+					console.log("Close");
+				}}
+			>
 				{/* <Bar>One</Bar> */}
 				{user?.avatar ? <LogoImage /> : <Logo>ONE</Logo>}
-
 				<LogoTitle>
 					{user?.churchName ? user?.churchName : <div>One Church Network</div>}
 				</LogoTitle>
@@ -87,6 +93,18 @@ const AdminMainSider = () => {
 				>
 					<Icon />
 					<span>Overview</span>
+				</Nav>
+
+				<Nav
+					to="/announcement"
+					id="cancel"
+					onClick={() => {
+						dismissMeun();
+						console.log("Close");
+					}}
+				>
+					<ProdIcon />
+					<span>Make MakeAnnouncement</span>
 				</Nav>
 
 				<Nav

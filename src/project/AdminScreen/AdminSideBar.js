@@ -25,6 +25,11 @@ const AdminSideBar = () => {
 					<span>Overview</span>
 				</Nav>
 
+				<Nav to="/announcement">
+					<ProdIcon />
+					<span>Make Announcement</span>
+				</Nav>
+
 				<Nav to="/product">
 					<ProdIcon />
 					<span>Product</span>
@@ -211,7 +216,7 @@ const Container = styled.div`
 	width: 260px;
 	height: 100vh;
 	position: fixed;
-	/* background-color: lightblue; */
+	background-color: #f4f5fa;
 	border-right: 1px dotted silver;
 	z-index: 2;
 

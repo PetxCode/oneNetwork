@@ -22,7 +22,7 @@ const SupportProjects = () => {
 		reference: new Date().getTime().toString(),
 		email: user.email,
 		amount: amount * 100,
-		publicKey: "pk_test_dsdfghuytfd2345678gvxxxxxxxxxx",
+		publicKey: "pk_test_d632bf4b9aa1e74745eb158cec8034961dc13b18",
 	};
 
 	const onSuccess = (reference) => {
@@ -303,7 +303,7 @@ const Holder = styled.div`
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
-	margin-top: 60px;
+	margin-top: 100px;
 `;
 
 const Space = styled.div`

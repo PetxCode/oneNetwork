@@ -394,7 +394,7 @@ const Mini = styled.div`
 	font-weight: bold;
 	width: 100%;
 	display: flex;
-	margin-left: 50px;
+	margin-left: 80px;
 	margin-top: 50px;
 `;
 

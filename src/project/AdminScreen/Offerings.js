@@ -3,11 +3,7 @@ import styled from "styled-components";
 import { usePaystackPayment } from "react-paystack";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import * as yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 
-import axios from "axios";
 import left from "./left.png";
 import right from "./Right.png";
 import { useSelector } from "react-redux";
@@ -22,7 +18,7 @@ const Offerings = () => {
 		reference: new Date().getTime().toString(),
 		email: user.email,
 		amount: amount * 100,
-		publicKey: "pk_test_dsdfghuytfd2345678gvxxxxxxxxxx",
+		publicKey: "pk_test_d632bf4b9aa1e74745eb158cec8034961dc13b18",
 	};
 
 	const onSuccess = (reference) => {
@@ -34,8 +30,6 @@ const Offerings = () => {
 	};
 
 	const initializePayment = usePaystackPayment(config);
-
-	const navigate = useNavigate();
 
 	const onHandle = (e) => {
 		e.preventDefault();
@@ -134,14 +128,6 @@ const BUtton = styled.button`
 
 const Div = styled.div`
 	color: red;
-	bottom: -18px;
-	font-size: 10px;
-	font-weight: bolder;
-`;
-
-const Error = styled.div`
-	color: red;
-	position: absolute;
 	bottom: -18px;
 	font-size: 10px;
 	font-weight: bolder;
@@ -253,17 +239,11 @@ const Holder = styled.div`
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
-	margin-top: 60px;
+	margin-top: 170px;
 `;
 
 const Space = styled.div`
 	flex: 1;
-`;
-
-const Line = styled.div`
-	margin-top: 40px;
-	width: 60%;
-	border-top: 1px solid silver;
 `;
 
 const Sub = styled.div`
