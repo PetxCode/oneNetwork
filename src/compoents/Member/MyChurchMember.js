@@ -115,7 +115,7 @@ const MyChurchMember = () => {
 							<Error>{errors?.password?.message}</Error>
 						</InputHolder1>
 						<InputHolder2>
-							<Label>Confirm Password</Label>
+							<Label>Confirm</Label>
 							<Input placeholder="Confirm Password" {...register("confirm")} />
 							<Error>{errors?.confirm?.message}</Error>
 						</InputHolder2>

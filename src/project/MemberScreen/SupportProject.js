@@ -234,6 +234,7 @@ const Mini = styled.div`
 	width: 100%;
 	display: flex;
 	margin-top: 50px;
+	margin-left: 50px;
 `;
 
 const WrapperHolder = styled.div`

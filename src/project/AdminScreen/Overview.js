@@ -25,6 +25,7 @@ const Overview = () => {
 	const [announcementOne, setAnnouncementOne] = useState({});
 	const [announcementOne7, setAnnouncementOne7] = useState({});
 	const [ministry, setMinistry] = useState({});
+	const [ministry1, setMinistry1] = useState({});
 	const [ebooks, setEbooks] = useState({});
 
 	const getAllMembers = async () => {

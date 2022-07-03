@@ -86,7 +86,7 @@ const ChangeMemberPassword = () => {
 						<Error>{errors?.password?.message}</Error>
 					</InputHolder>
 					<InputHolder>
-						<Label>Confirm Password</Label>
+						<Label>Confirm</Label>
 						<Input placeholder="Confirm Password" {...register("confirm")} />
 						<Error>{errors?.confirm?.message}</Error>
 					</InputHolder>
