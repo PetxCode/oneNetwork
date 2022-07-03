@@ -43,6 +43,15 @@ const Product = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const placeEbookOrder = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `http://localhost:2233/api/order/${user?._id}/${book._id}/create`;
+		await axios
+			.post(url)
+			.then((res) => {})
+			.catch((err) => console.log(err.message));
+	};
+
 	const getAllEbook = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
 		const url = `http://localhost:2233/api/eBook/${user?._id}`;
@@ -50,7 +59,6 @@ const Product = () => {
 			.get(url)
 			.then((res) => {
 				setEBookContent(res.data.data);
-				console.log("Members: ", eBookContent);
 			})
 			.catch((err) => console.log(err.message));
 	};
@@ -139,6 +147,7 @@ const Product = () => {
 
 	useEffect(() => {
 		// getAllAudio();
+		getAllEbook();
 		getAllAnnouncementOne();
 		getAlleBookProducts();
 		getAllProducts();
@@ -158,7 +167,7 @@ const Product = () => {
 								{announcementOne?.announcement?.map((props) => (
 									<div>
 										<NoticeMessage>{props.message}</NoticeMessage>
-										<Dated>{props.createdAt}</Dated>
+										<Dated>{moment(props.createdAt).fromNow()}</Dated>
 									</div>
 								))}
 							</Notice>
@@ -190,7 +199,7 @@ const Product = () => {
 							<CardTitleTExt>Total eBooks</CardTitleTExt>
 							<TextCOunt>
 								<AllCOunt>
-									<Count>{0}</Count>
+									<Count>{eBookDisplay?.eBookContent?.length}</Count>
 									<Count1>{0}+</Count1>
 								</AllCOunt>
 							</TextCOunt>
@@ -360,6 +369,7 @@ const Product = () => {
 									<Button
 										onClick={() => {
 											dispatch(createBook(props));
+
 											Swal.fire({
 												title: props.title,
 												text: "You are about to place an order for this book, could you like to continue?",
@@ -372,6 +382,7 @@ const Product = () => {
 												confirmButtonText: "Yes, Please!",
 											}).then(() => {
 												console.log("Order Completed");
+												placeEbookOrder();
 												initializePayment(onSuccess, onClose);
 											});
 										}}

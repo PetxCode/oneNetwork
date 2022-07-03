@@ -20,14 +20,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
-const MakeAnnouncement = () => {
+const AddMinistries = () => {
 	const user = useSelector((state) => state.user);
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
-	const [announcementOne, setAnnouncementOne] = useState({});
 
 	const yupSchema = yup.object().shape({
-		announcement: yup.string().required("You haven't say anything yet...!"),
+		ministry: yup.string().required("You haven't say anything yet...!"),
 	});
 
 	const {
@@ -37,21 +36,21 @@ const MakeAnnouncement = () => {
 	} = useForm({ resolver: yupResolver(yupSchema) });
 
 	const onSubmit = handleSubmit(async (value) => {
-		const { announcement } = value;
+		const { ministry } = value;
 		const url = "http://localhost:2233";
-		const newURL = `${url}/api/announcement/${user._id}/create`;
+		const newURL = `${url}/api/ministry/${user._id}/create`;
 
 		await axios
-			.post(newURL, { message: announcement })
+			.post(newURL, { title: ministry })
 			.then((res) => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "You announcement has been make publicly",
+					title: "This Ministry has been created",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
-					navigate("/");
+					navigate("/support");
 				});
 			})
 			.catch((error) => setErrorState(error.response.data.message));
@@ -69,7 +68,7 @@ const MakeAnnouncement = () => {
 					</LogoHolder>
 
 					<Title>
-						<TitleHead>Anouncement Announcement📢📢</TitleHead>
+						<TitleHead>Add Ministries that People can give to </TitleHead>
 						<br />
 						<TitleSub>
 							Enter the Announcement you'd want all <span>MEMBERS</span> to see
@@ -78,14 +77,14 @@ const MakeAnnouncement = () => {
 					<br />
 					<br />
 					<InputHolder>
-						<Label>Announcement</Label>
-						<Input placeholder="Announcement" {...register("announcement")} />
-						<Error>{errors?.announcement?.message}</Error>
+						<Label>Ministry Name</Label>
+						<Input placeholder="Ministry Name" {...register("ministry")} />
+						<Error>{errors?.ministry?.message}</Error>
 					</InputHolder>
 
 					<ButtonHolder>
 						<BUtton type="submit" bg>
-							Make Announcement
+							Add Ministry
 						</BUtton>
 						<Div>{errorState}</Div>
 					</ButtonHolder>
@@ -122,7 +121,7 @@ const MakeAnnouncement = () => {
 	);
 };
 
-export default MakeAnnouncement;
+export default AddMinistries;
 
 const ButtonHolder = styled.div`
 	margin: 10px 0;
@@ -246,7 +245,7 @@ const Error = styled.div`
 	font-weight: bolder;
 `;
 
-const Input = styled.textarea`
+const Input = styled.input`
 	padding: 10px;
 	resize: none;
 	width: 97%;
@@ -278,7 +277,6 @@ const InputHolder = styled.div`
 	margin-bottom: 35px;
 	border: 1px solid #742e9d;
 	width: 100%;
-	height: 150px;
 	border-radius: 5px;
 	color: #742e9d;
 `;

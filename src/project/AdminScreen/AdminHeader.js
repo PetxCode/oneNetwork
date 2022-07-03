@@ -212,6 +212,7 @@ const Coder = styled.div`
 	display: flex;
 	flex-direction: column;
 `;
+
 const Diva = styled.div`
 	display: flex;
 	align-items: center;

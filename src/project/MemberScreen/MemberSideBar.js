@@ -20,12 +20,12 @@ const MemberSideBar = () => {
 			</LogoHolder>
 
 			<NavOptions>
-				<Nav to="/">
+				{/* <Nav to="/">
 					<Icon />
 					<span>Overview</span>
-				</Nav>
+				</Nav> */}
 
-				<Nav to="/products">
+				<Nav to="/">
 					<ProdIcon />
 					<span>Product</span>
 				</Nav>
@@ -50,7 +50,7 @@ const MemberSideBar = () => {
 					<span>Pay Offering</span>
 				</Nav>
 
-				{/* <Space /> */}
+				<Space />
 
 				<Nav1 to="/supports">
 					<span>Support the Ministry</span>

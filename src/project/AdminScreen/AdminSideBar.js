@@ -3,8 +3,10 @@ import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillPieChart, AiFillSetting, AiFillAudio } from "react-icons/ai";
 import { BsFillBagFill, BsPersonCircle } from "react-icons/bs";
+import { BiPurchaseTag, BiMessageDetail } from "react-icons/bi";
 import { GiPayMoney } from "react-icons/gi";
 import { useSelector } from "react-redux";
+import { FaChurch } from "react-icons/fa";
 
 const AdminSideBar = () => {
 	const user = useSelector((state) => state.user);
@@ -24,10 +26,19 @@ const AdminSideBar = () => {
 					<Icon />
 					<span>Overview</span>
 				</Nav>
+				<Nav to="/order">
+					<OrderIcon />
+					<span>View Orders</span>
+				</Nav>
 
 				<Nav to="/announcement">
-					<ProdIcon />
+					<AnnIcon />
 					<span>Make Announcement</span>
+				</Nav>
+
+				<Nav to="/add-ministry">
+					<ChurchIcon />
+					<span>Add Minitries</span>
 				</Nav>
 
 				<Nav to="/product">
@@ -90,6 +101,24 @@ const MembIcon = styled(BsPersonCircle)`
 `;
 
 const SetIcon = styled(AiFillSetting)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+
+const OrderIcon = styled(BiPurchaseTag)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+
+const ChurchIcon = styled(FaChurch)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+
+const AnnIcon = styled(BiMessageDetail)`
 	font-size: 30px;
 	margin-right: 10px;
 	margin-left: 20px;

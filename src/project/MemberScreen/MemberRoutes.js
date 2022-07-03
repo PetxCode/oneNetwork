@@ -16,9 +16,9 @@ const MemberRoutes = () => {
 		<>
 			{user?.status === "member" ? (
 				<Routes>
-					<Route path="/" element={<Overview />} />
+					{/* <Route path="/" element={<Overview />} /> */}
 					<Route path="/to-cart" element={<CartPage />} />
-					<Route path="/products" element={<Product />} />
+					<Route path="/" element={<Product />} />
 					<Route path="/view-member" element={<ViewMembers />} />
 					<Route path="/offerings" element={<Offerings />} />
 					<Route path="/supports" element={<SupportProjects />} />

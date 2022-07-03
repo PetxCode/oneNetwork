@@ -11,12 +11,22 @@ import axios from "axios";
 import left from "./left.png";
 import right from "./Right.png";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { AiFillDelete } from "react-icons/ai";
 
 const SupportProjects = () => {
 	const user = useSelector((state) => state.user);
-
+	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
 	const [amount, setAmount] = useState(0);
+	const [show, setShow] = useState(null);
+
+	const onShow = (index) => {
+		setShow((prev) => {
+			return prev === index ? null : index;
+		});
+		console.log("clicked", index);
+	};
 
 	const config = {
 		reference: new Date().getTime().toString(),
@@ -26,6 +36,7 @@ const SupportProjects = () => {
 	};
 
 	const onSuccess = (reference) => {
+		navigate("/");
 		console.log(reference);
 	};
 
@@ -35,80 +46,149 @@ const SupportProjects = () => {
 
 	const initializePayment = usePaystackPayment(config);
 
-	const navigate = useNavigate();
-
 	const onHandle = (e) => {
 		e.preventDefault();
 		initializePayment(onSuccess, onClose);
 	};
 
+	const [newMinistry, setNewMinistry] = useState({});
+
+	const viewMinistry = async () => {
+		const url = "http://localhost:2233";
+		const newURL = `${url}/api/ministry/${user._id}/`;
+
+		await axios
+			.get(newURL)
+			.then((res) => {
+				setNewMinistry(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const deleteMinistry = async (ID) => {
+		const url = "http://localhost:2233";
+		const newURL = `${url}/api/ministry/${user._id}/${ID}/`;
+		await axios.delete(newURL);
+		window.location.reload();
+	};
+
+	const giveMinistry = async (ID) => {
+		const url = "http://localhost:2233";
+
+		const newURL = `${url}/api/give/${user._id}/${ID}/createAdmin`;
+
+		await axios.post(newURL, { cost: amount }).then(() => {
+			Swal.fire({
+				position: "center",
+				icon: "success",
+				title: "Thank you for your Support, it means great deal to us!",
+				showConfirmButton: false,
+				timer: 2500,
+			}).then(() => {
+				initializePayment(onSuccess, onClose);
+			});
+		});
+	};
+
+	useEffect(() => {
+		viewMinistry();
+	}, []);
+
 	return (
 		<Container>
 			<Mini>Here are list of our ministries, you can Support</Mini>
 			<WrapperHolder>
-				<Wrapper>
-					<Card>
-						<Title>
-							<TitleHead>Widows Ministry 💸</TitleHead>
-							<br />
-							<TitleSub>
-								We are <span>GLAD</span>, You've considered giving to Our{" "}
-								<span>MINISTRY</span>. <br /> <span>God </span>please you!
-							</TitleSub>
-						</Title>
-						<br />
-						<br />
-						<InputHolder>
-							<Label>How much would you want to Give?</Label>
-							<Input
-								placeholder="Amount"
-								value={amount}
-								onChange={(e) => {
-									setAmount(amount);
-								}}
-							/>
-						</InputHolder>
+				{newMinistry?.ministry &&
+					newMinistry?.ministry?.map((props) => (
+						<Wrapper key={props._id}>
+							<Card>
+								<Title>
+									<TitleHead>
+										<span>{props.title} 💸</span>{" "}
+										<div>
+											<DeleteIcon
+												onClick={() => {
+													Swal.fire({
+														title: "Are you sure?",
+														text: "You won't be able to revert this!",
+														icon: "warning",
+														showCancelButton: true,
+														confirmButtonColor: "#3085d6",
+														cancelButtonColor: "#d33",
+														confirmButtonText: "Yes, delete it!",
+													}).then((result) => {
+														if (result.isConfirmed) {
+															Swal.fire(
+																"Deleted!",
+																"Your file has been deleted.",
+																"success"
+															).then(() => {
+																deleteMinistry(props._id);
+															});
+														}
+													});
+												}}
+											/>{" "}
+										</div>
+									</TitleHead>
 
-						<ButtonHolder>
-							<BUtton type="submit" bg onClick={onHandle}>
-								Support Widows Ministry
-							</BUtton>
-							<Div>{errorState}</Div>
-						</ButtonHolder>
-					</Card>
-				</Wrapper>
-				<Wrapper>
-					<Card>
-						<Title>
-							<TitleHead>Out of School Ministry 💸</TitleHead>
-							<br />
-							<TitleSub>
-								We are <span>GLAD</span>, You've considered giving to Our{" "}
-								<span>MINISTRY</span>. <br /> <span>God </span>please you!
-							</TitleSub>
-						</Title>
-						<br />
-						<br />
-						<InputHolder>
-							<Label>How much would you want to Give?</Label>
-							<Input
-								placeholder="Amount"
-								value={amount}
-								onChange={(e) => {
-									setAmount(amount);
-								}}
-							/>
-						</InputHolder>
+									<br />
+									<TitleSub>
+										We are <span>GLAD</span>, You've considered giving to Our{" "}
+										<span>MINISTRY</span>. <br /> <span>God </span>please you!
+									</TitleSub>
+								</Title>
+								<br />
+								<br />
 
-						<ButtonHolder>
-							<BUtton type="submit" bg onClick={onHandle}>
-								Support Out of School Ministry
-							</BUtton>
-							<Div>{errorState}</Div>
-						</ButtonHolder>
-					</Card>
-				</Wrapper>
+								{show === props._id ? (
+									<InputHolder>
+										<Label>How much would you want to Give?</Label>
+										<SmallButtonHolder>
+											<Input
+												placeholder="Amount"
+												value={amount}
+												onChange={(e) => {
+													setAmount(e.target.value);
+												}}
+											/>
+											<SmallButton
+												onClick={() => {
+													onShow(props._id);
+												}}
+											>
+												Close
+											</SmallButton>
+										</SmallButtonHolder>
+									</InputHolder>
+								) : (
+									<Button
+										onClick={() => {
+											onShow(props._id);
+										}}
+									>
+										Click here Enter an Amount
+									</Button>
+								)}
+
+								<ButtonHolder>
+									<BUtton
+										type="submit"
+										bg
+										onClick={(e) => {
+											e.preventDefault();
+											giveMinistry(props._id);
+										}}
+									>
+										Support {props.title}
+									</BUtton>
+									<Div>{errorState}</Div>
+								</ButtonHolder>
+							</Card>
+						</Wrapper>
+					))}
 			</WrapperHolder>
+
 			<TextHolder>
 				<Title1>
 					Give, and it will be given to you. A good measure, pressed down,
@@ -128,6 +208,23 @@ const SupportProjects = () => {
 };
 
 export default SupportProjects;
+
+const DeleteIcon = styled(AiFillDelete)`
+	color: red;
+	font-size: 30px;
+	transition: all 350ms;
+	font-weight: 700;
+
+	:hover {
+		cursor: pointer;
+		transform: scale(0.99);
+	}
+`;
+
+const SmallButtonHolder = styled.div`
+	display: flex;
+	width: 100%;
+`;
 
 const Mini = styled.div`
 	color: #742e9d;
@@ -162,6 +259,48 @@ const ButtonHolder = styled.div`
 	align-items: center;
 `;
 
+const SmallButton = styled.button`
+	margin-bottom: 5px;
+	width: 80px;
+	height: 40px;
+	background-color: rgba(255, 0, 0, 0.7);
+	color: white;
+	border: 0;
+	outline: none;
+	border-radius: 5px;
+	font-size: 13px;
+	font-family: Poppins;
+	text-transform: uppercase;
+	transition: all 350ms;
+	font-weight: 700;
+
+	:hover {
+		cursor: pointer;
+		/* transform: scale(0.99); */
+	}
+`;
+
+const Button = styled.button`
+	margin-bottom: 5px;
+	width: 100%;
+	height: 50px;
+	background-color: ${({ bg }) => (bg ? "#742e9d" : "rgba(255, 0, 0, 0.9)")};
+	color: white;
+	border: 0;
+	outline: none;
+	border-radius: 5px;
+	font-size: 13px;
+	font-family: Poppins;
+	text-transform: uppercase;
+	transition: all 350ms;
+	font-weight: 700;
+
+	:hover {
+		cursor: pointer;
+		transform: scale(0.99);
+	}
+`;
+
 const BUtton = styled.button`
 	margin-bottom: 5px;
 	width: 100%;
@@ -171,7 +310,8 @@ const BUtton = styled.button`
 	border: 0;
 	outline: none;
 	border-radius: 5px;
-	font-size: 20px;
+	font-size: 17px;
+	font-weight: 700;
 	font-family: Poppins;
 	text-transform: uppercase;
 	transition: all 350ms;
@@ -249,6 +389,9 @@ const TitleHead = styled.div`
 	font-weight: bolder;
 	color: #742e9d;
 	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 `;
 
 const Title = styled.div`

@@ -76,7 +76,7 @@ const MemberSiderMain = () => {
 			</LogoHolder>
 
 			<NavOptions>
-				<Nav
+				{/* <Nav
 					to="/"
 					id="cancel"
 					onClick={() => {
@@ -86,10 +86,10 @@ const MemberSiderMain = () => {
 				>
 					<Icon />
 					<span>Overview</span>
-				</Nav>
+				</Nav> */}
 
 				<Nav
-					to="/products"
+					to="/"
 					id="cancel"
 					onClick={() => {
 						dismissMeun();
@@ -148,7 +148,7 @@ const MemberSiderMain = () => {
 					<span>Pay Offering</span>
 				</Nav>
 
-				{/* <Space /> */}
+				<Space />
 
 				<Nav1
 					to="/supports"

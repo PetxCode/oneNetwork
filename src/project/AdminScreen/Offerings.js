@@ -56,7 +56,7 @@ const Offerings = () => {
 							placeholder="Amount"
 							value={amount}
 							onChange={(e) => {
-								setAmount(amount);
+								setAmount(e.target.value);
 							}}
 						/>
 					</InputHolder>

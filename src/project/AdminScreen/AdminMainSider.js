@@ -6,6 +6,8 @@ import { BsFillBagFill, BsPersonCircle } from "react-icons/bs";
 import { GiPayMoney } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../../compoents/Global/Global";
+import { BiPurchaseTag, BiMessageDetail } from "react-icons/bi";
+import { FaChurch } from "react-icons/fa";
 
 const AdminMainSider = () => {
 	const navigate = useNavigate();
@@ -96,6 +98,17 @@ const AdminMainSider = () => {
 				</Nav>
 
 				<Nav
+					to="/order"
+					id="cancel"
+					onClick={() => {
+						dismissMeun();
+						console.log("Close");
+					}}
+				>
+					<OrderIcon />
+					<span>View Orders</span>
+				</Nav>
+				<Nav
 					to="/announcement"
 					id="cancel"
 					onClick={() => {
@@ -103,8 +116,19 @@ const AdminMainSider = () => {
 						console.log("Close");
 					}}
 				>
-					<ProdIcon />
-					<span>Make MakeAnnouncement</span>
+					<AnnIcon />
+					<span>Make Announcement</span>
+				</Nav>
+				<Nav
+					to="/add-ministry"
+					id="cancel"
+					onClick={() => {
+						dismissMeun();
+						console.log("Close");
+					}}
+				>
+					<ChurchIcon />
+					<span>Add Minitries</span>
 				</Nav>
 
 				<Nav
@@ -249,6 +273,23 @@ const MembIcon = styled(BsPersonCircle)`
 `;
 
 const SetIcon = styled(AiFillSetting)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+
+const OrderIcon = styled(BiPurchaseTag)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+
+const ChurchIcon = styled(FaChurch)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+const AnnIcon = styled(BiMessageDetail)`
 	font-size: 30px;
 	margin-right: 10px;
 	margin-left: 20px;

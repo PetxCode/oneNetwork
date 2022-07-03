@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import pix from "./pii.png";
 import { AiFillAudio } from "react-icons/ai";
-import { BsFillBookFill, BsPersonCircle } from "react-icons/bs";
-import { FaMoneyCheck } from "react-icons/fa";
+import {
+	BsFillBookFill,
+	BsPersonCircle,
+	BsFillEyeFill,
+	BsFillEyeSlashFill,
+} from "react-icons/bs";
+import { FaMoneyCheck, FaChurch } from "react-icons/fa";
+import { GiMoneyStack } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import myURL from "../../urlData.json";
 import axios from "axios";
 import { useEffect } from "react";
+import moment from "moment";
 
 const Overview = () => {
 	const user = useSelector((state) => state.user);
@@ -16,6 +23,9 @@ const Overview = () => {
 	const [audioContent, setAudioContent] = useState({});
 	const [announcement, setAnnouncement] = useState({});
 	const [announcementOne, setAnnouncementOne] = useState({});
+	const [announcementOne7, setAnnouncementOne7] = useState({});
+	const [ministry, setMinistry] = useState({});
+	const [ebooks, setEbooks] = useState({});
 
 	const getAllMembers = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
@@ -28,6 +38,17 @@ const Overview = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const getAllMinistry = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `http://localhost:2233/api/ministry/${user?._id}`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setMinistry(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
 		const url = `http://localhost:2233/api/content/${user?._id}`;
@@ -35,6 +56,17 @@ const Overview = () => {
 			.get(url)
 			.then((res) => {
 				setAudioContent(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const getAllEbooks = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `http://localhost:2233/api/ebook/${user?._id}`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setEbooks(res.data.data);
 			})
 			.catch((err) => console.log(err.message));
 	};
@@ -51,6 +83,18 @@ const Overview = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const getAllAnnouncementSeven = async () => {
+		const newURL = `http://localhost:2233`;
+
+		const url = `${newURL}/api/announcement/${user?._id}/seven`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setAnnouncementOne7(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
 	const getAllAnnouncementOne = async () => {
 		const newURL = `http://localhost:2233`;
 
@@ -63,12 +107,39 @@ const Overview = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const [viewOrders, setViewOrders] = useState({});
+
+	const getOrders = async () => {
+		const newURL = `http://localhost:2233/api/order/${user._id}/five`;
+		await axios
+			.get(newURL)
+			.then((res) => {
+				setViewOrders(res.data.data);
+			})
+			.then((err) => {
+				return console.log(err);
+			});
+	};
+
+	const seenOrdered = async (ID) => {
+		const newURL = `http://localhost:2233/api/order/${user._id}/${ID}/seen`;
+		await axios.patch(newURL);
+	};
+
+	const deliveredOrdered = async (ID) => {
+		const newURL = `http://localhost:2233/api/order/${user._id}/${ID}/deliver`;
+		await axios.patch(newURL);
+	};
+
 	useEffect(() => {
+		getOrders();
 		getAllAnnouncementOne();
+		getAllAnnouncementSeven();
+		getAllEbooks();
 		getAllMembers();
 		getAllAudio();
 		getAllAnnouncement();
-		console.log(announcementOne);
+		getAllMinistry();
 	}, []);
 
 	return (
@@ -83,7 +154,7 @@ const Overview = () => {
 								{announcementOne?.announcement?.map((props) => (
 									<div key={props._id}>
 										<NoticeMessage>{props.message}</NoticeMessage>
-										<Date>{props.createdAt}</Date>
+										<Date>{moment(props.createdAt).fromNow()}</Date>
 									</div>
 								))}
 							</Notice>
@@ -111,10 +182,10 @@ const Overview = () => {
 							<IconBuild bg="rgba(255,180,0, 0.7)" bc="#ffb400">
 								<IconDataBook />
 							</IconBuild>
-							<CardTitleTExt>Total Audio Sales</CardTitleTExt>
+							<CardTitleTExt>Total Books</CardTitleTExt>
 							<TextCOunt>
 								<AllCOunt>
-									<Count>{0}</Count>
+									<Count>{ebooks?.eBookContent?.length}</Count>
 									<Count1>{0}+</Count1>
 								</AllCOunt>
 							</TextCOunt>
@@ -125,7 +196,7 @@ const Overview = () => {
 							<IconBuild bg="rgba(116,46,157,0.7)" bc="rgb(116,46,157)">
 								<IconDataMoney />
 							</IconBuild>
-							<CardTitleTExt>Total eBooks Sales</CardTitleTExt>
+							<CardTitleTExt>Total Audio Sales</CardTitleTExt>
 							<TextCOunt>
 								<AllCOunt>
 									<Count>{0}</Count>
@@ -139,7 +210,7 @@ const Overview = () => {
 							<IconBuild bg="rgba(86,202,0,0.7)" bc="rgb(86,202,0)">
 								<IconDataMoney />
 							</IconBuild>
-							<CardTitleTExt>Total eBooks</CardTitleTExt>
+							<CardTitleTExt>Total eBooks Sales</CardTitleTExt>
 							<TextCOunt>
 								<AllCOunt>
 									<Count>{0}</Count>
@@ -152,14 +223,81 @@ const Overview = () => {
 					</SiderSider>
 				</Top>
 
-				{/* <Second>Second</Second>
-				<Third>Third</Third>
-				<Fourth>Fourth</Fourth> */}
+				<Card>
+					<TextHolderFile>
+						<Text>Top 5 Most recent Orders</Text>
+						<MinCard1>
+							<Header fs>
+								<SeenVisible>Seen</SeenVisible>
+								<Seen>Status</Seen>
+								<Detailed>Profile</Detailed>
+								<Status>Details</Status>
+							</Header>
+
+							{viewOrders?.order &&
+								viewOrders?.order?.map((props) => (
+									<Header key={props._id}>
+										<SeenVisible>
+											{props.seen ? (
+												<NonVisibleIcon
+													onClick={() => {
+														seenOrdered(props._id);
+														window.location.reload();
+													}}
+												/>
+											) : (
+												<VisibleIcon
+													onClick={() => {
+														seenOrdered(props._id);
+														window.location.reload();
+													}}
+												/>
+											)}
+										</SeenVisible>
+										<Seen>
+											{props.delivered ? (
+												<Active
+													bg
+													onClick={() => {
+														deliveredOrdered(props._id);
+													}}
+												>
+													Deliver
+												</Active>
+											) : (
+												<Active
+													onClick={() => {
+														deliveredOrdered(props._id);
+													}}
+												>
+													Not Deliver
+												</Active>
+											)}
+										</Seen>
+										<Detailed>
+											<Named>{props.who}</Named>
+											<DisplayNamed>displayName</DisplayNamed>
+										</Detailed>
+										<Status>
+											<Named>{props.what}</Named>
+											<DisplayNamed>{props.detail}</DisplayNamed>
+											<CostOrder>#{props.cost}.00</CostOrder>
+										</Status>
+									</Header>
+								))}
+						</MinCard1>
+					</TextHolderFile>
+				</Card>
 
 				<Card>
-					<MinCard>Most Top</MinCard>
+					<MinCard>
+						<Iframe src="https://charts.mongodb.com/charts-project-0-bbtqu/embed/charts?id=62c15947-7e6a-47f7-89e2-26c53d4c947c&maxDataAge=3600&theme=light&autoRefresh=true" />
+					</MinCard>
+
 					<MinCardHolder>
-						<TopCard>Top Card</TopCard>
+						<TopCard>
+							<Iframe src="https://charts.mongodb.com/charts-project-0-bbtqu/embed/charts?id=62c158bd-2fb0-4681-89f0-f0e9a2d8f3ac&maxDataAge=3600&theme=light&autoRefresh=true" />
+						</TopCard>
 						<BottomCard>
 							<BCard>
 								<IconBuild bg="rgb(86,202,0)" bc="rgba(86,202,0,0.7)">
@@ -175,7 +313,34 @@ const Overview = () => {
 
 								<DataCount>As at Today</DataCount>
 							</BCard>
-							<BCard>2</BCard>
+							<BCard>
+								<IconBuild bg="rgb(255, 0, 0)" bc="rgba(255, 0,0,0.7)">
+									<ChurchPerson />
+								</IconBuild>
+								<CardTitleTExt>Total Ministries: </CardTitleTExt>
+								<TextCOunt>
+									<AllCOunt>
+										<Count> {ministry?.ministry?.length}</Count>
+										<Count1>{45}%+</Count1>
+									</AllCOunt>
+								</TextCOunt>
+
+								<DataCount>As at Today</DataCount>
+							</BCard>
+							<BCard>
+								<IconBuild bg="rgb(255,177,0)" bc="rgba(255,177,0, 0.7)">
+									<GivePerson />
+								</IconBuild>
+								<CardTitleTExt>Total Most recent Giver </CardTitleTExt>
+								<TextCOunt>
+									<AllCOunt>
+										<Count> {ministry?.ministry?.length}</Count>
+										<Count1>{45}%+</Count1>
+									</AllCOunt>
+								</TextCOunt>
+
+								<DataCount>As at Today</DataCount>
+							</BCard>
 						</BottomCard>
 					</MinCardHolder>
 				</Card>
@@ -211,9 +376,10 @@ const Overview = () => {
 					<TableCard1>
 						<TableHolder>
 							<TopTitle>Top 5 Latest Announcemnet</TopTitle>
-							{announcement?.announcement?.length < 5 ? (
-								<div>
-									{announcement?.announcement.map((props) => (
+
+							<div>
+								{announcementOne7?.announcement &&
+									announcementOne7?.announcement.map((props) => (
 										<Detail1 key={props._id}>
 											{props?.avatar ? (
 												<Image src={props.avatar} />
@@ -226,8 +392,7 @@ const Overview = () => {
 											</DetailHolder1>
 										</Detail1>
 									))}
-								</div>
-							) : null}
+							</div>
 						</TableHolder>
 					</TableCard1>
 				</Card>
@@ -237,6 +402,123 @@ const Overview = () => {
 };
 
 export default Overview;
+
+const TextHolderFile = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
+
+const Text = styled.div`
+	text-transform: uppercase;
+	font-weight: 700;
+	margin: 30px 0;
+`;
+
+const CostOrder = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+	color: red;
+`;
+
+const DisplayNamed = styled.div`
+	font-size: 10px;
+	color: gray;
+`;
+
+const Named = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+`;
+
+const Active = styled.div`
+	width: 50%;
+	background-color: ${({ bg }) => (bg ? "#56ca00" : "red")};
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 30px;
+	font-size: 13px;
+	padding: 5px 10px;
+	transition: all 350ms;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+const NonVisibleIcon = styled(BsFillEyeFill)`
+	font-size: 20px;
+	margin-right: 20px;
+	transition: all 350ms;
+	color: red;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const VisibleIcon = styled(BsFillEyeSlashFill)`
+	font-size: 20px;
+	margin-right: 20px;
+	transition: all 350ms;
+	color: red;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const Status = styled.div`
+	width: 300px;
+`;
+
+const Detailed = styled.div`
+	width: 300px;
+`;
+
+const SeenVisible = styled.div`
+	width: 70px;
+`;
+
+const Seen = styled.div`
+	width: 130px;
+`;
+
+const Header = styled.div`
+	padding: 10px 20px;
+	display: flex;
+	transition: all 350ms;
+	border-bottom: 1px solid silver;
+	align-items: center;
+	font-size: ${({ fs }) => (fs ? "11px" : "")};
+	font-weight: ${({ fs }) => (fs ? "700" : "")};
+	background-color: ${({ fs }) => (fs ? "rgba(0,0,0,0.1)" : "")};
+	text-transform: ${({ fs }) => (fs ? "uppercase" : "")};
+
+	:hover {
+		background-color: #f5f7fc;
+	}
+`;
+
+const Iframe = styled.iframe`
+	background: #f1f5f4;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 0 2px 10px 0 rgba(70, 76, 79, 0.2);
+	width: 100%;
+	height: 100%;
+`;
+
+const GivePerson = styled(GiMoneyStack)`
+	color: white;
+	font-size: 30px;
+`;
+
+const ChurchPerson = styled(FaChurch)`
+	color: white;
+	font-size: 30px;
+`;
 
 const IconPerson = styled(BsPersonCircle)`
 	color: white;
@@ -466,7 +748,7 @@ const BottomCard = styled.div`
 
 const TopCard = styled.div`
 	width: 400px;
-	height: 200px;
+	height: 300px;
 	background-color: green;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 5px;
@@ -478,6 +760,10 @@ const TopCard = styled.div`
 `;
 
 const MinCardHolder = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 	@media screen and (max-width: 768px) {
 		width: 100%;
 		display: flex;
@@ -487,14 +773,26 @@ const MinCardHolder = styled.div`
 	}
 `;
 
+const MinCard1 = styled.div`
+	width: 900px;
+	height: 100%;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+	border-radius: 5px;
+	margin-right: 10px;
+	margin-bottom: 30px;
+	overflow: hidden;
+	background-color: white;
+	border: 1px solid silver;
+`;
+
 const MinCard = styled.div`
 	width: 900px;
 	height: 400px;
-	background-color: red;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 5px;
 	margin-right: 10px;
 	margin-bottom: 10px;
+	overflow: hidden;
 `;
 
 const Card = styled.div`
