@@ -835,7 +835,6 @@ const Text1 = styled.div`
 	margin-top: 20px;
 	margin-bottom: 10px;
 	font-size: 20px;
-	font-weight: 500;
 `;
 
 const Text = styled.div`
@@ -844,7 +843,6 @@ const Text = styled.div`
 	margin-top: 20px;
 	margin-bottom: 10px;
 	font-size: 20px;
-	font-weight: 00;
 `;
 
 const SartIcon = styled(AiFillStar)`
