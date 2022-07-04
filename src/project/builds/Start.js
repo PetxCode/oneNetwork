@@ -29,11 +29,9 @@ const Start = () => {
 						Stay connected with your Church infrastructure, Vision and Messages
 					</Text>
 					<Brief wid>
-						Search all the open positions on the web. Get your own personalized
-						salary estimate. Read reviews on over 600,000 companies worldwide
-						<br />
-						Search all the open positions on the web. Get your own personalized
-						salary estimate. Read reviews on over 600,000 companies worldwide
+						“Woman,” Jesus replied, “believe me, a time is coming when you will
+						worship the Father neither on this mountain nor in Jerusalem. John
+						4:21
 					</Brief>
 				</Brand>
 
@@ -41,9 +39,9 @@ const Start = () => {
 				<MainCard>
 					<LogoTitle1>
 						<Brief>
-							Search all the open positions on the web. Get your own
-							personalized salary estimate. Read reviews on over 600,000
-							companies worldwide
+							“Woman,” Jesus replied, “believe me, a time is coming when you
+							will worship the Father neither on this mountain nor in Jerusalem.
+							John 4:21
 						</Brief>
 					</LogoTitle1>
 
@@ -51,8 +49,8 @@ const Start = () => {
 						<Content>
 							<TextContext>Login as Church Admin</TextContext>
 							<TextDetail>
-								personalized salary estimate. Read reviews on over 600,000
-								companies worldwide
+								In the last days the mountain of the LORD’s temple will be
+								established as the highest of the mountains... Micah 4:1
 							</TextDetail>
 						</Content>
 						<Image src={school} alt="school" />
@@ -62,8 +60,8 @@ const Start = () => {
 						<Content>
 							<TextContext>Login as Church Member</TextContext>
 							<TextDetail>
-								personalized salary estimate. Read reviews on over 600,000
-								companies worldwide
+								In the last days the mountain of the LORD’s temple will be
+								established as the highest of the mountains... Micah 4:1
 							</TextDetail>
 						</Content>
 						<Image src={perfect} alt="perfect" />

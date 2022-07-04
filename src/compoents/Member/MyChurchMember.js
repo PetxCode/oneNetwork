@@ -77,11 +77,6 @@ const MyChurchMember = () => {
 						</TitleSub>
 					</Title>
 					<br />
-					{/* <InputHolder>
-						<Label>Church Name</Label>
-						<Input placeholder="Church Name" {...register("churchName")} />
-						<Error>{errors?.churchName?.message}</Error>
-					</InputHolder> */}
 
 					<InputRow>
 						<InputHolder1>
@@ -112,12 +107,20 @@ const MyChurchMember = () => {
 					<InputRow>
 						<InputHolder1>
 							<Label>Password</Label>
-							<Input placeholder="Password" {...register("password")} />
+							<Input
+								placeholder="Password"
+								{...register("password")}
+								type="password"
+							/>
 							<Error>{errors?.password?.message}</Error>
 						</InputHolder1>
 						<InputHolder2>
 							<Label>Confirm</Label>
-							<Input placeholder="Confirm Password" {...register("confirm")} />
+							<Input
+								placeholder="Confirm Password"
+								{...register("confirm")}
+								type="password"
+							/>
 							<Error>{errors?.confirm?.message}</Error>
 						</InputHolder2>
 					</InputRow>

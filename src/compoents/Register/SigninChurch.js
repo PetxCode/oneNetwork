@@ -87,7 +87,7 @@ const SigninChurch = () => {
 					</InputHolder>
 					<InputHolder>
 						<Label>Password</Label>
-						<Input placeholder="Password" {...register("password")} />
+						<Input placeholder="Password" {...register("password")}  type="password"/>
 						<Error>{errors?.password?.message}</Error>
 					</InputHolder>
 
