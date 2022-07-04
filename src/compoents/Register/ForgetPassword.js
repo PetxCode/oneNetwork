@@ -19,6 +19,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const ForgetPasswordChurch = () => {
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
@@ -35,7 +37,6 @@ const ForgetPasswordChurch = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/admin/reset`;
 
 		await axios

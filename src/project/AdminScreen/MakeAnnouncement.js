@@ -20,6 +20,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useSelector } from "react-redux";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const MakeAnnouncement = () => {
 	const user = useSelector((state) => state.user);
 	const navigate = useNavigate();
@@ -38,7 +40,6 @@ const MakeAnnouncement = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		const { announcement } = value;
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/announcement/${user._id}/create`;
 
 		await axios

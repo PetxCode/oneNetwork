@@ -5,12 +5,14 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const ViewOrders = () => {
 	const user = useSelector((state) => state.user);
 	const [viewMembers, setViewMembers] = useState({});
 
 	const getMembers = async () => {
-		const newURL = `http://localhost:2233/api/order/${user._id}`;
+		const newURL = `${url}/api/order/${user._id}`;
 		await axios
 			.get(newURL)
 			.then((res) => {
@@ -22,12 +24,12 @@ const ViewOrders = () => {
 	};
 
 	const seenOrdered = async (ID) => {
-		const newURL = `http://localhost:2233/api/order/${user._id}/${ID}/seen`;
+		const newURL = `${url}/api/order/${user._id}/${ID}/seen`;
 		await axios.patch(newURL);
 	};
 
 	const deliveredOrdered = async (ID) => {
-		const newURL = `http://localhost:2233/api/order/${user._id}/${ID}/deliver`;
+		const newURL = `${url}/api/order/${user._id}/${ID}/deliver`;
 		await axios.patch(newURL);
 	};
 

@@ -19,6 +19,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const MyChurchMember = () => {
 	const navigate = useNavigate();
 	const [myChecked, setMyChacked] = useState(false);
@@ -40,7 +42,6 @@ const MyChurchMember = () => {
 	} = useForm({ resolver: yupResolver(yupSchema) });
 
 	const onSubmit = handleSubmit(async (value) => {
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/member/register`;
 
 		await axios

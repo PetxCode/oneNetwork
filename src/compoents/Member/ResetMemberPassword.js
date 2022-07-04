@@ -19,6 +19,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const ChangeMemberPassword = () => {
 	const { id, token } = useParams();
 
@@ -40,7 +42,7 @@ const ChangeMemberPassword = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
-		const url = "http://localhost:2233";
+
 		const newURL = `${url}/api/member/change/${id}/${token}`;
 
 		await axios

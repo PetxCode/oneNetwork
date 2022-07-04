@@ -5,12 +5,14 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import pix from "./pii.png";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const ViewMembers = () => {
 	const user = useSelector((state) => state.user);
 	const [viewMembers, setViewMembers] = useState({});
 
 	const getMembers = async () => {
-		const newURL = `http://localhost:2233/api/admin/${user._id}`;
+		const newURL = `${url}/api/admin/${user._id}`;
 		await axios
 			.get(newURL)
 			.then((res) => {

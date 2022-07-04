@@ -15,6 +15,8 @@ import { useSelector } from "react-redux";
 import pix from "./pix.jpeg";
 import one from "./one.png";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const UpdateSettings = () => {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
@@ -50,7 +52,6 @@ const UpdateSettings = () => {
 	} = useForm({ resolver: yupResolver(yupSchema) });
 
 	const onSubmit = handleSubmit(async (value) => {
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/member/${user._id}/`;
 
 		await axios
@@ -71,7 +72,6 @@ const UpdateSettings = () => {
 
 	const onSubmitImage = async (e) => {
 		e.preventDefault();
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/member/${user._id}/image`;
 
 		const formData = new FormData();

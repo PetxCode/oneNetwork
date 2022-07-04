@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { AiFillDelete } from "react-icons/ai";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const SupportProjects = () => {
 	const user = useSelector((state) => state.user);
 	const navigate = useNavigate();
@@ -54,7 +56,6 @@ const SupportProjects = () => {
 	const [newMinistry, setNewMinistry] = useState({});
 
 	const viewMinistry = async () => {
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/ministry/${user._id}/`;
 
 		await axios
@@ -66,15 +67,12 @@ const SupportProjects = () => {
 	};
 
 	const deleteMinistry = async (ID) => {
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/ministry/${user._id}/${ID}/`;
 		await axios.delete(newURL);
 		window.location.reload();
 	};
 
 	const giveMinistry = async (ID) => {
-		const url = "http://localhost:2233";
-
 		const newURL = `${url}/api/give/${user._id}/${ID}/createAdmin`;
 
 		await axios.post(newURL, { cost: amount }).then(() => {

@@ -21,6 +21,8 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createUser } from "../Global/Global";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const SigninChurchMember = () => {
 	const dispatch = useDispatch();
 
@@ -42,7 +44,6 @@ const SigninChurchMember = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/member/signin`;
 
 		await axios

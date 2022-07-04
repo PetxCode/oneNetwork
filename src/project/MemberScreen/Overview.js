@@ -9,6 +9,8 @@ import myURL from "../../urlData.json";
 import axios from "axios";
 import { useEffect } from "react";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const Overview = () => {
 	const user = useSelector((state) => state.user);
 	const newURL = myURL[0].url;
@@ -17,7 +19,7 @@ const Overview = () => {
 
 	const getAllMembers = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `http://localhost:2233/api/admin/${user?._id}`;
+		const url = `${url}/api/admin/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -28,7 +30,7 @@ const Overview = () => {
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `http://localhost:2233/api/content/${user?._id}`;
+		const url = `${url}/api/content/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {

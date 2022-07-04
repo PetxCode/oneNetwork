@@ -14,6 +14,8 @@ import pix from "./pix.jpeg";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./base";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const AddEbook = () => {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
@@ -69,7 +71,6 @@ const AddEbook = () => {
 
 		console.log(value);
 
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/eBook/${user._id}/create`;
 
 		await axios

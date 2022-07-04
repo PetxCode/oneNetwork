@@ -17,6 +17,8 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./base";
 import AddEbook from "./AddEbook";
 
+const url = "https://onechurch1.herokuapp.com";
+
 const AddProducts = () => {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
@@ -87,7 +89,6 @@ const AddProducts = () => {
 
 		console.log(value);
 
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/content/${user._id}/create`;
 
 		await axios

@@ -8,8 +8,9 @@ const ViewMembers = () => {
 	const user = useSelector((state) => state.user);
 	const [members, setMembers] = useState({});
 
+	const url = "https://onechurch1.herokuapp.com";
+
 	const getMembers = async () => {
-		const url = "http://localhost:2233";
 		const newURL = `${url}/api/admin/${user.admin}`;
 
 		await axios
