@@ -260,22 +260,9 @@ const Product = () => {
 									</SeenVisible>
 									<Seen>
 										{props.delivered ? (
-											<Active
-												bg
-												onClick={() => {
-													deliveredOrdered(props._id);
-												}}
-											>
-												Deliver
-											</Active>
+											<Active bg>Deliver</Active>
 										) : (
-											<Active
-												onClick={() => {
-													deliveredOrdered(props._id);
-												}}
-											>
-												Not Deliver
-											</Active>
+											<Active>Not Deliver</Active>
 										)}
 									</Seen>
 									<Detailed>

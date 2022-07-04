@@ -198,6 +198,10 @@ const TextContent = styled(Link)`
 	cursor: pointer;
 	position: absolute;
 	top: 420px;
+	@media screen and (max-width: 360px) {
+		margin-top: 20px;
+		font-size: 12px;
+	}
 `;
 
 const Statement = styled.div`
