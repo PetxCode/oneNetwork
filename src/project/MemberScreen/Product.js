@@ -241,7 +241,7 @@ const Product = () => {
 				</Top>
 
 				<TextHolderFile>
-					<Text>5 Most recent Ebook Orders</Text>
+					<TextBook>5 Most recent Ebook Orders</TextBook>
 					<MinCard1>
 						<Header fs>
 							<SeenVisible>Seen</SeenVisible>
@@ -832,6 +832,12 @@ const IconStart = styled.div`
 const Text1 = styled.div`
 	font-weight: 500;
 	font-size: 13px;
+`;
+
+const TextBook = styled.div`
+	font-weight: 500;
+	font-size: 20px;
+	margin: 15px 0;
 `;
 
 const Text = styled.div`
