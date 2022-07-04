@@ -11,7 +11,7 @@ import axios from "axios";
 import pix from "./pix.jpeg";
 import moment from "moment";
 
-const url = "https://onechurch1.herokuapp.com";
+const MianURL = "https://onechurch1.herokuapp.com";
 
 const Product = () => {
 	const user = useSelector((state) => state.user);
@@ -23,7 +23,7 @@ const Product = () => {
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/content/${user?._id}`;
+		const url = `${MianURL}/api/content/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -34,7 +34,7 @@ const Product = () => {
 
 	const getAllEbook = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/eBook/${user?._id}`;
+		const url = `${MianURL}/api/eBook/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {

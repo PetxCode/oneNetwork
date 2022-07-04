@@ -52,11 +52,11 @@ const VerifySigninChurch = () => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "Please check your email for account verification",
+					title: "your account has been verified",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
-					navigate("/confirmChurch");
+					navigate("/");
 				});
 			})
 			.catch((error) => setErrorState(error.response.data.message));
