@@ -345,13 +345,6 @@ const Product = () => {
 										<Text1> {props.like.length}</Text1>
 									</IconHolder>
 
-									{/* <IconHolder>
-										<IconStart>
-											<EyeIcon />
-										</IconStart>
-										<Text>View: {0}</Text>
-									</IconHolder> */}
-
 									<IconHolder>
 										<IconStart>
 											<SartIcon />
@@ -851,7 +844,7 @@ const Text = styled.div`
 	margin-top: 20px;
 	margin-bottom: 10px;
 	font-size: 20px;
-	font-weight: 700;
+	font-weight: 00;
 `;
 
 const SartIcon = styled(AiFillStar)`
