@@ -16,7 +16,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import moment from "moment";
 
-const url = "https://onechurch1.herokuapp.com";
+const mainURL = "https://onechurch1.herokuapp.com";
 
 const Overview = () => {
 	const user = useSelector((state) => state.user);
@@ -57,7 +57,7 @@ const Overview = () => {
 
 	const getAllGiversData = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/give/${user?._id}/`;
+		const url = `${mainURL}/api/give/${user?._id}/`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -86,7 +86,7 @@ const Overview = () => {
 
 	const getAllMembers = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/admin/${user?._id}`;
+		const url = `${mainURL}/api/admin/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -97,7 +97,7 @@ const Overview = () => {
 
 	const getAllMinistry = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/ministry/${user?._id}`;
+		const url = `${mainURL}/api/ministry/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -108,7 +108,7 @@ const Overview = () => {
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/content/${user?._id}`;
+		const url = `${mainURL}/api/content/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -119,7 +119,7 @@ const Overview = () => {
 
 	const getAllEbooks = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/ebook/${user?._id}`;
+		const url = `${mainURL}/api/ebook/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -129,7 +129,7 @@ const Overview = () => {
 	};
 
 	const getAllAnnouncement = async () => {
-		const newURL = `${url}`;
+		const newURL = `${mainURL}`;
 
 		const url = `${newURL}/api/announcement/${user?._id}`;
 		await axios
@@ -141,7 +141,7 @@ const Overview = () => {
 	};
 
 	const getAllAnnouncementSeven = async () => {
-		const newURL = `${url}`;
+		const newURL = `${mainURL}`;
 
 		const url = `${newURL}/api/announcement/${user?._id}/seven`;
 		await axios
@@ -153,7 +153,7 @@ const Overview = () => {
 	};
 
 	const getAllAnnouncementOne = async () => {
-		const newURL = `${url}`;
+		const newURL = `${mainURL}`;
 
 		const url = `${newURL}/api/announcement/${user?._id}/one`;
 		await axios
@@ -167,7 +167,7 @@ const Overview = () => {
 	const [viewOrders, setViewOrders] = useState({});
 
 	const getOrders = async () => {
-		const newURL = `${url}/api/order/${user._id}/five`;
+		const newURL = `${mainURL}/api/order/${user._id}/five`;
 		await axios
 			.get(newURL)
 			.then((res) => {
@@ -179,12 +179,12 @@ const Overview = () => {
 	};
 
 	const seenOrdered = async (ID) => {
-		const newURL = `${url}/api/order/${user._id}/${ID}/seen`;
+		const newURL = `${mainURL}/api/order/${user._id}/${ID}/seen`;
 		await axios.patch(newURL);
 	};
 
 	const deliveredOrdered = async (ID) => {
-		const newURL = `${url}/api/order/${user._id}/${ID}/deliver`;
+		const newURL = `${mainURL}/api/order/${user._id}/${ID}/deliver`;
 		await axios.patch(newURL);
 	};
 
