@@ -114,7 +114,7 @@ const UpdateSettings = () => {
 				</Nav>
 
 				<Nav
-					bg={myImage ? "bg" : null}
+					bg={myRecord ? "bg" : null}
 					onClick={() => {
 						setMyLogo(false);
 						setMyRecord(true);
@@ -174,7 +174,7 @@ const UpdateSettings = () => {
 					</Wrapper>
 				) : myRecord ? (
 					<Wrapper>
-						<Card>
+						<Card onSubmit={onSubmitImage}>
 							<Title>
 								<TitleHead>My Aavatar</TitleHead>
 								<br />
@@ -202,7 +202,7 @@ const UpdateSettings = () => {
 							</LogoImageHolder>
 
 							<ButtonHolder>
-								<BUtton type="submit" bg onClick={onSubmitImage}>
+								<BUtton type="submit" bg>
 									Upload
 								</BUtton>
 								<Div>{errorState}</Div>
