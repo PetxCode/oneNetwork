@@ -43,6 +43,7 @@ const Product = () => {
 
 	const getOrders = async () => {
 		const newURL = `${mainURL}/api/order/${user.admin}/five`;
+
 		await axios
 			.get(newURL)
 			.then((res) => {
@@ -341,7 +342,7 @@ const Product = () => {
 											</IconStart>
 										)}
 
-										<Text> {props.like.length}</Text>
+										<Text1> {props.like.length}</Text1>
 									</IconHolder>
 
 									{/* <IconHolder>
@@ -835,9 +836,18 @@ const IconStart = styled.div`
 	}
 `;
 
+const Text1 = styled.div`
+	font-weight: 500;
+	font-size: 12px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	font-size: 20px;
+	font-weight: 500;
+`;
+
 const Text = styled.div`
 	font-weight: 500;
-	font-size: 13px;
+	font-size: 12px;
 	margin-top: 20px;
 	margin-bottom: 10px;
 	font-size: 20px;
