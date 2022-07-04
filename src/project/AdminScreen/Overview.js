@@ -36,7 +36,7 @@ const Overview = () => {
 	const [dataUser, setDataUser] = useState();
 
 	const getAllGivers7 = async () => {
-		const url = `http://localhost:2233/api/give/${user?._id}/limit7`;
+		const url = `${mainURL}/api/give/${user?._id}/limit7`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -46,7 +46,7 @@ const Overview = () => {
 	};
 
 	const getAllGivers = async () => {
-		const url = `http://localhost:2233/api/give/${user?._id}/limit`;
+		const url = `${mainURL}/api/give/${user?._id}/limit`;
 		await axios
 			.get(url)
 			.then((res) => {
