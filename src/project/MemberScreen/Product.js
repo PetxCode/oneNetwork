@@ -25,7 +25,7 @@ import Swal from "sweetalert2";
 import { v4 as uuidv4 } from "uuid";
 import { usePaystackPayment } from "react-paystack";
 
-const url = "https://onechurch1.herokuapp.com";
+const mainURL = "https://onechurch1.herokuapp.com";
 
 const Product = () => {
 	const dispatch = useDispatch();
@@ -41,10 +41,8 @@ const Product = () => {
 	const [announcementOne, setAnnouncementOne] = useState({});
 	const [viewOrders, setViewOrders] = useState({});
 
-	const url = "https://onechurch1.herokuapp.com";
-
 	const getOrders = async () => {
-		const newURL = `${url}/api/order/${user.admin}/five`;
+		const newURL = `${mainURL}/api/order/${user.admin}/five`;
 		await axios
 			.get(newURL)
 			.then((res) => {
@@ -57,7 +55,7 @@ const Product = () => {
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/content/${user?._id}`;
+		const url = `${mainURL}/api/content/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -68,7 +66,7 @@ const Product = () => {
 
 	const placeEbookOrder = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/order/${user?._id}/${book._id}/create`;
+		const url = `${mainURL}/api/order/${user?._id}/${book._id}/create`;
 		await axios
 			.post(url)
 			.then((res) => {})
@@ -77,7 +75,7 @@ const Product = () => {
 
 	const getAllEbook = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/eBook/${user?._id}`;
+		const url = `${mainURL}/api/eBook/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -89,7 +87,7 @@ const Product = () => {
 	const getAllProducts = async () => {
 		console.log(user.admin);
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/content/${user.admin}`;
+		const url = `${mainURL}/api/content/${user.admin}`;
 
 		await axios
 			.get(url)
@@ -102,7 +100,7 @@ const Product = () => {
 	const getAlleBookProducts = async () => {
 		console.log(user.admin);
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/ebook/${user.admin}`;
+		const url = `${mainURL}/api/ebook/${user.admin}`;
 
 		await axios
 			.get(url)
@@ -115,7 +113,7 @@ const Product = () => {
 	const likeProduct = async (content) => {
 		console.log(user.admin);
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/content/${user._id}/${content}/like`;
+		const url = `${mainURL}/api/content/${user._id}/${content}/like`;
 
 		await axios
 			.post(url)
@@ -128,7 +126,7 @@ const Product = () => {
 	const unlikeProduct = async (content) => {
 		console.log(user.admin);
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${url}/api/content/${user._id}/${content}/dislike`;
+		const url = `${mainURL}/api/content/${user._id}/${content}/dislike`;
 
 		await axios
 			.post(url)
@@ -139,7 +137,7 @@ const Product = () => {
 	};
 
 	const getAllAnnouncementOne = async () => {
-		const newURL = `${url}`;
+		const newURL = `${mainURL}`;
 
 		const url = `${newURL}/api/announcement/${user?.admin}/one`;
 		await axios
@@ -169,12 +167,12 @@ const Product = () => {
 	const initializePayment = usePaystackPayment(config);
 
 	const seenOrdered = async (ID) => {
-		const newURL = `${url}/api/order/${user.admin}/${ID}/seen`;
+		const newURL = `${mainURL}/api/order/${user.admin}/${ID}/seen`;
 		await axios.patch(newURL);
 	};
 
 	const deliveredrdered = async (ID) => {
-		const newURL = `${url}/api/order/${user.admin}/${ID}/deliver`;
+		const newURL = `${mainURL}/api/order/${user.admin}/${ID}/deliver`;
 		await axios.patch(newURL);
 	};
 
