@@ -6,8 +6,14 @@ import {
 	AiFillEye,
 	AiFillStar,
 } from "react-icons/ai";
+
 import { AiFillAudio } from "react-icons/ai";
-import { BsFillBookFill, BsPersonCircle } from "react-icons/bs";
+import {
+	BsFillBookFill,
+	BsPersonCircle,
+	BsFillEyeFill,
+	BsFillEyeSlashFill,
+} from "react-icons/bs";
 import { FaMoneyCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -31,6 +37,19 @@ const Product = () => {
 	const [productDisplay, setProductDisplay] = useState({});
 	const [eBookDisplay, setEBookDisplay] = useState({});
 	const [announcementOne, setAnnouncementOne] = useState({});
+	const [viewOrders, setViewOrders] = useState({});
+
+	const getOrders = async () => {
+		const newURL = `http://localhost:2233/api/order/${user.admin}/five`;
+		await axios
+			.get(newURL)
+			.then((res) => {
+				setViewOrders(res.data.data);
+			})
+			.then((err) => {
+				return console.log(err);
+			});
+	};
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
@@ -145,19 +164,31 @@ const Product = () => {
 
 	const initializePayment = usePaystackPayment(config);
 
+	const seenOrdered = async (ID) => {
+		const newURL = `http://localhost:2233/api/order/${user.admin}/${ID}/seen`;
+		await axios.patch(newURL);
+	};
+
+	const deliveredOrdered = async (ID) => {
+		const newURL = `http://localhost:2233/api/order/${user.admin}/${ID}/deliver`;
+		await axios.patch(newURL);
+	};
+
 	useEffect(() => {
 		// getAllAudio();
 		getAllEbook();
 		getAllAnnouncementOne();
 		getAlleBookProducts();
 		getAllProducts();
+		getOrders();
+		deliveredOrdered();
+		seenOrdered();
 	}, []);
 
 	return (
 		<Container>
 			<Wrapper>
 				<MainTitle>Product Screen</MainTitle>
-
 				<Top>
 					<TopSider>
 						<NoticeHolder>
@@ -208,6 +239,56 @@ const Product = () => {
 						</Card1>
 					</SiderSider>
 				</Top>
+
+				<TextHolderFile>
+					<Text>5 Most recent Ebook Orders</Text>
+					<MinCard1>
+						<Header fs>
+							<SeenVisible>Seen</SeenVisible>
+							<Seen>Status</Seen>
+							<Detailed>Profile</Detailed>
+							<Status>Details</Status>
+						</Header>
+
+						{viewOrders?.order &&
+							viewOrders?.order?.map((props) => (
+								<Header key={props._id}>
+									<SeenVisible>
+										{props.seen ? <NonVisibleIcon /> : <VisibleIcon />}
+									</SeenVisible>
+									<Seen>
+										{props.delivered ? (
+											<Active
+												bg
+												onClick={() => {
+													deliveredOrdered(props._id);
+												}}
+											>
+												Deliver
+											</Active>
+										) : (
+											<Active
+												onClick={() => {
+													deliveredOrdered(props._id);
+												}}
+											>
+												Not Deliver
+											</Active>
+										)}
+									</Seen>
+									<Detailed>
+										<Named>{props.who}</Named>
+										<DisplayNamed>displayName</DisplayNamed>
+									</Detailed>
+									<Status>
+										<Named>{props.what}</Named>
+										<DisplayNamed>{props.detail}</DisplayNamed>
+										<CostOrder>#{props.cost}.00</CostOrder>
+									</Status>
+								</Header>
+							))}
+					</MinCard1>
+				</TextHolderFile>
 
 				<DisplayOption>
 					<Nav
@@ -400,6 +481,112 @@ const Product = () => {
 };
 
 export default Product;
+
+const DisplayNamed = styled.div`
+	font-size: 10px;
+	color: gray;
+`;
+
+const Named = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+`;
+
+const CostOrder = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+	color: red;
+`;
+
+const Active = styled.div`
+	width: 50%;
+	background-color: ${({ bg }) => (bg ? "#56ca00" : "red")};
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 30px;
+	font-size: 13px;
+	padding: 5px 10px;
+	transition: all 350ms;
+	text-align: center;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const TextHolderFile = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
+
+const MinCard1 = styled.div`
+	width: 900px;
+	height: 100%;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+	border-radius: 5px;
+	margin-right: 10px;
+	margin-bottom: 30px;
+	overflow: hidden;
+	background-color: white;
+	border: 1px solid silver;
+`;
+
+const NonVisibleIcon = styled(BsFillEyeFill)`
+	font-size: 20px;
+	margin-right: 20px;
+	transition: all 350ms;
+	color: red;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const VisibleIcon = styled(BsFillEyeSlashFill)`
+	font-size: 20px;
+	margin-right: 20px;
+	transition: all 350ms;
+	color: red;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const Status = styled.div`
+	width: 300px;
+`;
+
+const Detailed = styled.div`
+	width: 300px;
+`;
+
+const SeenVisible = styled.div`
+	width: 70px;
+`;
+
+const Seen = styled.div`
+	width: 130px;
+`;
+
+const Header = styled.div`
+	padding: 10px 20px;
+	display: flex;
+	transition: all 350ms;
+	border-bottom: 1px solid silver;
+	align-items: center;
+	font-size: ${({ fs }) => (fs ? "11px" : "")};
+	font-weight: ${({ fs }) => (fs ? "700" : "")};
+	background-color: ${({ fs }) => (fs ? "rgba(0,0,0,0.1)" : "")};
+	text-transform: ${({ fs }) => (fs ? "uppercase" : "")};
+
+	:hover {
+		background-color: #f5f7fc;
+	}
+`;
 
 const Cost = styled.div``;
 const DisplayHolder = styled.div`
@@ -664,7 +851,10 @@ const IconStart = styled.div`
 const Text = styled.div`
 	font-weight: 500;
 	font-size: 13px;
-	margin-left: 1px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	font-size: 20px;
+	font-weight: 700;
 `;
 
 const SartIcon = styled(AiFillStar)`

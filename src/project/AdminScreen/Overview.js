@@ -28,6 +28,60 @@ const Overview = () => {
 	const [ministry1, setMinistry1] = useState({});
 	const [ebooks, setEbooks] = useState({});
 
+	const [givers7, setGivers7] = useState({});
+	const [givers, setGivers] = useState({});
+	const [allGivers, setAllGivers] = useState({});
+	const [dataUser, setDataUser] = useState();
+
+	const getAllGivers7 = async () => {
+		const url = `http://localhost:2233/api/give/${user?._id}/limit7`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setGivers7(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const getAllGivers = async () => {
+		const url = `http://localhost:2233/api/give/${user?._id}/limit`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setGivers(res.data.data);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const getAllGiversData = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `http://localhost:2233/api/give/${user?._id}/`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setAllGivers(res.data.data);
+
+				var ministryName = allGivers.givers.reduce(function (pv, cv) {
+					if (pv[cv.name]) {
+						pv[cv.name] += cv.cost;
+					} else {
+						pv[cv.name] = cv.cost;
+					}
+					return pv;
+				}, {});
+
+				console.log(ministryName);
+
+				const r = allGivers.givers.reduce(function (acc, obj) {
+					return acc + obj.cost;
+				}, 0); // 7
+				console.log("cost Data: ", r);
+
+				setDataUser(r);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
 	const getAllMembers = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
 		const url = `http://localhost:2233/api/admin/${user?._id}`;
@@ -141,10 +195,14 @@ const Overview = () => {
 		getAllAudio();
 		getAllAnnouncement();
 		getAllMinistry();
+		getAllGivers();
+		getAllGiversData();
+		getAllGivers7();
 	}, []);
 
 	return (
 		<Container>
+			{}
 			<Wrapper>
 				<Top>
 					<TopSider>
@@ -165,6 +223,25 @@ const Overview = () => {
 						</NoticeHolder>
 					</TopSider>
 					<SiderSider>
+						<Card1>
+							<IconBuild bg="rgba(0, 0, 0, 0.8)" bc=" rgba(0, 0, 0, 0.7)">
+								<ChurchPerson />
+							</IconBuild>
+							<CardTitleTExt style={{ color: "darkorange", fontWeight: "700" }}>
+								Total Ministry Givings:
+							</CardTitleTExt>
+							<TextCOunt>
+								<AllCOunt>
+									<Count style={{ color: "rgb(116,46,157)" }}>
+										#{dataUser}.00
+									</Count>
+									<Count1>{0}+</Count1>
+								</AllCOunt>
+							</TextCOunt>
+
+							<DataCount style={{ color: "red" }}>As at Today</DataCount>
+						</Card1>
+
 						<Card1>
 							<IconBuild bg=" rgba(255, 0, 0, 0.7)" bc="red">
 								<IconData />
@@ -226,7 +303,7 @@ const Overview = () => {
 
 				<Card>
 					<TextHolderFile>
-						<Text>Top 5 Most recent Orders</Text>
+						<Text>5 Most recent Orders</Text>
 						<MinCard1>
 							<Header fs>
 								<SeenVisible>Seen</SeenVisible>
@@ -328,20 +405,29 @@ const Overview = () => {
 
 								<DataCount>As at Today</DataCount>
 							</BCard>
-							<BCard>
+
+							<BCard1>
 								<IconBuild bg="rgb(255,177,0)" bc="rgba(255,177,0, 0.7)">
 									<GivePerson />
 								</IconBuild>
-								<CardTitleTExt>Total Most recent Giver </CardTitleTExt>
+								<CardTitleTExt>5 most recent Givers </CardTitleTExt>
 								<TextCOunt>
-									<AllCOunt>
-										<Count> {ministry?.ministry?.length}</Count>
-										<Count1>{45}%+</Count1>
-									</AllCOunt>
-								</TextCOunt>
+									<TextCOunt24>
+										{givers?.givers?.map((props) => (
+											<AllCount>
+												{props?.image ? (
+													<Image24 src={props.image} />
+												) : (
+													<DemiImage24>ONE</DemiImage24>
+												)}
 
-								<DataCount>As at Today</DataCount>
-							</BCard>
+												<DivName>{props.who}</DivName>
+												<DivName>{props.admin}</DivName>
+											</AllCount>
+										))}
+									</TextCOunt24>
+								</TextCOunt>
+							</BCard1>
 						</BottomCard>
 					</MinCardHolder>
 				</Card>
@@ -349,10 +435,11 @@ const Overview = () => {
 				<Card>
 					<TableCard>
 						<TableHolder>
-							<TopTitle>Top 5 newly registeres Member</TopTitle>
-							{members?.member?.length < 5 ? (
-								<div>
-									{members?.member.map((props) => (
+							<TopTitle>7 newly registered Member</TopTitle>
+
+							<div>
+								{members?.member &&
+									members?.member.map((props) => (
 										<Detail key={props._id}>
 											{props?.avatar ? (
 												<Image src={props.avatar} />
@@ -369,14 +456,39 @@ const Overview = () => {
 											</DetailHolder>
 										</Detail>
 									))}
-								</div>
-							) : null}
+							</div>
+						</TableHolder>
+					</TableCard>
+					<TableCard>
+						<TableHolder>
+							<TopTitle>7 Recent GIVERS</TopTitle>
+
+							<div>
+								{givers7?.givers &&
+									givers7?.givers.map((props) => (
+										<Detail key={props._id}>
+											{props?.image ? (
+												<Image src={props.image} />
+											) : (
+												<DemiImage>ONE</DemiImage>
+											)}
+											<DetailHolder>
+												<Name>{props.admin}</Name>
+												<Name>{props.who}</Name>
+												<DisplayName>#{props.cost}.00</DisplayName>
+												<DisplayName>
+													Giver to: <span>{props.name}</span>{" "}
+												</DisplayName>
+											</DetailHolder>
+										</Detail>
+									))}
+							</div>
 						</TableHolder>
 					</TableCard>
 
 					<TableCard1>
 						<TableHolder>
-							<TopTitle>Top 5 Latest Announcemnet</TopTitle>
+							<TopTitle>Top 7 Latest Announcemnet</TopTitle>
 
 							<div>
 								{announcementOne7?.announcement &&
@@ -403,6 +515,13 @@ const Overview = () => {
 };
 
 export default Overview;
+
+const DivName = styled.div`
+	font-size: 10px;
+	color: gray;
+	font-weight: 700;
+	margin-top: 5px;
+`;
 
 const TextHolderFile = styled.div`
 	display: flex;
@@ -443,6 +562,7 @@ const Active = styled.div`
 	font-size: 13px;
 	padding: 5px 10px;
 	transition: all 350ms;
+	text-align: center;
 	:hover {
 		cursor: pointer;
 		transform: scale(1.05);
@@ -540,6 +660,13 @@ const IconData = styled(AiFillAudio)`
 	font-size: 30px;
 `;
 
+const AllCount = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 5px;
+`;
+
 const AllCOunt = styled.div`
 	display: flex;
 `;
@@ -558,6 +685,12 @@ const DataCount = styled.div`
 	font-weight: 700;
 `;
 
+const TextCOunt24 = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+`;
+
 const TextCOunt = styled.div`
 	margin: 10px 0;
 	font-size: 25px;
@@ -572,8 +705,8 @@ const CardTitleTExt = styled.div`
 `;
 
 const IconBuild = styled.div`
-	width: 50px;
-	height: 50px;
+	width: 40px;
+	height: 40px;
 	border-radius: 50%;
 	background-color: ${({ bg }) => bg};
 	display: flex;
@@ -638,6 +771,10 @@ const DisplayName = styled.div`
 	font-size: 11px;
 	width: 100%;
 	color: gray;
+
+	span {
+		font-weight: 700;
+	}
 `;
 const Name = styled.div`
 	font-size: 14px;
@@ -663,6 +800,42 @@ const DemiImage = styled.div`
 	align-items: center;
 	font-size: 12px;
 	font-weight: 700;
+`;
+
+const DemiImage24 = styled.div`
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	background-color: #742e9d;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 12px;
+	font-weight: 700;
+	transition: all 350ms;
+
+	:hover {
+		/* background-color: rgba(0, 0, 0, 0.1); */
+		opacity: 0.9;
+		cursor: pointer;
+	}
+`;
+
+const Image24 = styled.img`
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	background-color: #742e9d;
+	transition: all 350ms;
+
+	:hover {
+		/* background-color: rgba(0, 0, 0, 0.1); */
+		opacity: 0.9;
+		cursor: pointer;
+	}
 `;
 
 const Image = styled.img`
@@ -701,6 +874,7 @@ const TopTitle = styled.div`
 const TableHolder = styled.div`
 	width: 90%;
 	margin: 20px 0;
+	/* height: 500px; */
 `;
 
 const TableCard1 = styled.div`
@@ -721,7 +895,6 @@ const TableCard1 = styled.div`
 
 const TableCard = styled.div`
 	width: 300px;
-	height: 200px;
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 5px;
@@ -729,6 +902,16 @@ const TableCard = styled.div`
 	display: flex;
 	justify-content: center;
 	margin: 10px;
+`;
+
+const BCard1 = styled.div`
+	width: 180px;
+	/* height: 400px; */
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+	border-radius: 5px;
+	margin: 0 5px;
+	padding: 20px;
 `;
 
 const BCard = styled.div`
