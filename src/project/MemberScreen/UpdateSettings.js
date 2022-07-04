@@ -117,8 +117,8 @@ const UpdateSettings = () => {
 					bg={myImage ? "bg" : null}
 					onClick={() => {
 						setMyLogo(false);
-						setMyRecord(false);
-						setMyImage(true);
+						setMyRecord(true);
+						setMyImage(false);
 					}}
 				>
 					My Avatar
