@@ -130,7 +130,7 @@ const UpdateSettings = () => {
 					<Wrapper>
 						<Card onSubmit={onSubmit}>
 							<Title>
-								<TitleHead>Church Profile 💸</TitleHead>
+								<TitleHead>Update Personal Profile 💸</TitleHead>
 								<br />
 								<TitleSub>
 									We are <span>GLAD</span>, You've considered giving to Our{" "}

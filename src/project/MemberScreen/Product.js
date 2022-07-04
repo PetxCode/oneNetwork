@@ -223,7 +223,6 @@ const Product = () => {
 
 							<DataCount>As at Today</DataCount>
 						</Card1>
-
 						<Card1>
 							<IconBuild bg="rgba(86,202,0,0.7)" bc="rgb(86,202,0)">
 								<IconDataBook />
@@ -266,7 +265,7 @@ const Product = () => {
 									</Seen>
 									<Detailed>
 										<Named>{props.who}</Named>
-										<DisplayNamed>displayName</DisplayNamed>
+										<DisplayNamed>{}</DisplayNamed>
 									</Detailed>
 									<Status>
 										<Named>{props.what}</Named>
@@ -412,13 +411,6 @@ const Product = () => {
 										<Text> {props.like.length}</Text>
 									</IconHolder>
 
-									{/* <IconHolder>
-									<IconStart>
-										<EyeIcon />
-									</IconStart>
-									<Text>View: {0}</Text>
-								</IconHolder> */}
-
 									<IconHolder>
 										<IconStart>
 											<SartIcon />
@@ -513,6 +505,10 @@ const MinCard1 = styled.div`
 	overflow: hidden;
 	background-color: white;
 	border: 1px solid silver;
+
+	@media screen and (max-width: 768px) {
+		width: 100%;
+	}
 `;
 
 const NonVisibleIcon = styled(BsFillEyeFill)`
@@ -638,6 +634,10 @@ const TextCOunt = styled.div`
 	font-size: 25px;
 	font-weight: 700;
 	flex: 1;
+
+	@media screen and (max-width: 400px) {
+		margin: 0;
+	}
 `;
 
 const CardTitleTExt = styled.div`
@@ -725,14 +725,13 @@ const Card1 = styled.div`
 	border-radius: 3px;
 	margin: 0 5px;
 	padding: 20px;
-	margin-bottom: 0px;
+	margin-bottom: 15px;
 `;
 
 const SiderSider = styled.div`
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
-	height: 100%;
 	margin-bottom: 10px;
 `;
 
@@ -763,6 +762,7 @@ const Nav = styled.div`
 	font-weight: 700;
 	border-radius: 3px;
 	transition: all 350ms;
+	text-align: center;
 
 	:hover {
 		cursor: pointer;
@@ -831,18 +831,12 @@ const IconStart = styled.div`
 
 const Text1 = styled.div`
 	font-weight: 500;
-	font-size: 12px;
-	margin-top: 20px;
-	margin-bottom: 10px;
-	font-size: 20px;
+	font-size: 13px;
 `;
 
 const Text = styled.div`
 	font-weight: 500;
-	font-size: 12px;
-	margin-top: 20px;
-	margin-bottom: 10px;
-	font-size: 20px;
+	font-size: 13px;
 `;
 
 const SartIcon = styled(AiFillStar)`
@@ -942,6 +936,7 @@ const Card = styled.div`
 const CardHolder24 = styled.div`
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 `;
 
 const Wrapper = styled.div`

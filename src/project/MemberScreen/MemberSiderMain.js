@@ -358,7 +358,7 @@ const LogoHolder = styled(Link)`
 
 const Container = styled.div`
 	width: 260px;
-	height: 100vh;
+	min-height: 100vh;
 	position: fixed;
 	/* background-color: lightblue; */
 	border-right: 1px dotted silver;
