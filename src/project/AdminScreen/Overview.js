@@ -263,7 +263,9 @@ const Overview = () => {
 					<TopSider>
 						<NoticeHolder>
 							<Notice>
-								<NoticeTitle>Welcome Back {user.fullName} 🎉</NoticeTitle>
+								<NoticeTitle>
+									Welcome Back <span>{user.fullName}</span> 🎉
+								</NoticeTitle>
 								<Space />
 								{announcementOne?.announcement?.map((props) => (
 									<div key={props._id}>
@@ -358,7 +360,7 @@ const Overview = () => {
 
 				<Card>
 					<TextHolderFile>
-						<Text>5 Most recent Orders</Text>
+						<Text>5 Most recent eBook Orders</Text>
 						<MinCard1>
 							<Header fs>
 								<SeenVisible>Seen</SeenVisible>
@@ -800,6 +802,11 @@ const NoticeTitle = styled.div`
 	font-size: 25px;
 	font-weight: 700;
 	margin-top: 20px;
+
+	span {
+		font-style: italic;
+		font-weight: 900;
+	}
 `;
 
 const NoticeHolder = styled.div`
@@ -1014,7 +1021,7 @@ const MinCardHolder = styled.div`
 `;
 
 const MinCard1 = styled.div`
-	width: 900px;
+	/* width: 900px; */
 	height: 100%;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 5px;
@@ -1023,6 +1030,10 @@ const MinCard1 = styled.div`
 	overflow: hidden;
 	background-color: white;
 	border: 1px solid silver;
+
+	@media screen and (max-width: 768px) {
+		width: 90%;
+	}
 `;
 
 const MinCard = styled.div`

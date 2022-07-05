@@ -256,7 +256,9 @@ const Product = () => {
 					<TopSider>
 						<NoticeHolder>
 							<Notice>
-								<NoticeTitle>Welcome Back {mainUser.fullName} 🎉</NoticeTitle>
+								<NoticeTitle>
+									Welcome Back <span>{mainUser.fullName} </span>🎉
+								</NoticeTitle>
 								<Space />
 								{announcementOne?.announcement?.map((props) => (
 									<div>
@@ -759,6 +761,11 @@ const NoticeTitle = styled.div`
 	font-weight: 700;
 	margin-top: 20px;
 	line-height: 1.1;
+
+	span {
+		font-style: italic;
+		font-weight: 900;
+	}
 `;
 
 const NoticeHolder = styled.div`

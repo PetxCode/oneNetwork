@@ -387,6 +387,10 @@ const Button = styled.div`
 		background-color: rgba(116, 46, 157, 0.9);
 		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 	}
+
+	@media screen and (max-width: 768px) {
+		display: none;
+	}
 `;
 
 const Image = styled.img`
