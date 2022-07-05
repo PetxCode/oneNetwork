@@ -56,7 +56,7 @@ const ChangePasswordChurch = () => {
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
-					navigate("/signin");
+					navigate("/signinChurch");
 				});
 				setLoading(false);
 			})
