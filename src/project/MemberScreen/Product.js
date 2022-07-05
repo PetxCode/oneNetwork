@@ -47,13 +47,11 @@ const Product = () => {
 
 	const getOrders = async () => {
 		const newURL = `${mainURL}/api/order/${user.admin}/five`;
-		setLoading(true);
+
 		await axios
 			.get(newURL)
 			.then((res) => {
 				setViewOrders(res.data.data);
-
-				setLoading(false);
 			})
 			.catch((error) => {
 				new Swal({
@@ -98,8 +96,6 @@ const Product = () => {
 			.get(url)
 			.then((res) => {
 				setMainUser(res.data.data);
-
-				setLoading(false);
 			})
 			.catch((error) => {
 				new Swal({
@@ -261,12 +257,18 @@ const Product = () => {
 									Welcome Back <span>{mainUser.fullName} </span>🎉
 								</NoticeTitle>
 								<Space />
-								{announcementOne?.announcement?.map((props) => (
+								{announcementOne?.announcement?.length < 1 ? (
+									<div>No Announcement yet...!</div>
+								) : (
 									<div>
-										<NoticeMessage>{props.message}</NoticeMessage>
-										<Dated>{moment(props.createdAt).fromNow()}</Dated>
+										{announcementOne?.announcement?.map((props) => (
+											<div>
+												<NoticeMessage>{props.message}</NoticeMessage>
+												<Dated>{moment(props.createdAt).fromNow()}</Dated>
+											</div>
+										))}
 									</div>
-								))}
+								)}
 							</Notice>
 							<Cartoon>
 								<ImagePix src={pix} />
