@@ -13,6 +13,7 @@ import pix from "./pix.jpeg";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./base";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -24,6 +25,7 @@ const AddEbook = () => {
 	const [errorState, setErrorState] = useState("");
 	const [imageBook, setImageBook] = useState("");
 	const [avatar, setAvatar] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const handleEbookUpload = (e) => {
 		const file = e.target.files[0];
@@ -80,22 +82,35 @@ const AddEbook = () => {
 				cost: eBookCost,
 				eBook: eBookFile,
 			})
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Audio Message has been created...",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/product");
-		});
+			.then((res) => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "This eBook has been added",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/product");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<WrapperHolder>
 				<Wrapper>
 					<Card onSubmit={onSubmitEbook}>

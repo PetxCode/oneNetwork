@@ -13,6 +13,7 @@ import right from "./Right.png";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { AiFillDelete } from "react-icons/ai";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -22,6 +23,7 @@ const SupportProjects = () => {
 	const [errorState, setErrorState] = useState("");
 	const [amount, setAmount] = useState(0);
 	const [show, setShow] = useState(null);
+	const [loading, setLoading] = useState(false);
 
 	const onShow = (index) => {
 		setShow((prev) => {
@@ -68,8 +70,33 @@ const SupportProjects = () => {
 
 	const deleteMinistry = async (ID) => {
 		const newURL = `${url}/api/ministry/${user._id}/${ID}/`;
-		await axios.delete(newURL);
-		window.location.reload();
+		await axios
+			.delete(newURL)
+			.then(() => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Ministry has been Deleted Successfully!",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					// navigate("/");
+				});
+				setLoading(false);
+				window.location.reload();
+			})
+			.catch((error) => {
+				new Swal({
+					title: `Oops, Something when wrong: ${error.message}`,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	const giveMinistry = async (ID) => {
@@ -94,6 +121,7 @@ const SupportProjects = () => {
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Mini>Here are list of our ministries, you can Support</Mini>
 			<WrapperHolder>
 				{newMinistry?.ministry &&
@@ -229,7 +257,7 @@ const Mini = styled.div`
 	font-size: 20px;
 	text-transform: uppercase;
 	font-weight: bold;
-	width: 100%;
+	width: 90%;
 	display: flex;
 	margin-top: 50px;
 	margin-left: 50px;

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { usePaystackPayment } from "react-paystack";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Loading from "../../LoadingState";
 
 import axios from "axios";
 import left from "./left.png";
@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 
 import pix from "./pix.jpeg";
 import one from "./one.png";
+import { useEffect } from "react";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -30,7 +31,21 @@ const UpdateSettings = () => {
 	const [image, setImage] = useState(pix);
 	const [avatar, setAvatar] = useState("");
 
+	const [userData, setUserData] = useState({});
+
 	const [imageLogo, setImageLogo] = useState(one);
+
+	const [displayName, setDisplayName] = useState("");
+	const [fullName, setFullName] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+
+	const getMemeberData = async () => {
+		const localURL = "http://localhost:2233";
+		const url = `${localURL}/api/member/${user._id}/`;
+		await axios.get(url).then((res) => {
+			setUserData(res.data.data);
+		});
+	};
 
 	const onHandleImage = (e) => {
 		const file = e.target.files[0];
@@ -38,6 +53,8 @@ const UpdateSettings = () => {
 		setImage(save);
 		setAvatar(file);
 	};
+
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		displayName: yup.string().required("Please enter your Display Name!"),
@@ -52,27 +69,41 @@ const UpdateSettings = () => {
 	} = useForm({ resolver: yupResolver(yupSchema) });
 
 	const onSubmit = handleSubmit(async (value) => {
+		// const localURL = "http://localhost:2233";
 		const newURL = `${url}/api/member/${user._id}/`;
 
+		setLoading(true);
 		await axios
-			.post(newURL, value)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Your profile has been updated",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/");
-		});
+			.patch(newURL, value)
+			.then((res) => {
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Your profile has been updated",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	const onSubmitImage = async (e) => {
 		e.preventDefault();
-		const newURL = `${url}/api/member/${user._id}/image`;
+		const localURL = "http://localhost:2233";
+		const newURL = `${localURL}/api/member/${user._id}/image`;
 
 		const formData = new FormData();
 		formData.append("avatar", avatar);
@@ -80,25 +111,41 @@ const UpdateSettings = () => {
 		const config = {
 			"Content-Type": "multipart/form-data",
 		};
-
+		setLoading(true);
 		await axios
 			.patch(newURL, formData, config)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Your Avatar has been Uploaded",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/");
-		});
+			.then((res) => {
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Your Avatar has been Uploaded",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					// navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
+
+	useEffect(() => {
+		getMemeberData();
+	}, []);
 
 	return (
 		<Container>
+			{loading ? <Loading /> : null}
 			<Mini>Change Details</Mini>
 
 			<DisplayOption>
@@ -141,7 +188,10 @@ const UpdateSettings = () => {
 							<br />
 							<InputHolder>
 								<Label>Full Name</Label>
-								<Input placeholder="Full Name" {...register("fullName")} />
+								<Input
+									placeholder={`${userData.fullName}`}
+									{...register("fullName")}
+								/>
 								<Error>{errors?.fullName?.message}</Error>
 							</InputHolder>
 
@@ -149,7 +199,7 @@ const UpdateSettings = () => {
 								<InputHolder1>
 									<Label>Display Name</Label>
 									<Input
-										placeholder="Display Name"
+										placeholder={`${userData.displayName}`}
 										{...register("displayName")}
 									/>
 									<Error>{errors?.displayName?.message}</Error>
@@ -157,7 +207,7 @@ const UpdateSettings = () => {
 								<InputHolder2>
 									<Label>Phone Number</Label>
 									<Input
-										placeholder="Phone Number"
+										placeholder={`${userData.phoneNumber}`}
 										{...register("phoneNumber")}
 									/>
 									<Error>{errors?.phoneNumber?.message}</Error>
@@ -316,10 +366,11 @@ const Mini = styled.div`
 	font-size: 20px;
 	text-transform: uppercase;
 	font-weight: bold;
-	width: 100%;
+	width: 90%;
 	display: flex;
+
 	margin-top: 50px;
-	margin-left: 50px;
+	/* margin-left: 50px; */
 `;
 
 const WrapperHolder = styled.div`

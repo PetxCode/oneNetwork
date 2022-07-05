@@ -16,6 +16,7 @@ import pix from "./pix.jpeg";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./base";
 import AddEbook from "./AddEbook";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -28,6 +29,7 @@ const AddProducts = () => {
 	const [myLogo, setMyLogo] = useState(true);
 	const [myRecord, setMyRecord] = useState(false);
 	const [myImage, setMyImage] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const [image, setImage] = useState("");
 	const [imageBook, setImageBook] = useState("");
@@ -93,8 +95,30 @@ const AddProducts = () => {
 
 		await axios
 			.post(newURL, { title, description, cost, audioFile: audioFile })
-			.then((res) => {})
-			.catch((error) => console.log(error));
+			.then((res) => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "The Audio Message has been made",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/product");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 
 		Swal.fire({
 			position: "center",
@@ -109,6 +133,7 @@ const AddProducts = () => {
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Mini>Change Details</Mini>
 
 			<DisplayOption>

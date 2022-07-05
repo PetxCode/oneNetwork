@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { logOut } from "../../compoents/Global/Global";
@@ -9,8 +9,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import pix from "./pix.jpeg";
 import { useNavigate } from "react-router-dom";
 import AdminMainSider from "./AdminMainSider";
+import axios from "axios";
+import Swal from "sweetalert2";
+import LoadingState from "../../LoadingState";
 
 const AdminHeader = () => {
+	const mainURL = "https://onechurch1.herokuapp.com";
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const user = useSelector((state) => state.user);
@@ -83,8 +87,40 @@ const AdminHeader = () => {
 		});
 	});
 
+	const [mainUser, setMainUser] = useState({});
+	const [loading, setLoading] = useState(false);
+
+	const getMainUsers = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+
+		const url = `${mainURL}/api/member/${user?._id}`;
+
+		await axios
+			.get(url)
+			.then((res) => {
+				setMainUser(res.data.data);
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
+	};
+
+	useEffect(() => {
+		getMainUsers();
+	}, []);
+
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Holder>
 					<MenuDisplay>
@@ -131,7 +167,11 @@ const AdminHeader = () => {
 					</Diva>
 
 					<ImageHolder>
-						<Image src={pix} />
+						{mainUser?.avatar ? (
+							<Image src={mainUser?.avatar} />
+						) : (
+							<Image src={pix} />
+						)}
 						<Green />
 					</ImageHolder>
 					<Button

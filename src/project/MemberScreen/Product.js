@@ -24,6 +24,7 @@ import { addToCart, createBook } from "../../compoents/Global/Global";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from "uuid";
 import { usePaystackPayment } from "react-paystack";
+import LoadingState from "../../LoadingState";
 
 const mainURL = "https://onechurch1.herokuapp.com";
 
@@ -40,17 +41,30 @@ const Product = () => {
 	const [eBookDisplay, setEBookDisplay] = useState({});
 	const [announcementOne, setAnnouncementOne] = useState({});
 	const [viewOrders, setViewOrders] = useState({});
+	const [mainUser, setMainUser] = useState({});
+
+	const [loading, setLoading] = useState(false);
 
 	const getOrders = async () => {
 		const newURL = `${mainURL}/api/order/${user.admin}/five`;
-
+		setLoading(true);
 		await axios
 			.get(newURL)
 			.then((res) => {
 				setViewOrders(res.data.data);
+
+				setLoading(false);
 			})
-			.then((err) => {
-				return console.log(err);
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
 			});
 	};
 
@@ -62,7 +76,42 @@ const Product = () => {
 			.then((res) => {
 				setAudioContent(res.data.data);
 			})
-			.catch((err) => console.log(err.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
+	};
+
+	const getMainUsers = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+
+		const url = `${mainURL}/api/member/${user?._id}`;
+
+		await axios
+			.get(url)
+			.then((res) => {
+				setMainUser(res.data.data);
+
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	const placeEbookOrder = async () => {
@@ -70,8 +119,29 @@ const Product = () => {
 		const url = `${mainURL}/api/order/${user?._id}/${book._id}/create`;
 		await axios
 			.post(url)
-			.then((res) => {})
-			.catch((err) => console.log(err.message));
+			.then((res) => {
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Your Order has been made",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					// navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	const getAllEbook = async () => {
@@ -167,16 +237,6 @@ const Product = () => {
 
 	const initializePayment = usePaystackPayment(config);
 
-	const seenOrdered = async (ID) => {
-		const newURL = `${mainURL}/api/order/${user.admin}/${ID}/seen`;
-		await axios.patch(newURL);
-	};
-
-	const deliveredrdered = async (ID) => {
-		const newURL = `${mainURL}/api/order/${user.admin}/${ID}/deliver`;
-		await axios.patch(newURL);
-	};
-
 	useEffect(() => {
 		// getAllAudio();
 		getAllEbook();
@@ -184,17 +244,19 @@ const Product = () => {
 		getAlleBookProducts();
 		getAllProducts();
 		getOrders();
+		getMainUsers();
 	}, []);
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<MainTitle>Product Screen</MainTitle>
 				<Top>
 					<TopSider>
 						<NoticeHolder>
 							<Notice>
-								<NoticeTitle>Welcome Back {user.fullName} 🎉</NoticeTitle>
+								<NoticeTitle>Welcome Back {mainUser.fullName} 🎉</NoticeTitle>
 								<Space />
 								{announcementOne?.announcement?.map((props) => (
 									<div>
@@ -835,7 +897,7 @@ const Text1 = styled.div`
 `;
 
 const TextBook = styled.div`
-	font-weight: 500;
+	font-weight: 700;
 	font-size: 20px;
 	margin: 15px 0;
 `;

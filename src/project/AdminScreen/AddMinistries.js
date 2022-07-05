@@ -19,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
 import { useSelector } from "react-redux";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -26,6 +27,7 @@ const AddMinistries = () => {
 	const user = useSelector((state) => state.user);
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		ministry: yup.string().required("You haven't say anything yet...!"),
@@ -43,22 +45,35 @@ const AddMinistries = () => {
 
 		await axios
 			.post(newURL, { title: ministry })
-			.then((res) => {
+			.then(() => {
+				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "This Ministry has been created",
+					title: "Ministry has been added",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
 					navigate("/support");
 				});
+				setLoading(false);
 			})
-			.catch((error) => setErrorState(error.response.data.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">

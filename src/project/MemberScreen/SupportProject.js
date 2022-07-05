@@ -23,6 +23,8 @@ const SupportProjects = () => {
 	const [amount, setAmount] = useState(0);
 	const [show, setShow] = useState(null);
 
+	const [loading, setLoading] = useState(false);
+
 	const onShow = (index) => {
 		setShow((prev) => {
 			return prev === index ? null : index;
@@ -48,11 +50,6 @@ const SupportProjects = () => {
 
 	const initializePayment = usePaystackPayment(config);
 
-	const onHandle = (e) => {
-		e.preventDefault();
-		initializePayment(onSuccess, onClose);
-	};
-
 	const [newMinistry, setNewMinistry] = useState({});
 
 	const viewMinistry = async () => {
@@ -66,12 +63,6 @@ const SupportProjects = () => {
 			.catch((err) => console.log(err.message));
 	};
 
-	const deleteMinistry = async (ID) => {
-		const newURL = `${url}/api/ministry/${user._id}/${ID}/`;
-		await axios.delete(newURL);
-		window.location.reload();
-	};
-
 	const giveMinistry = async (ID) => {
 		const newURL = `${url}/api/give/${user._id}/${ID}/create`;
 
@@ -82,9 +73,31 @@ const SupportProjects = () => {
 				title: "Thank you for your Support, it means great deal to us!",
 				showConfirmButton: false,
 				timer: 2500,
-			}).then(() => {
-				initializePayment(onSuccess, onClose);
-			});
+			})
+				.then(() => {
+					initializePayment(onSuccess, onClose);
+					Swal.fire({
+						position: "center",
+						icon: "success",
+						title: "Processing payment",
+						showConfirmButton: false,
+						timer: 2500,
+					}).then(() => {
+						// navigate("/");
+					});
+					setLoading(false);
+				})
+				.catch((error) => {
+					new Swal({
+						title: error.message,
+						text: "Please check your Network",
+						icon: "error",
+						showConfirmButton: false,
+						timer: 2500,
+					}).then(() => {
+						setLoading(false);
+					});
+				});
 		});
 	};
 

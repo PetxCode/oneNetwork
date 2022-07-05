@@ -13,6 +13,7 @@ import right from "./Right.png";
 import { useSelector } from "react-redux";
 
 import pix from "./pix.jpeg";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -25,6 +26,7 @@ const UpdateSettings = () => {
 	const [myLogo, setMyLogo] = useState(true);
 	const [myRecord, setMyRecord] = useState(false);
 	const [myImage, setMyImage] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const [image, setImage] = useState(pix);
 	const [avatar, setAvatar] = useState("");
@@ -63,18 +65,30 @@ const UpdateSettings = () => {
 
 		await axios
 			.post(newURL, value)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Your Profile has been updated successfully",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/");
-		});
+			.then((res) => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Your profile info has been updated",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: `Oops, Something when wrong: ${error.message}`,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	const onSubmitImage = async (e) => {
@@ -90,18 +104,30 @@ const UpdateSettings = () => {
 
 		await axios
 			.patch(newURL, formData, config)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Your Image has been Uploaded",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/");
-		});
+			.then((res) => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Your profile Picture info has been updated",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: `Oops, Something when wrong: ${error.message}`,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	const onSubmitLogo = async (e) => {
@@ -117,22 +143,35 @@ const UpdateSettings = () => {
 
 		await axios
 			.patch(newURL, formData, config)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Church Logo Uploaded",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/");
-		});
+			.then((res) => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "The Church Logo has been updated",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: `Oops, Something when wrong: ${error.message}`,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Mini>Change Details</Mini>
 
 			<DisplayOption>

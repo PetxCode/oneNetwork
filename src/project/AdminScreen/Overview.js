@@ -15,6 +15,8 @@ import myURL from "../../urlData.json";
 import axios from "axios";
 import { useEffect } from "react";
 import moment from "moment";
+import Swal from "sweetalert2";
+import LoadingState from "../../LoadingState";
 
 const mainURL = "https://onechurch1.herokuapp.com";
 
@@ -34,6 +36,7 @@ const Overview = () => {
 	const [givers, setGivers] = useState({});
 	const [allGivers, setAllGivers] = useState({});
 	const [dataUser, setDataUser] = useState();
+	const [loading, setLoading] = useState(false);
 
 	const getAllGivers7 = async () => {
 		const url = `${mainURL}/api/give/${user?._id}/limit7`;
@@ -180,12 +183,62 @@ const Overview = () => {
 
 	const seenOrdered = async (ID) => {
 		const newURL = `${mainURL}/api/order/${user._id}/${ID}/seen`;
-		await axios.patch(newURL);
+		await axios
+			.patch(newURL)
+			.then(() => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Order has been seen",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					// navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	const deliveredOrdered = async (ID) => {
 		const newURL = `${mainURL}/api/order/${user._id}/${ID}/deliver`;
-		await axios.patch(newURL);
+		await axios
+			.patch(newURL)
+			.then(() => {
+				setLoading(true);
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Updating the Delivered info",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					// navigate("/");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	};
 
 	useEffect(() => {
@@ -204,7 +257,7 @@ const Overview = () => {
 
 	return (
 		<Container>
-			{}
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Top>
 					<TopSider>
