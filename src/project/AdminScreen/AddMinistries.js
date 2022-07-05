@@ -42,11 +42,10 @@ const AddMinistries = () => {
 	const onSubmit = handleSubmit(async (value) => {
 		const { ministry } = value;
 		const newURL = `${url}/api/ministry/${user._id}/create`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, { title: ministry })
 			.then(() => {
-				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",

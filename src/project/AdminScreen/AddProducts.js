@@ -92,11 +92,10 @@ const AddProducts = () => {
 		console.log(value);
 
 		const newURL = `${url}/api/content/${user._id}/create`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, { title, description, cost, audioFile: audioFile })
 			.then((res) => {
-				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",

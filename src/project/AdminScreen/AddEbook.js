@@ -74,7 +74,7 @@ const AddEbook = () => {
 		console.log(value);
 
 		const newURL = `${url}/api/eBook/${user._id}/create`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, {
 				description: eBookDescription,

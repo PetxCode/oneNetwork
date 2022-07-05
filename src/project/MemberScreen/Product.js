@@ -117,6 +117,7 @@ const Product = () => {
 	const placeEbookOrder = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
 		const url = `${mainURL}/api/order/${user?._id}/${book._id}/create`;
+		setLoading(true);
 		await axios
 			.post(url)
 			.then((res) => {

@@ -101,18 +101,32 @@ const SupportProjects = () => {
 
 	const giveMinistry = async (ID) => {
 		const newURL = `${url}/api/give/${user._id}/${ID}/createAdmin`;
-
-		await axios.post(newURL, { cost: amount }).then(() => {
-			Swal.fire({
-				position: "center",
-				icon: "success",
-				title: "Thank you for your Support, it means great deal to us!",
-				showConfirmButton: false,
-				timer: 2500,
-			}).then(() => {
-				initializePayment(onSuccess, onClose);
+		setLoading(true);
+		await axios
+			.post(newURL, { cost: amount })
+			.then(() => {
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Thank you for your Support, it means great deal to us!",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					initializePayment(onSuccess, onClose);
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
 			});
-		});
 	};
 
 	useEffect(() => {

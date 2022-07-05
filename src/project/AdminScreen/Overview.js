@@ -36,6 +36,7 @@ const Overview = () => {
 	const [givers, setGivers] = useState({});
 	const [allGivers, setAllGivers] = useState({});
 	const [dataUser, setDataUser] = useState();
+	const [ministryToGive, setMinistryToGive] = useState();
 	const [loading, setLoading] = useState(false);
 
 	const getAllGivers7 = async () => {
@@ -54,35 +55,6 @@ const Overview = () => {
 			.get(url)
 			.then((res) => {
 				setGivers(res.data.data);
-			})
-			.catch((err) => console.log(err.message));
-	};
-
-	const getAllGiversData = async () => {
-		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${mainURL}/api/give/${user?._id}/`;
-		await axios
-			.get(url)
-			.then((res) => {
-				setAllGivers(res.data.data);
-
-				var ministryName = allGivers.givers.reduce(function (pv, cv) {
-					if (pv[cv.name]) {
-						pv[cv.name] += cv.cost;
-					} else {
-						pv[cv.name] = cv.cost;
-					}
-					return pv;
-				}, {});
-
-				console.log(ministryName);
-
-				const r = allGivers.givers.reduce(function (acc, obj) {
-					return acc + obj.cost;
-				}, 0); // 7
-				console.log("cost Data: ", r);
-
-				setDataUser(r);
 			})
 			.catch((err) => console.log(err.message));
 	};
@@ -183,6 +155,7 @@ const Overview = () => {
 
 	const seenOrdered = async (ID) => {
 		const newURL = `${mainURL}/api/order/${user._id}/${ID}/seen`;
+		setLoading(true);
 		await axios
 			.patch(newURL)
 			.then(() => {
@@ -213,6 +186,7 @@ const Overview = () => {
 
 	const deliveredOrdered = async (ID) => {
 		const newURL = `${mainURL}/api/order/${user._id}/${ID}/deliver`;
+		setLoading(true);
 		await axios
 			.patch(newURL)
 			.then(() => {
@@ -241,6 +215,46 @@ const Overview = () => {
 			});
 	};
 
+	const getAllGiversData = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `${mainURL}/api/give/${user?._id}/`;
+		await axios
+			.get(url)
+			.then((res) => {
+				setAllGivers(res.data.data);
+
+				const r = allGivers.givers.reduce(function (acc, obj) {
+					return acc + obj.cost;
+				}, 0);
+
+				setDataUser(r);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
+	const getAllGiversDataSinge = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+		const url = `${mainURL}/api/give/${user?._id}/`;
+		await axios
+			.get(url)
+			.then((res) => {
+				// setAllGivers(res.data.data);
+
+				var ministryName = res?.data?.data?.givers.reduce(function (pv, cv) {
+					if (pv[cv.name]) {
+						pv[cv.name] += cv.cost;
+					} else {
+						pv[cv.name] = cv.cost;
+					}
+					return pv;
+				}, {});
+
+				setMinistryToGive(ministryName);
+				console.log("ministries: ", ministryName);
+			})
+			.catch((err) => console.log(err.message));
+	};
+
 	useEffect(() => {
 		getOrders();
 		getAllAnnouncementOne();
@@ -253,7 +267,10 @@ const Overview = () => {
 		getAllGivers();
 		getAllGiversData();
 		getAllGivers7();
+		getAllGiversDataSinge();
 	}, []);
+
+	const dataFiles = { Love: 50000, "Love world": 300, Gamers: 900 };
 
 	return (
 		<Container>
@@ -357,7 +374,6 @@ const Overview = () => {
 						</Card1>
 					</SiderSider>
 				</Top>
-
 				<Card>
 					<TextHolderFile>
 						<Text>5 Most recent eBook Orders</Text>
@@ -423,7 +439,6 @@ const Overview = () => {
 						</MinCard1>
 					</TextHolderFile>
 				</Card>
-
 				<Card>
 					<MinCard>
 						<Iframe src="https://charts.mongodb.com/charts-project-0-bbtqu/embed/charts?id=62c15947-7e6a-47f7-89e2-26c53d4c947c&maxDataAge=3600&theme=light&autoRefresh=true" />
@@ -467,7 +482,7 @@ const Overview = () => {
 								<IconBuild bg="rgb(255,177,0)" bc="rgba(255,177,0, 0.7)">
 									<GivePerson />
 								</IconBuild>
-								<CardTitleTExt>5 most recent Givers </CardTitleTExt>
+								<CardTitleTExt>3 most recent Givers </CardTitleTExt>
 								<TextCOunt>
 									<TextCOunt24>
 										{givers?.givers?.map((props) => (
@@ -488,8 +503,35 @@ const Overview = () => {
 						</BottomCard>
 					</MinCardHolder>
 				</Card>
-
 				<Card>
+					<TableCard>
+						<TableHolder>
+							<TopTitle>Ministries and their Fund Raised</TopTitle>
+
+							<div>
+								{ministryToGive && (
+									<div>
+										{Object?.keys(ministryToGive)?.map((key, i) => (
+											<p key={i}>
+												<Ministry>
+													<MinistryHolder>
+														<MinistryLogo>{key.charAt(0)} </MinistryLogo>
+														<MinistryInfo>
+															<MinistryName24>{key}</MinistryName24>
+															<MinistryInfoName>Found Raised</MinistryInfoName>
+														</MinistryInfo>
+													</MinistryHolder>
+
+													<MinistryCost>#{ministryToGive[key]}.00</MinistryCost>
+												</Ministry>
+											</p>
+										))}
+									</div>
+								)}
+							</div>
+						</TableHolder>
+					</TableCard>
+
 					<TableCard>
 						<TableHolder>
 							<TopTitle>7 newly registered Member</TopTitle>
@@ -516,6 +558,7 @@ const Overview = () => {
 							</div>
 						</TableHolder>
 					</TableCard>
+
 					<TableCard>
 						<TableHolder>
 							<TopTitle>7 Recent GIVERS</TopTitle>
@@ -572,6 +615,50 @@ const Overview = () => {
 };
 
 export default Overview;
+
+const MinistryCost = styled.div`
+	padding: 5px 10px;
+	background-color: rgba(116, 46, 157, 0.2);
+	color: rgb(116, 46, 157);
+	font-weight: 700;
+	font-size: 13px;
+	border-radius: 20px;
+`;
+
+const MinistryInfoName = styled.div`
+	font-size: 12px;
+	font-weight: 500;
+`;
+
+const MinistryName24 = styled.div`
+	font-weight: 700;
+	text-transform: capitalize;
+	font-size: 12px;
+`;
+
+const MinistryInfo = styled.div``;
+
+const MinistryLogo = styled.div`
+	padding: 10px 25px;
+	background-color: #742e9d;
+	border-radius: 4px;
+	color: white;
+	font-size: 25px;
+	margin-right: 5px;
+	font-weight: 700;
+	text-transform: uppercase;
+`;
+
+const MinistryHolder = styled.div`
+	display: flex;
+	align-items: center;
+`;
+
+const Ministry = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
 
 const DivName = styled.div`
 	font-size: 10px;
