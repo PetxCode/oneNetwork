@@ -52,11 +52,11 @@ const ChangePasswordChurch = () => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "Password Request has been confirm, check your email",
+					title: "Password Request has been confirm",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
-					navigate("/product");
+					navigate("/signin");
 				});
 				setLoading(false);
 			})
