@@ -20,6 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { createUser } from "../Global/Global";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -28,6 +29,7 @@ const SigninChurchMember = () => {
 
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		email: yup.string().email().required("Please enter your desired email!"),
@@ -45,7 +47,7 @@ const SigninChurchMember = () => {
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
 		const newURL = `${url}/api/member/signin`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, value)
 			.then((res) => {
@@ -59,15 +61,25 @@ const SigninChurchMember = () => {
 				}).then(() => {
 					navigate("/");
 				});
+				setLoading(false);
 			})
-			.catch((error) => setErrorState(error.response.data.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
-
-	console.log(errorState);
 
 	return (
 		<Container>
 			<Wrapper>
+				{loading ? <LoadingState /> : null}
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">
 						{/* <Bar>One</Bar> */}

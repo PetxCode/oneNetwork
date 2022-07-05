@@ -20,6 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { createUser } from "../Global/Global";
 import { useDispatch } from "react-redux";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -27,6 +28,7 @@ const SigninChurch = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [myChecked, setMyChacked] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [errorState, setErrorState] = useState("");
 
 	const yupSchema = yup.object().shape({
@@ -43,7 +45,7 @@ const SigninChurch = () => {
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
 		const newURL = `${url}/api/admin/signin`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, value)
 			.then((res) => {
@@ -51,20 +53,32 @@ const SigninChurch = () => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "Please check your email for account verification",
+					title: "Welcome Back",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
 					navigate("/");
 				});
+				setLoading(false);
 			})
-			.catch((error) => setErrorState(error.response.data.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	console.log(errorState);
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">
@@ -87,7 +101,11 @@ const SigninChurch = () => {
 					</InputHolder>
 					<InputHolder>
 						<Label>Password</Label>
-						<Input placeholder="Password" {...register("password")}  type="password"/>
+						<Input
+							placeholder="Password"
+							{...register("password")}
+							type="password"
+						/>
 						<Error>{errors?.password?.message}</Error>
 					</InputHolder>
 

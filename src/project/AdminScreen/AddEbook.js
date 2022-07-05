@@ -83,7 +83,6 @@ const AddEbook = () => {
 				eBook: eBookFile,
 			})
 			.then((res) => {
-				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",

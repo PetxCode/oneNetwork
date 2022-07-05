@@ -18,10 +18,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
+import LoadingState from "../../LoadingState";
 
 const ForgetPasswordChurchMember = () => {
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		email: yup.string().email().required("Please enter your desired email!"),
@@ -37,27 +39,37 @@ const ForgetPasswordChurchMember = () => {
 		console.log(value);
 		const url = "http://localhost:2233";
 		const newURL = `${url}/api/member/reset`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, value)
 			.then((res) => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "Please check your email for account verification",
+					title: "Password reset request",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
 					navigate("/redirectMember");
 				});
+				setLoading(false);
 			})
-			.catch((error) => setErrorState(error.response.data.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
-
-	console.log(errorState);
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">

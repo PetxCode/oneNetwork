@@ -20,6 +20,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { createUser } from "../Global/Global";
 import { useDispatch } from "react-redux";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -29,6 +30,7 @@ const VerifySigninChurch = () => {
 
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		email: yup.string().email().required("Please enter your desired email!"),
@@ -52,14 +54,25 @@ const VerifySigninChurch = () => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "your account has been verified",
+					title: "Welcome Back",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
 					navigate("/");
 				});
+				setLoading(false);
 			})
-			.catch((error) => setErrorState(error.response.data.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	useEffect(async () => {
@@ -69,6 +82,7 @@ const VerifySigninChurch = () => {
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">

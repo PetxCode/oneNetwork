@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
@@ -26,6 +27,7 @@ const ChangePasswordChurch = () => {
 
 	const navigate = useNavigate();
 	const [errorState, setErrorState] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		password: yup.string().required("Please enter your choice password!"),
@@ -43,27 +45,39 @@ const ChangePasswordChurch = () => {
 	const onSubmit = handleSubmit(async (value) => {
 		console.log(value);
 		const newURL = `${url}/api/admin/change/${id}/${token}`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, value)
 			.then((res) => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "Please check your email for account verification",
+					title: "Password Request has been confirm, check your email",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
-					navigate("/signinChurch");
+					navigate("/product");
 				});
+				setLoading(false);
 			})
-			.catch((error) => setErrorState(error.response.data.message));
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	console.log(errorState);
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">

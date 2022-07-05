@@ -18,12 +18,14 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import axios from "axios";
+import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
 
 const MyChurch = () => {
 	const navigate = useNavigate();
 	const [myChecked, setMyChacked] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const yupSchema = yup.object().shape({
 		churchName: yup.string().required("Please enter your Church Name!"),
@@ -43,25 +45,37 @@ const MyChurch = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		const newURL = `${url}/api/admin/register`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, value)
-			.then((res) => {})
-			.catch((error) => console.log(error));
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Please check your email for account verification",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/confirmChurch");
-		});
+			.then((res) => {
+				Swal.fire({
+					position: "center",
+					icon: "success",
+					title: "Registeration successful",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					navigate("/confirmChurch");
+				});
+				setLoading(false);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
 	});
 
 	return (
 		<Container>
+			{loading ? <LoadingState /> : null}
 			<Wrapper>
 				<Card onSubmit={onSubmit}>
 					<LogoHolder to="/">
