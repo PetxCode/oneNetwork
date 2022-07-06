@@ -32,47 +32,129 @@ const ViewMembers = () => {
 		<Container>
 			<Wrapper></Wrapper>
 
-			<TableHolder>
-				<MyTable>
-					<HeaderTable bg>
-						<Title bl>User</Title>
-						<Email bl>Email</Email>
-						<Role bl>Role</Role>
-						<Status bl>Status</Status>
-					</HeaderTable>
+			<br />
+			<br />
+			<br />
+
+			<DivData style={{ overflowX: "auto" }}>
+				<table>
+					<tr
+						style={{
+							backgroundColor: "#e0e1e2",
+							height: "50px",
+							paddingRight: "20px",
+							paddingLeft: "20px",
+						}}
+					>
+						<th
+							style={{
+								height: "50px",
+								paddingRight: "20px",
+								paddingLeft: "20px",
+							}}
+						>
+							User
+						</th>
+						<th
+							style={{
+								height: "50px",
+								paddingRight: "20px",
+								paddingLeft: "20px",
+							}}
+						>
+							Email
+						</th>
+						<th
+							style={{
+								height: "50px",
+								paddingRight: "20px",
+								paddingLeft: "20px",
+							}}
+						>
+							Role
+						</th>
+						<th
+							style={{
+								height: "50px",
+								paddingRight: "20px",
+								paddingLeft: "20px",
+							}}
+						>
+							Status
+						</th>
+					</tr>
 
 					{viewMembers?.member?.map((props) => (
-						<HeaderTable key={props._id}>
-							<Title1>
-								{props?.avatar ? (
-									<Image src={props?.avatar} />
-								) : (
+						<TRHold>
+							<td>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										margin: "20px",
+										minWidth: "200px",
+									}}
+								>
 									<Image1 src={pix} />
-								)}
-								<TitleHolder>
-									<Name>{props.fullName}</Name>
+									<div>
+										<div style={{ fontWeight: "700" }}>Name</div>
+										<div style={{ fontSize: "12px" }}>DisplayName</div>
+									</div>
+								</div>
+							</td>
 
-									{props?.displayName ? (
-										<DisplayName>{props.displayName}</DisplayName>
-									) : (
-										<DisplayName>No displayName yet</DisplayName>
-									)}
-								</TitleHolder>
-							</Title1>
-							<Email1>{props.email}</Email1>
-							<Role>{props.status}</Role>
-							<Status>
+							<td
+								style={{
+									fontSize: "15px",
+									padding: "0 15px",
+									minWidth: "250px",
+								}}
+							>
+								brighterdayscodelab@gmail.com
+							</td>
+
+							<td
+								style={{
+									margin: "10px",
+									minWidth: "150px",
+									paddingLeft: "30px",
+									fontWeight: "500",
+								}}
+							>
+								member
+							</td>
+
+							<td
+								style={{
+									margin: "10px",
+									minWidth: "150px",
+									paddingLeft: "10px",
+									fontWeight: "500",
+								}}
+							>
 								<Active>Active</Active>
-							</Status>
-						</HeaderTable>
+							</td>
+						</TRHold>
 					))}
-				</MyTable>
-			</TableHolder>
+				</table>
+			</DivData>
 		</Container>
 	);
 };
 
 export default ViewMembers;
+
+const DivData = styled.div`
+	border: 1 solid silver;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+`;
+const TRHold = styled.tr`
+	transition: all 350ms;
+	:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+		cursor: pointer;
+	}
+`;
 
 const Active = styled.div`
 	width: 60%;
@@ -86,21 +168,21 @@ const Active = styled.div`
 	padding: 5px 0;
 `;
 
-const DisplayName = styled.div`
+const DisplayName = styled.td`
 	font-size: 12px;
 `;
-const Name = styled.div`
+const Name = styled.td`
 	margin-bottom: 5px;
 	font-weight: 700;
 `;
 
-const TitleHolder = styled.div`
+const TitleHolder = styled.tr`
 	display: inline-block;
 	vertical-align: top;
 	line-height: 100%;
 `;
 
-const Title1 = styled.div`
+const Title1 = styled.tr`
 	display: inline-block;
 	margin: 10px;
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
@@ -132,12 +214,13 @@ const Image = styled.img`
 `;
 
 const TableHolder = styled.div`
-	justify-content: center;
-	display: flex;
+	/* justify-content: center;
+	display: flex; */
+	overflow-x: auto;
 	width: 100%;
 `;
 
-const Title = styled.div`
+const Title = styled.th`
 	display: inline-block;
 	margin: 10px;
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
@@ -154,7 +237,7 @@ const Email1 = styled.div`
 	font-size: 12px;
 	font-weight: 500;
 `;
-const Email = styled.div`
+const Email = styled.th`
 	display: inline-block;
 	margin: 10px;
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
@@ -162,7 +245,7 @@ const Email = styled.div`
 	padding-left: 10px;
 `;
 
-const Role = styled.div`
+const Role = styled.th`
 	display: inline-block;
 	margin: 10px;
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
@@ -170,7 +253,7 @@ const Role = styled.div`
 	padding-left: 10px;
 `;
 
-const Status = styled.div`
+const Status = styled.th`
 	display: inline-block;
 	margin: 10px;
 	border-left: ${({ bl }) => (bl ? "3px solid lightgray" : "")};
@@ -178,7 +261,7 @@ const Status = styled.div`
 	padding-left: 10px;
 `;
 
-const HeaderTable = styled.div`
+const HeaderTable = styled.tr`
 	display: inline-block;
 	background-color: ${({ bg }) => (bg ? "rgba(0, 0, 0, 0.1)" : "#f9fafc")};
 	/* background-color: #f9fafc; */
@@ -195,7 +278,7 @@ const HeaderTable = styled.div`
 	}
 `;
 
-const MyTable = styled.div`
+const MyTable = styled.table`
 	overflow-x: scroll;
 	overflow-y: hidden;
 	white-space: nowrap;

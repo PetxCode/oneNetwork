@@ -13,6 +13,7 @@ import PrivateRoute from "../Global/PrivateRoute";
 import AdminScreen from "../../project/AdminScreen/AdminScreen";
 import Private from "../Global/Private";
 import JustLook from "./JustLook";
+import TableView from "../../project/AdminScreen/TableView";
 
 const ChurchAuth = () => {
 	const user = useSelector((state) => state.user);
@@ -21,6 +22,7 @@ const ChurchAuth = () => {
 		<Routes>
 			{/* {!user ? () :()} */}
 			<>
+				<Route path="/table" element={<TableView />} />
 				<Route path="/registerChurch" element={<MyChurch />} />
 				<Route path="/just-look" element={<JustLook />} />
 				<Route path="/confirmChurch" element={<DirectComp />} />

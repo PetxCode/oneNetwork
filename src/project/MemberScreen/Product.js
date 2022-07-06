@@ -25,6 +25,7 @@ import Swal from "sweetalert2";
 import { v4 as uuidv4 } from "uuid";
 import { usePaystackPayment } from "react-paystack";
 import LoadingState from "../../LoadingState";
+import TableHolder from "./TableHolder";
 
 const mainURL = "https://onechurch1.herokuapp.com";
 
@@ -307,43 +308,6 @@ const Product = () => {
 					</SiderSider>
 				</Top>
 
-				<TextHolderFile>
-					<TextBook>5 Most recent Ebook Orders</TextBook>
-					<MinCard1>
-						<Header fs>
-							<SeenVisible>Seen</SeenVisible>
-							<Seen>Status</Seen>
-							<Detailed>Profile</Detailed>
-							<Status>Details</Status>
-						</Header>
-
-						{viewOrders?.order &&
-							viewOrders?.order?.map((props) => (
-								<Header key={props._id}>
-									<SeenVisible>
-										{props.seen ? <NonVisibleIcon /> : <VisibleIcon />}
-									</SeenVisible>
-									<Seen>
-										{props.delivered ? (
-											<Active bg>Deliver</Active>
-										) : (
-											<Active>Not Deliver</Active>
-										)}
-									</Seen>
-									<Detailed>
-										<Named>{props.who}</Named>
-										<DisplayNamed>{}</DisplayNamed>
-									</Detailed>
-									<Status>
-										<Named>{props.what}</Named>
-										<DisplayNamed>{props.detail}</DisplayNamed>
-										<CostOrder>#{props.cost}.00</CostOrder>
-									</Status>
-								</Header>
-							))}
-					</MinCard1>
-				</TextHolderFile>
-
 				<DisplayOption>
 					<Nav
 						bg={audio ? "bg" : null}
@@ -522,6 +486,38 @@ const Product = () => {
 
 export default Product;
 
+const Table = styled.table`
+	background-color: white;
+	border: 1 solid silver;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+`;
+
+const DivData = styled.div`
+	/* width: 95%;
+	display: flex;
+	justify-content: center; */
+	margin: 0 10px;
+`;
+const TRHold = styled.tr`
+	transition: all 350ms;
+	:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+		cursor: pointer;
+	}
+`;
+
+// const TRHold = styled.tr`
+// 	transition: all 350ms;
+// 	border-bottom: 1px solid silver;
+// 	background-color: rgba(0, 0, 0, 0.1);
+
+// 	:hover {
+// 		background-color: rgba(0, 0, 0, 0.05);
+// 		cursor: pointer;
+// 		border-bottom: 1px solid silver;
+// 	}
+// `;
+
 const DisplayNamed = styled.div`
 	font-size: 10px;
 	color: gray;
@@ -554,6 +550,14 @@ const Active = styled.div`
 		cursor: pointer;
 		transform: scale(1.05);
 	}
+`;
+
+const TextHolderFileLine = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	/* border: 1 solid silver; */
+	/* box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px; */
 `;
 
 const TextHolderFile = styled.div`
@@ -600,6 +604,11 @@ const VisibleIcon = styled(BsFillEyeSlashFill)`
 	}
 `;
 
+const StatusData = styled.div`
+	width: 300px;
+	/* text-align: left; */
+`;
+
 const Status = styled.div`
 	width: 300px;
 `;
@@ -610,6 +619,10 @@ const Detailed = styled.div`
 
 const SeenVisible = styled.div`
 	width: 70px;
+	/* margin-left: 20px; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
 
 const Seen = styled.div`
@@ -1032,7 +1045,8 @@ const Container = styled.div`
 	position: absolute;
 	right: 0;
 	top: 70px;
-	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 
 	@media screen and (max-width: 768px) {
 		width: 100%;

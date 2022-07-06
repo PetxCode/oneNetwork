@@ -1,7 +1,11 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
-import { AiFillPieChart, AiFillSetting } from "react-icons/ai";
+import {
+	AiFillNotification,
+	AiFillPieChart,
+	AiFillSetting,
+} from "react-icons/ai";
 import { BsFillBagFill, BsPersonCircle, BsFillCartFill } from "react-icons/bs";
 import { GiPayMoney } from "react-icons/gi";
 import { useSelector } from "react-redux";
@@ -28,6 +32,11 @@ const MemberSideBar = () => {
 				<Nav to="/">
 					<ProdIcon />
 					<span>Product</span>
+				</Nav>
+
+				<Nav to="/order-notification">
+					<NotifyIcon />
+					<span>Order Notification</span>
 				</Nav>
 
 				<Nav to="/to-cart">
@@ -85,6 +94,12 @@ const MembIcon = styled(BsPersonCircle)`
 `;
 
 const SetIcon = styled(AiFillSetting)`
+	font-size: 30px;
+	margin-right: 10px;
+	margin-left: 20px;
+`;
+
+const NotifyIcon = styled(AiFillNotification)`
 	font-size: 30px;
 	margin-right: 10px;
 	margin-left: 20px;

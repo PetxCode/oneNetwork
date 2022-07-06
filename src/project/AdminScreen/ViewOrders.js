@@ -40,74 +40,116 @@ const ViewOrders = () => {
 	return (
 		<Container>
 			<WrapperHolder>
-				<TableHolder>
-					<MyTable>
-						<HeaderTable bg>
-							<Title bl>Order By</Title>
-							<Email bl>Order What</Email>
-							<Status bl>Status</Status>
-						</HeaderTable>
+				<DivData style={{ overflowX: "auto" }}>
+					<Table>
+						<tr
+							style={{
+								backgroundColor: "#e0e1e2",
+								height: "50px",
+								paddingRight: "20px",
+								paddingLeft: "20px",
+							}}
+						>
+							<th
+								style={{
+									height: "50px",
+									paddingRight: "20px",
+									paddingLeft: "20px",
+									fontWeight: "normal",
+								}}
+							>
+								Order By
+							</th>
+							<th
+								style={{
+									height: "50px",
+									paddingRight: "20px",
+									paddingLeft: "20px",
+									fontWeight: "normal",
+								}}
+							>
+								Order What
+							</th>
+							<th
+								style={{
+									height: "50px",
+									paddingRight: "20px",
+									paddingLeft: "20px",
+									fontWeight: "normal",
+								}}
+							>
+								Status
+							</th>
+						</tr>
 
-						{viewMembers?.order?.map((props) => (
-							<HeaderTable key={props._id}>
-								<Title1>
-									{props.seen ? (
-										<NonVisibleIcon
-											onClick={() => {
-												seenOrdered(props._id);
-												window.location.reload();
+						{viewMembers?.order &&
+							viewMembers?.order?.map((props) => (
+								<TRHold>
+									<tr>
+										<div
+											style={{
+												display: "flex",
+												justifyContent: "center",
+												alignItems: "center",
+												marginTop: "10px",
+												marginBottom: "10px",
+												marginLeft: "20px",
+												marginLeft: "30px",
+												minWidth: "200px",
 											}}
-										/>
-									) : (
-										<VisibleIcon
-											onClick={() => {
-												seenOrdered(props._id);
-												window.location.reload();
-											}}
-										/>
-									)}
-									<TitleHolder>
-										<Name>{props.who}</Name>
+										>
+											<div>
+												{props.seen ? <NonVisibleIcon /> : <VisibleIcon />}
+											</div>
+											<div>
+												<div style={{ fontWeight: "700" }}>{props.who}</div>
+												<div>
+													{props.displayName ? (
+														<div>{props.displayName}</div>
+													) : (
+														<div
+															style={{ fontWeight: "normal", fontSize: "10px" }}
+														>
+															No Display Name yet
+														</div>
+													)}
+												</div>
+											</div>
+										</div>
+									</tr>
 
-										{props?.displayName ? (
-											<DisplayName>{props.displayName}</DisplayName>
+									<td
+										style={{
+											fontSize: "15px",
+											padding: "0 15px",
+											minWidth: "250px",
+											fontSize: "13px",
+										}}
+									>
+										<Named>{props.what}</Named>
+										<DisplayNamed>{props.detail}</DisplayNamed>
+										<CostOrder>#{props.cost}.00</CostOrder>
+									</td>
+
+									<td
+										style={{
+											margin: "10px",
+											minWidth: "250px",
+											paddingLeft: "10px",
+											fontWeight: "500",
+											fontSize: "13px",
+										}}
+									>
+										{props.delivered ? (
+											<Active bg>Deliver</Active>
 										) : (
-											<DisplayName>No displayName yet</DisplayName>
+											<Active>Not Deliver</Active>
 										)}
-									</TitleHolder>
-								</Title1>
-
-								<TitleHolder24>
-									<Email fw>{props.what}</Email>
-
-									<DisplayName1>{props.detail}</DisplayName1>
-									<Role>#{props.cost}.00</Role>
-								</TitleHolder24>
-
-								<Status>
-									{props.delivered ? (
-										<Active
-											bg
-											onClick={() => {
-												deliveredOrdered(props._id);
-											}}
-										>
-											Deliver
-										</Active>
-									) : (
-										<Active
-											onClick={() => {
-												deliveredOrdered(props._id);
-											}}
-										>
-											Not Deliver
-										</Active>
-									)}
-								</Status>
-							</HeaderTable>
-						))}
-					</MyTable>
-				</TableHolder>
+									</td>
+								</TRHold>
+							))}
+					</Table>
+				</DivData>
 			</WrapperHolder>
 		</Container>
 	);
@@ -115,9 +157,47 @@ const ViewOrders = () => {
 
 export default ViewOrders;
 
+const Table = styled.table`
+	background-color: white;
+	border: 1 solid silver;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+`;
+
+const DivData = styled.div`
+	/* width: 95%;
+	display: flex;
+	justify-content: center; */
+	margin: 0 10px;
+`;
+const TRHold = styled.tr`
+	transition: all 350ms;
+	:hover {
+		background-color: rgba(0, 0, 0, 0.05);
+		cursor: pointer;
+	}
+`;
+
+const DisplayNamed = styled.div`
+	font-size: 10px;
+	color: gray;
+`;
+
+const Named = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+`;
+
+const CostOrder = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+	color: red;
+`;
+
 const WrapperHolder = styled.div`
 	/* width: 80%; */
 	padding: 30px 10px;
+	display: flex;
+	justify-content: center;
 `;
 
 const Diva = styled.div`

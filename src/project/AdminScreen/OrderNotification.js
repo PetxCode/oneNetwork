@@ -4,10 +4,18 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import one from "./one.png";
-const ViewMembers = () => {
+import { BsFillEyeSlashFill, BsFillEyeFill } from "react-icons/bs";
+import LoadingState from "../../LoadingState";
+
+import Swal from "sweetalert2";
+
+const mainURL = "https://onechurch1.herokuapp.com";
+const OrderNotification = () => {
 	const user = useSelector((state) => state.user);
 	const [members, setMembers] = useState({});
 
+	const [viewOrders, setViewOrders] = useState({});
+	const [loading, setLoading] = useState(false);
 	const url = "https://onechurch1.herokuapp.com";
 
 	const getMembers = async () => {
@@ -21,55 +29,34 @@ const ViewMembers = () => {
 			.catch((err) => console.log(err.message));
 	};
 
+	const getOrders = async () => {
+		const newURL = `${mainURL}/api/order/${user.admin}/five`;
+
+		await axios
+			.get(newURL)
+			.then((res) => {
+				setViewOrders(res.data.data);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {
+					setLoading(false);
+				});
+			});
+	};
+
 	useEffect(() => {
 		getMembers();
+		getOrders();
 	}, []);
 
 	return (
 		<Container>
-			{/* <TableHolder>
-				<MyTable>
-					<HeaderTable bg>
-						<Title bl>User</Title>
-						<Email bl>Email</Email>
-						<Role bl>Role</Role>
-						<Role bl>Phone No</Role>
-						<Status bl>Status</Status>
-					</HeaderTable>
-					{members?.member?.map((props) => (
-						<HeaderTable key={props._id}>
-							<Title1>
-								{props?.avatar ? (
-									<Image scr={props.avatar} />
-								) : (
-									<Image src={one} />
-								)}
-								<TitleHolder>
-									<Name>{props.fullName}</Name>
-									{props.DisplayName ? (
-										<DisplayName>{props.displayName}</DisplayName>
-									) : (
-										<DisplayName>No displayName yet</DisplayName>
-									)}
-								</TitleHolder>
-							</Title1>
-							<Email>{props.email}</Email>
-							<Role>{props.status}</Role>
-
-							{props.phone ? (
-								<Role> {props.phone}</Role>
-							) : (
-								<Role> No Phone Numb. yet</Role>
-							)}
-
-							<Status>
-								<Active>Active</Active>
-							</Status>
-						</HeaderTable>
-					))}
-				</MyTable>
-			</TableHolder> */}
-
 			<DivData style={{ overflowX: "auto" }}>
 				<Table>
 					<tr
@@ -87,7 +74,7 @@ const ViewMembers = () => {
 								paddingLeft: "20px",
 							}}
 						>
-							User
+							SEEN
 						</th>
 						<th
 							style={{
@@ -96,7 +83,7 @@ const ViewMembers = () => {
 								paddingLeft: "20px",
 							}}
 						>
-							Email
+							STATUS
 						</th>
 						<th
 							style={{
@@ -105,7 +92,7 @@ const ViewMembers = () => {
 								paddingLeft: "20px",
 							}}
 						>
-							Role
+							PROFILE
 						</th>
 						<th
 							style={{
@@ -114,95 +101,113 @@ const ViewMembers = () => {
 								paddingLeft: "20px",
 							}}
 						>
-							Phone Number
-						</th>
-						<th
-							style={{
-								height: "50px",
-								paddingRight: "20px",
-								paddingLeft: "20px",
-							}}
-						>
-							Status
+							DETAILS
 						</th>
 					</tr>
 
-					{members?.member?.map((props) => (
-						<TRHold>
-							<td>
-								<div
+					{viewOrders?.order &&
+						viewOrders?.order?.map((props) => (
+							<TRHold>
+								<tr>
+									<div
+										style={{
+											display: "flex",
+											justifyContent: "center",
+											marginTop: "20px",
+											marginLeft: "10px",
+											minWidth: "200px",
+										}}
+									>
+										{props.seen ? <NonVisibleIcon /> : <VisibleIcon />}
+									</div>
+								</tr>
+
+								<td
 									style={{
-										display: "flex",
-										alignItems: "center",
-										margin: "20px",
-										minWidth: "200px",
+										fontSize: "15px",
+										padding: "0 15px",
+										minWidth: "250px",
+										fontSize: "13px",
 									}}
 								>
-									<Image src={one} />
-									<div>
-										<div style={{ fontWeight: "700" }}>{props.fullName}</div>
-										<div style={{ fontSize: "12px" }}>{props.displayName}</div>
-									</div>
-								</div>
-							</td>
+									{props.delivered ? (
+										<Active bg>Deliver</Active>
+									) : (
+										<Active>Not Deliver</Active>
+									)}
+								</td>
 
-							<td
-								style={{
-									fontSize: "15px",
-									padding: "0 15px",
-									minWidth: "250px",
-									fontSize: "13px",
-								}}
-							>
-								{props.email}
-							</td>
+								<td
+									style={{
+										margin: "10px",
+										minWidth: "200px",
+										paddingLeft: "30px",
+										fontSize: "13px",
+									}}
+								>
+									{props.who}
+								</td>
 
-							<td
-								style={{
-									margin: "10px",
-									minWidth: "150px",
-									paddingLeft: "30px",
-									fontSize: "13px",
-								}}
-							>
-								{props.status}
-							</td>
-
-							<td
-								style={{
-									margin: "10px",
-									minWidth: "150px",
-									paddingLeft: "30px",
-									fontSize: "13px",
-								}}
-							>
-								{props.phoneNumber ? (
-									<div>{props.phoneNumber}</div>
-								) : (
-									<div>No Phone Numb. yet</div>
-								)}
-							</td>
-
-							<td
-								style={{
-									margin: "10px",
-									minWidth: "150px",
-									paddingLeft: "10px",
-									fontWeight: "500",
-									fontSize: "13px",
-								}}
-							>
-								<Active>Active</Active>
-							</td>
-						</TRHold>
-					))}
+								<td
+									style={{
+										margin: "10px",
+										minWidth: "250px",
+										paddingLeft: "10px",
+										fontWeight: "500",
+										fontSize: "13px",
+									}}
+								>
+									<Named>{props.what}</Named>
+									<DisplayNamed>{props.detail}</DisplayNamed>
+									<CostOrder>#{props.cost}.00</CostOrder>
+								</td>
+							</TRHold>
+						))}
 				</Table>
 			</DivData>
 		</Container>
 	);
 };
 
-export default ViewMembers;
+export default OrderNotification;
+
+const NonVisibleIcon = styled(BsFillEyeFill)`
+	font-size: 20px;
+	margin-right: 20px;
+	transition: all 350ms;
+	color: red;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const VisibleIcon = styled(BsFillEyeSlashFill)`
+	font-size: 20px;
+	margin-right: 20px;
+	transition: all 350ms;
+	color: red;
+	:hover {
+		cursor: pointer;
+		transform: scale(1.05);
+	}
+`;
+
+const DisplayNamed = styled.div`
+	font-size: 10px;
+	color: gray;
+`;
+
+const Named = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+`;
+
+const CostOrder = styled.div`
+	font-weight: 700;
+	font-size: 13px;
+	color: red;
+`;
 
 const Table = styled.table`
 	background-color: white;

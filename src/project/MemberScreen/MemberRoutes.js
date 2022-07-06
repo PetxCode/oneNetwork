@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import AddProducts from "./AddProducts";
 import CartPage from "./CartPage";
 import Offerings from "./Offerings";
+import OrderNotification from "./OrderNotification";
 import Overview from "./Overview";
 import Product from "./Product";
 import SupportProjects from "./SupportProject";
@@ -18,6 +19,7 @@ const MemberRoutes = () => {
 				<Routes>
 					{/* <Route path="/" element={<Overview />} /> */}
 					<Route path="/to-cart" element={<CartPage />} />
+					<Route path="/order-notification" element={<OrderNotification />} />
 					<Route path="/" element={<Product />} />
 					<Route path="/view-member" element={<ViewMembers />} />
 					<Route path="/offerings" element={<Offerings />} />
