@@ -479,9 +479,9 @@ const Overview = () => {
 							</BCard>
 
 							<BCard1>
-								<IconBuild bg="rgb(255,177,0)" bc="rgba(255,177,0, 0.7)">
+								<IconBuildNew bg="rgb(255,177,0)" bc="rgba(255,177,0, 0.7)">
 									<GivePerson />
-								</IconBuild>
+								</IconBuildNew>
 								<CardTitleTExt>3 most recent Givers </CardTitleTExt>
 								<TextCOunt>
 									<TextCOunt24>
@@ -671,6 +671,8 @@ const TextHolderFile = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	width: 100%;
+	max-width: 1200px;
 `;
 
 const Text = styled.div`
@@ -778,7 +780,7 @@ const Iframe = styled.iframe`
 
 const GivePerson = styled(GiMoneyStack)`
 	color: white;
-	font-size: 30px;
+	font-size: 40px;
 `;
 
 const ChurchPerson = styled(FaChurch)`
@@ -847,6 +849,22 @@ const CardTitleTExt = styled.div`
 	margin-top: 40px;
 	font-size: 13px;
 	font-weight: 500;
+`;
+
+const IconBuildNew = styled.div`
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: ${({ bg }) => bg};
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transition: all 350ms;
+
+	:hover {
+		background-color: ${({ bc }) => bc};
+		cursor: pointer;
+	}
 `;
 
 const IconBuild = styled.div`
@@ -1060,7 +1078,7 @@ const BCard1 = styled.div`
 	background-color: white;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 5px;
-	margin: 0 5px;
+	margin: 10px 5px;
 	padding: 20px;
 `;
 
@@ -1117,6 +1135,9 @@ const MinCard1 = styled.div`
 	overflow: hidden;
 	background-color: white;
 	border: 1px solid silver;
+
+	width: 100%;
+	max-width: 1200px;
 
 	@media screen and (max-width: 768px) {
 		width: 90%;

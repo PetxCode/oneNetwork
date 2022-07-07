@@ -308,6 +308,90 @@ const Product = () => {
 					</SiderSider>
 				</Top>
 
+				{/* <div
+					style={{
+						width: "100%",
+						maxWidth: "1200px",
+						backgroundColor: "lightgray",
+						overflow: "hidden",
+						// margin: "0 40px",
+						border: "1px solid green",
+						overflowX: "scroll",
+						height: "100%",
+						display: "block",
+					}}
+				>
+					<div
+						style={{
+							width: "1500px",
+							backgroundColor: "pink",
+							padding: "0 20px",
+							height: "150px",
+						}}
+					>
+						We are ready
+					</div>
+					<div
+						style={{
+							width: "1500px",
+							backgroundColor: "blue",
+							padding: "0 20px",
+							height: "150px",
+						}}
+					>
+						Let's row
+					</div>
+					<div
+						style={{
+							width: "1500px",
+							backgroundColor: "yellow",
+							padding: "0 20px",
+							height: "150px",
+						}}
+					>
+						Let's You
+					</div>
+				</div> */}
+
+				{/* <Card> */}
+				<TextHolderFile>
+					<Text>5 Most recent eBook Orders</Text>
+					<MinCard1>
+						<Header fs>
+							<SeenVisible>Seen</SeenVisible>
+							<Seen>Status</Seen>
+							<Detailed>Profile</Detailed>
+							<Status>Details</Status>
+						</Header>
+
+						{viewOrders?.order &&
+							viewOrders?.order?.map((props) => (
+								<Header key={props._id}>
+									<SeenVisible>
+										{props.seen ? <NonVisibleIcon /> : <VisibleIcon />}
+									</SeenVisible>
+									<Seen>
+										{props.delivered ? (
+											<Active bg>Deliver</Active>
+										) : (
+											<Active>Not Deliver</Active>
+										)}
+									</Seen>
+									<Detailed>
+										<Named>{props.who}</Named>
+										<DisplayNamed>displayName</DisplayNamed>
+									</Detailed>
+									<Status>
+										<Named>{props.what}</Named>
+										<DisplayNamed>{props.detail}</DisplayNamed>
+										<CostOrder>#{props.cost}.00</CostOrder>
+									</Status>
+								</Header>
+							))}
+					</MinCard1>
+				</TextHolderFile>
+				{/* </Card> */}
+
 				<DisplayOption>
 					<Nav
 						bg={audio ? "bg" : null}
@@ -567,15 +651,21 @@ const TextHolderFile = styled.div`
 `;
 
 const MinCard1 = styled.div`
-	width: 900px;
+	/* width: 900px; */
 	height: 100%;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 	border-radius: 5px;
 	margin-right: 10px;
-	margin-bottom: 30px;
-	overflow: hidden;
 	background-color: white;
-	border: 1px solid silver;
+	width: 100%;
+	max-width: 1200px;
+
+	/* margin-bottom: 30px; */
+	/* overflow: hidden; */
+	/* overflow-x: scroll; */
+	/* border: 1px solid silver; */
+	/* height: 100%; */
+	/* overflow: hidden; */
 
 	@media screen and (max-width: 768px) {
 		width: 100%;
@@ -639,6 +729,7 @@ const Header = styled.div`
 	font-weight: ${({ fs }) => (fs ? "700" : "")};
 	background-color: ${({ fs }) => (fs ? "rgba(0,0,0,0.1)" : "")};
 	text-transform: ${({ fs }) => (fs ? "uppercase" : "")};
+	/* flex-direction: column; */
 
 	:hover {
 		background-color: #f5f7fc;
@@ -927,7 +1018,10 @@ const TextBook = styled.div`
 
 const Text = styled.div`
 	font-weight: 500;
-	font-size: 13px;
+	font-size: 20px;
+	height: 40px;
+	text-align: center;
+	margin-bottom: 20px;
 `;
 
 const SartIcon = styled(AiFillStar)`
