@@ -12,7 +12,7 @@ import left from "./left.png";
 import right from "./Right.png";
 import { useSelector } from "react-redux";
 
-import pix from "./pix.jpeg";
+import pix from "./avatar.jpg";
 import one from "./one.png";
 import { useEffect } from "react";
 
@@ -238,7 +238,7 @@ const UpdateSettings = () => {
 							<br />
 
 							<LogoImageHolder>
-								<LogoImage src={image} br />
+								<LogoImage src={image} />
 								<LogoImageInput
 									id="pix"
 									onChange={onHandleImage}
@@ -299,6 +299,7 @@ const LogoImage = styled.img`
 	height: 200px;
 	border-radius: ${({ br }) => (br ? "5px" : "50%")};
 	object-fit: cover;
+	border: 1px solid silver;
 	background-color: #742e9d;
 `;
 

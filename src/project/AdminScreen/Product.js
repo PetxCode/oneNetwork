@@ -8,7 +8,8 @@ import {
 } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import pix from "./pix.jpeg";
+import pix from "./sound.webp";
+import pix1 from "./eBook.jpg";
 import moment from "moment";
 
 const MianURL = "https://onechurch1.herokuapp.com";
@@ -23,7 +24,9 @@ const Product = () => {
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const url = `${MianURL}/api/content/${user?._id}`;
+		const localURL = "http://localhost:2233";
+		// const url = `${MianURL}/api/content/${user?._id}`;
+		const url = `${localURL}/api/content/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
@@ -79,7 +82,11 @@ const Product = () => {
 						{audioContent?.audioContent?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
-									<Image src={pix} />
+									{props?.audioCover ? (
+										<Image src={props.audioCover} />
+									) : (
+										<Image src={pix} />
+									)}
 
 									{user?.avatar ? (
 										<ImageAvatar src={user?.avatar} />
@@ -126,7 +133,7 @@ const Product = () => {
 						{eBookContent?.eBookContent?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
-									<Image src={pix} />
+									<Image src={pix1} />
 
 									{user?.avatar ? (
 										<ImageAvatar src={user?.avatar} />
@@ -306,7 +313,7 @@ const ImageAvatarMe = styled.div`
 	height: 50px;
 	object-fit: cover;
 	border-radius: 50%;
-	background-color: green;
+	background-color: #742e9d;
 	position: absolute;
 	bottom: -30px;
 	left: 20px;
@@ -340,6 +347,7 @@ const Image = styled.img`
 	height: 200px;
 	background-color: #742e9d;
 	object-fit: cover;
+	border-bottom: 1px solid silver;
 `;
 
 const Card = styled.div`

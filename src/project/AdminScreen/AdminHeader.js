@@ -6,7 +6,7 @@ import { BiSearch } from "react-icons/bi";
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
-import pix from "./pix.jpeg";
+import pix from "./avatar.jpg";
 import { useNavigate } from "react-router-dom";
 import AdminMainSider from "./AdminMainSider";
 import axios from "axios";

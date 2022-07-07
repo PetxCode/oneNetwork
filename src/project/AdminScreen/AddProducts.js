@@ -11,7 +11,8 @@ import left from "./left.png";
 import right from "./Right.png";
 import { useSelector } from "react-redux";
 
-import pix from "./pix.jpeg";
+import pix from "./sound.webp";
+import bookCover from "./eBook.jpg";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "./base";
@@ -36,16 +37,51 @@ const AddProducts = () => {
 	const [image, setImage] = useState("");
 	const [imageBook, setImageBook] = useState("");
 	const [avatar, setAvatar] = useState("");
+	const [avatarCover, setAvatarCover] = useState("");
 
 	const [audioFile, setAudioFile] = useState("");
-	const [eBookFile, setEBookFile] = useState("");
-	const [percentage, setPercentage] = useState(0);
+	const [audioFile1, setAudioFile1] = useState("");
 
-	const onHandleImage = (e) => {
+	const [eBookFile1, setEBookFile1] = useState("");
+	const [percentage, setPercentage] = useState(0);
+	const [percentage1, setPercentage1] = useState(0);
+
+	const handleAudioCoverUpload1 = (e) => {
 		const file = e.target.files[0];
 		const save = URL.createObjectURL(file);
-		setImage(save);
-		setAvatar(file);
+		setImageBook(save);
+		setAvatarCover(file);
+	};
+
+	const handleAudioCoverUpload = (e) => {
+		const file = e.target.files[0];
+		const save = URL.createObjectURL(file);
+		setImageBook(save);
+		setAvatarCover(file);
+
+		const storageRef = ref(storage, "/audioCover" + file.name);
+
+		const uploadTask = uploadBytesResumable(storageRef, file);
+
+		uploadTask.on(
+			"state_changed",
+			(snapshot) => {
+				const progress =
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+				console.log("Upload is " + progress + "% done");
+				setPercentage1(progress);
+			},
+			(error) => {
+				console.log(error.message);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+					setAudioFile1(downloadURL);
+					console.log(downloadURL);
+					console.log("This audioCover", audioFile1, downloadURL);
+				});
+			}
+		);
 	};
 
 	const handleAudioUpload = (e) => {
@@ -71,8 +107,8 @@ const AddProducts = () => {
 			},
 			() => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-					console.log("File available at", downloadURL);
 					setAudioFile(downloadURL);
+					console.log("This is the Audio File", audioFile);
 				});
 			}
 		);
@@ -98,7 +134,13 @@ const AddProducts = () => {
 		const newURL = `${url}/api/content/${user._id}/create`;
 		setLoading(true);
 		await axios
-			.post(newURL, { title, description, cost, audioFile: audioFile })
+			.post(newURL, {
+				title,
+				description,
+				cost,
+				audioFile,
+				audioCover: audioFile1,
+			})
 			.then((res) => {
 				Swal.fire({
 					position: "center",
@@ -122,21 +164,11 @@ const AddProducts = () => {
 					setLoading(false);
 				});
 			});
-
-		Swal.fire({
-			position: "center",
-			icon: "success",
-			title: "Audio Message has been created...",
-			showConfirmButton: false,
-			timer: 2500,
-		}).then(() => {
-			navigate("/product");
-		});
 	});
 
 	return (
 		<Container>
-			{loading ? <LoadingState /> : null}
+			{/* {loading ? <LoadingState /> : null} */}
 			<Mini>Change Details</Mini>
 
 			<DisplayOption>
@@ -178,35 +210,65 @@ const AddProducts = () => {
 							<br />
 
 							<LogoImageHolder>
-								{image === "" ? (
-									<LogoImage src={pix} br />
-								) : (
-									<LogoImageAudio>
-										<div style={{ marginTop: "10px" }}>Audio File Loaded</div>
-										<div>
-											{percentage > 0 && percentage <= 99.9999 ? (
-												<SpinningCircles
-													stroke="white"
-													strokeOpacity={1}
-													speed={0.75}
-													fill="white"
-													strokeWidth={3}
-													width={30}
-												/>
-											) : null}
-										</div>{" "}
-										{Math.floor(percentage)}% done
-									</LogoImageAudio>
-								)}
+								<DivImageHolder>
+									<div>
+										{image === "" ? (
+											<LogoImage src={pix} />
+										) : (
+											<LogoImageAudio bg>
+												<div style={{ marginTop: "10px", fontSize: "14px" }}>
+													Audio File Loaded
+												</div>
+												<div>
+													{percentage > 0 && percentage <= 99.9999 ? (
+														<SpinningCircles
+															stroke="white"
+															strokeOpacity={1}
+															speed={0.75}
+															fill="white"
+															strokeWidth={3}
+															width={30}
+														/>
+													) : null}
+												</div>{" "}
+												{Math.floor(percentage)}% done
+											</LogoImageAudio>
+										)}
+									</div>
+									<div>
+										{imageBook === "" ? (
+											<LogoImage src={pix} />
+										) : (
+											<LogoImageAudio>
+												<div style={{}}>
+													<LogoImage src={imageBook} />
+												</div>
+											</LogoImageAudio>
+										)}
+									</div>
+								</DivImageHolder>
+
 								<LogoImageInput
-									id="pix"
+									id="audio"
 									onChange={handleAudioUpload}
 									type="file"
 									accept=".mp3,audio/*"
 								/>
-								<LogoImageLabel htmlFor="pix">
-									<span>Choose the Message</span>
-								</LogoImageLabel>
+								<LogoImageInput
+									id="pix"
+									onChange={handleAudioCoverUpload}
+									type="file"
+									accept="images/*"
+								/>
+								<MessageHolderUpload>
+									<LogoImageLabel htmlFor="audio">
+										<span>Choose Message</span>
+									</LogoImageLabel>
+
+									<LogoImageLabel htmlFor="pix">
+										<span>Choose cover image</span>
+									</LogoImageLabel>
+								</MessageHolderUpload>
 							</LogoImageHolder>
 							<InputRow>
 								<InputHolder1>
@@ -258,12 +320,24 @@ const AddProducts = () => {
 
 export default AddProducts;
 
+const DivImageHolder = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`;
+
+const MessageHolderUpload = styled.div`
+	display: flex;
+	margin: 18px 0;
+	justify-content: space-between;
+`;
+
 const LogoImageLabel = styled.label`
-	padding: 15px 20px;
+	padding: 15px 10px;
 	border-radius: 50px;
 	background-color: #742e9d;
 	color: white;
-	margin: 10px 0;
+	margin: 5px;
 	transition: all 350ms;
 	display: flex;
 	align-items: center;
@@ -281,25 +355,27 @@ const LogoImageInput = styled.input`
 `;
 
 const LogoImageAudio = styled.div`
-	width: 50%;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 	border-radius: ${({ br }) => (br ? "5px" : "50%")};
 	object-fit: cover;
-	background-color: #742e9d;
+	background-color: ${({ bg }) => (bg ? "#742e9d" : "transperent")};
 	color: white;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 	align-items: center;
+	margin: 0 10px;
 `;
 
 const LogoImage = styled.img`
-	width: 50%;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 	border-radius: ${({ br }) => (br ? "5px" : "50%")};
 	object-fit: cover;
 	background-color: #742e9d;
+	border: 1px solid silver;
 `;
 
 const LogoImageHolder = styled.div`

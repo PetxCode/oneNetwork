@@ -17,8 +17,8 @@ import {
 import { FaMoneyCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import pix1 from "./pix.jpeg";
-import pix from "./pii.png";
+import pix1 from "./sound.webp";
+import pix from "./eBook.jpg";
 import moment from "moment";
 import { addToCart, createBook } from "../../compoents/Global/Global";
 import Swal from "sweetalert2";
@@ -307,52 +307,6 @@ const Product = () => {
 					</SiderSider>
 				</Top>
 
-				{/* <div
-					style={{
-						width: "100%",
-						maxWidth: "1200px",
-						backgroundColor: "lightgray",
-						overflow: "hidden",
-						// margin: "0 40px",
-						border: "1px solid green",
-						overflowX: "scroll",
-						height: "100%",
-						display: "block",
-					}}
-				>
-					<div
-						style={{
-							width: "1500px",
-							backgroundColor: "pink",
-							padding: "0 20px",
-							height: "150px",
-						}}
-					>
-						We are ready
-					</div>
-					<div
-						style={{
-							width: "1500px",
-							backgroundColor: "blue",
-							padding: "0 20px",
-							height: "150px",
-						}}
-					>
-						Let's row
-					</div>
-					<div
-						style={{
-							width: "1500px",
-							backgroundColor: "yellow",
-							padding: "0 20px",
-							height: "150px",
-						}}
-					>
-						Let's You
-					</div>
-				</div> */}
-
-				{/* <Card> */}
 				<TextHolderFile>
 					<Text>5 Most recent eBook Orders</Text>
 					<MinCard1>
@@ -416,13 +370,17 @@ const Product = () => {
 						{productDisplay?.audioContent?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
-									<Image src={pix1} />
-
-									{user?.avatar ? (
-										<ImageAvatar src={user?.avatar} />
+									{props?.audioCover ? (
+										<Image src={props.audioCover} />
 									) : (
-										<ImageAvatarMe>One</ImageAvatarMe>
+										<Image src={pix1} />
 									)}
+
+									{/* {user?.avatar ? (
+										<ImageAvatar src={user?.avatar} />
+									) : ( */}
+									<ImageAvatarMe>One</ImageAvatarMe>
+									{/* )} */}
 								</ImageHolder>
 								<DisplayHolder>
 									<TitleCart>
@@ -483,13 +441,17 @@ const Product = () => {
 						{eBookDisplay?.eBookContent?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
-									<Image src={pix} />
-
-									{user?.avatar ? (
-										<ImageAvatar src={user?.avatar} />
+									{props?.eBookCover ? (
+										<Image src={props.eBookCover} />
 									) : (
-										<ImageAvatarMe>One</ImageAvatarMe>
+										<Image src={pix} />
 									)}
+
+									{/* {user?.avatar ? (
+										<ImageAvatar src={user?.avatar} />
+									) : ( */}
+									<ImageAvatarMe>One</ImageAvatarMe>
+									{/* )} */}
 								</ImageHolder>
 								<DisplayHolder>
 									<TitleCart>
@@ -1071,7 +1033,7 @@ const ImageAvatarMe = styled.div`
 	height: 50px;
 	object-fit: cover;
 	border-radius: 50%;
-	background-color: green;
+	background-color: #742e9d;
 	position: absolute;
 	bottom: -30px;
 	left: 20px;
@@ -1105,6 +1067,7 @@ const Image = styled.img`
 	height: 200px;
 	background-color: #742e9d;
 	object-fit: cover;
+	border-bottom: 1px solid silver;
 `;
 
 const Card = styled.div`

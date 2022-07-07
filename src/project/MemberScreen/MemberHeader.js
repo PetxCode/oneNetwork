@@ -10,7 +10,7 @@ import {
 	BsFillCartFill,
 } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
-import pix from "./pix.jpeg";
+import pix from "./avatar.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import MemberSiderMain from "./MemberSiderMain";
 

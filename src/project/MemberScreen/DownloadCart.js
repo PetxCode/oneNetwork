@@ -18,7 +18,7 @@ import { BsFillBookFill, BsPersonCircle } from "react-icons/bs";
 import { FaMoneyCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import pix1 from "./pix.jpeg";
+import pix1 from "./sound.webp";
 import pix from "./pii.png";
 import moment from "moment";
 import {
@@ -69,7 +69,11 @@ const DownloadCartPage = () => {
 						{cart?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
-									<Image src={pix1} />
+									{props?.audioCover ? (
+										<Image src={props.audioCover} />
+									) : (
+										<Image src={pix1} />
+									)}
 
 									{user?.avatar ? (
 										<ImageAvatar src={user?.avatar} />
@@ -362,6 +366,7 @@ const Image = styled.img`
 	height: 200px;
 	background-color: #742e9d;
 	object-fit: cover;
+	border-bottom: 1px solid silver;
 `;
 
 const Card = styled.div`
