@@ -96,11 +96,11 @@ const AddEbook = () => {
 			})
 			.catch((error) => {
 				new Swal({
-					title: error.message,
-					text: "Please check your Network",
+					title: error.response.data.message,
+					text: "Please check and fix this ERROR",
 					icon: "error",
 					showConfirmButton: false,
-					timer: 2500,
+					timer: 3500,
 				}).then(() => {
 					setLoading(false);
 				});
@@ -165,6 +165,7 @@ const AddEbook = () => {
 							<BUtton type="submit" bg>
 								Upload eBook
 							</BUtton>
+
 							<Div>{errorState}</Div>
 						</ButtonHolder>
 					</Card>

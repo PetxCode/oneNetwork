@@ -6,6 +6,7 @@ const initialState = {
 	material: [],
 	materialCart: [],
 	book: {},
+	tokenData: "",
 };
 
 const Global = createSlice({
@@ -35,8 +36,14 @@ const Global = createSlice({
 			state.book = payload;
 		},
 
+		createToken: (state, { payload }) => {
+			state.tokenData = payload;
+		},
+
 		addToCart: (state, { payload }) => {
-			const check = state.materialCart.findIndex((el) => el.id === payload.id);
+			const check = state.materialCart.findIndex(
+				(el) => el._id === payload._id
+			);
 			if (check >= 0) {
 				return;
 			} else {
@@ -50,7 +57,7 @@ const Global = createSlice({
 
 		removeMaterial: (state, { payload }) => {
 			state.materialCart = state.materialCart.filter(
-				(fl) => fl.id !== payload.id
+				(fl) => fl._id !== payload._id
 			);
 		},
 
@@ -88,6 +95,7 @@ export const {
 	onToggleFalse,
 	onToggleTrue,
 	createBook,
+	createToken,
 } = Global.actions;
 
 export default Global.reducer;

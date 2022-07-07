@@ -50,6 +50,13 @@ const Offerings = () => {
 					</Title>
 					<br />
 					<br />
+					<TitleSub>
+						<span> What are you givig for:</span>
+					</TitleSub>
+					<Select>
+						<Option>Offering</Option>
+						<Option>Tithe</Option>
+					</Select>
 					<InputHolder>
 						<Label>How much would you want to Give?</Label>
 						<Input
@@ -63,7 +70,7 @@ const Offerings = () => {
 
 					<ButtonHolder>
 						<BUtton type="submit" bg onClick={onHandle}>
-							Pay Now
+							Give Now
 						</BUtton>
 						<Div>{errorState}</Div>
 					</ButtonHolder>
@@ -89,6 +96,26 @@ const Offerings = () => {
 };
 
 export default Offerings;
+
+const Option = styled.option`
+	font-family: Poppins;
+	font-weight: 500;
+`;
+
+const Select = styled.select`
+	display: flex;
+	position: relative;
+	margin-bottom: 35px;
+	border: 1px solid #742e9d;
+	width: 100%;
+	height: 40px;
+	border-radius: 5px;
+	color: #742e9d;
+	outline: none;
+	justify-content: center;
+	font-family: Poppins;
+	font-weight: 700;
+`;
 
 const TextHolder = styled.div`
 	width: 100%;

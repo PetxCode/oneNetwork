@@ -10,6 +10,7 @@ import LoadingState from "../../LoadingState";
 import Swal from "sweetalert2";
 
 const mainURL = "https://onechurch1.herokuapp.com";
+
 const OrderNotification = () => {
 	const user = useSelector((state) => state.user);
 	const [members, setMembers] = useState({});
@@ -39,11 +40,11 @@ const OrderNotification = () => {
 			})
 			.catch((error) => {
 				new Swal({
-					title: error.message,
-					text: "Please check your Network",
+					title: error.response.data.message,
+					text: "Please check and fix this ERROR",
 					icon: "error",
 					showConfirmButton: false,
-					timer: 2500,
+					timer: 3500,
 				}).then(() => {
 					setLoading(false);
 				});

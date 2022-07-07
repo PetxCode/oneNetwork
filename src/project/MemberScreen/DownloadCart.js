@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import left from "./left.png";
@@ -22,22 +22,22 @@ import pix1 from "./pix.jpeg";
 import pix from "./pii.png";
 import moment from "moment";
 import {
-	createToken,
 	removeMaterial,
 	totalMaterialCost,
 } from "../../compoents/Global/Global";
 import { v4 as uuidv4 } from "uuid";
+import fileDownload from "js-file-download";
 
-const CartPage = () => {
+const DownloadCartPage = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
 	const cart = useSelector((state) => state.materialCart);
 	const totalCost = useSelector((state) => state.tatalMaterialCost);
+	const myToken = useSelector((state) => state.tokenData);
+	const { token } = useParams();
 
 	console.log(uuidv4());
-
-	const tokenValue = uuidv4();
 
 	const config = {
 		reference: uuidv4(),
@@ -46,17 +46,15 @@ const CartPage = () => {
 		publicKey: "pk_test_d632bf4b9aa1e74745eb158cec8034961dc13b18",
 	};
 
-	const onSuccess = (reference) => {
-		dispatch(createToken(tokenValue));
-		navigate(`/downloadcart/${tokenValue}`);
-		console.log(reference);
+	const handleClick = (url, filename) => {
+		axios
+			.get(url, {
+				responseType: "blob",
+			})
+			.then((res) => {
+				fileDownload(res.data, filename);
+			});
 	};
-
-	const onClose = () => {
-		console.log("closed");
-	};
-
-	const initializePayment = usePaystackPayment(config);
 
 	useEffect(() => {
 		dispatch(totalMaterialCost());
@@ -64,86 +62,79 @@ const CartPage = () => {
 
 	return (
 		<Container>
-			{/* <Mini>Change Details</Mini> */}
-
-			<DisplayOption>
-				<Nav bg="#742e9d">
-					Total Cost
-					<br />#{totalCost}.00
-				</Nav>
-				<Nav bg="darkorange">
-					Total Messages
-					<br />
-					{cart.length}
-				</Nav>
-
-				<Nav
-					bg="red"
-					onClick={() => {
-						initializePayment(onSuccess, onClose);
-					}}
-				>
-					Proceed to
-					<br />
-					Pay
-				</Nav>
-			</DisplayOption>
-
+			<DivText>Thanks for paying to download this Message(ses)... </DivText>
 			<WrapperHolder>
-				<CardHolder24>
-					{cart?.map((props) => (
-						<Card key={props._id}>
-							<ImageHolder>
-								<Image src={pix1} />
+				{myToken === token ? (
+					<CardHolder24>
+						{cart?.map((props) => (
+							<Card key={props._id}>
+								<ImageHolder>
+									<Image src={pix1} />
 
-								{user?.avatar ? (
-									<ImageAvatar src={user?.avatar} />
-								) : (
-									<ImageAvatarMe>One</ImageAvatarMe>
-								)}
-							</ImageHolder>
-							<DisplayHolder>
-								<TitleCart>
-									<Tile>{props.title}</Tile>
-									<Cost>#{props.cost}.00</Cost>
-								</TitleCart>
+									{user?.avatar ? (
+										<ImageAvatar src={user?.avatar} />
+									) : (
+										<ImageAvatarMe>One</ImageAvatarMe>
+									)}
+								</ImageHolder>
+								<DisplayHolder>
+									<TitleCart>
+										<Tile>{props.title}</Tile>
+										<Cost>#{props.cost}.00</Cost>
+									</TitleCart>
 
-								<Date>
-									created: <span>{moment(props.createdAt).fromNow()}</span>
-								</Date>
-							</DisplayHolder>
+									<Date>
+										created: <span>{moment(props.createdAt).fromNow()}</span>
+									</Date>
+								</DisplayHolder>
 
-							<HolderState>
-								<IconHolder>
-									<IconStart>
-										<Icon
-											onClick={() => {
-												// unlikeProduct(props._id);
-											}}
-										/>
-									</IconStart>
+								<HolderState>
+									<IconHolder>
+										<IconStart>
+											<Icon
+												onClick={() => {
+													// unlikeProduct(props._id);
+												}}
+											/>
+										</IconStart>
 
-									<Text> {props.like.length}</Text>
-								</IconHolder>
-								<IconHolder>
-									<IconStart>
-										<SartIcon />
-									</IconStart>
-									<Text> {4.5}</Text>
-								</IconHolder>
-								<Space />
+										<Text> {props.like.length}</Text>
+									</IconHolder>
+									<IconHolder>
+										<IconStart>
+											<SartIcon />
+										</IconStart>
+										<Text> {4.5}</Text>
+									</IconHolder>
+									<Space />
+									<Button
+										href={props.audioFile}
+										download={props.title}
+										// onClick={() => {
+										// 	handleClick(props.audioFile, props.title);
+										// 	console.log("Donwloooaddedd");
+										// }}
+									>
+										Download
+									</Button>
+								</HolderState>
+							</Card>
+						))}
+					</CardHolder24>
+				) : null}
 
-								<Button
-									onClick={() => {
-										dispatch(removeMaterial(props));
-									}}
-								>
-									Remove from Cart
-								</Button>
-							</HolderState>
-						</Card>
-					))}
-				</CardHolder24>
+				{/* <div>
+					<button
+						onClick={() => {
+							handleClick(
+								"https://firebasestorage.googleapis.com/v0/b/one-church-network.appspot.com/o/pitchDeckstomping-rock-four-shots-111444.mp3?alt=media&token=2d93f1da-ef0e-4667-8ad3-569bc31ad412",
+								"sample"
+							);
+						}}
+					>
+						Download the File
+					</button>
+				</div> */}
 			</WrapperHolder>
 
 			<Holder>
@@ -154,7 +145,14 @@ const CartPage = () => {
 	);
 };
 
-export default CartPage;
+export default DownloadCartPage;
+
+const DivText = styled.div`
+	margin-top: 150px;
+	font-weight: 700;
+	font-size: 20px;
+	color: #742e9d;
+`;
 
 const HolderState = styled.div`
 	display: flex;
@@ -242,7 +240,8 @@ const Space = styled.div`
 	flex: 1;
 `;
 
-const Button = styled.div`
+const Button = styled.a`
+	text-decoration: none;
 	width: 100px;
 	height: 40px;
 	background-color: #742e9d;
@@ -458,7 +457,7 @@ const WrapperHolder = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	margin-top: 150px;
+	margin-top: 50px;
 
 	@media screen and (max-width: 425px) {
 		margin-top: 80px;
@@ -631,3 +630,32 @@ const Container = styled.div`
 		width: 100%;
 	}
 `;
+
+{
+	/* <Mini>Change Details</Mini> */
+}
+{
+	/* 
+			<DisplayOption>
+				<Nav bg="#742e9d">
+					Total Cost
+					<br />#{totalCost}.00
+				</Nav>
+				<Nav bg="darkorange">
+					Total Messages
+					<br />
+					{cart.length}
+				</Nav>
+
+				<Nav
+					bg="red"
+					onClick={() => {
+						initializePayment(onSuccess, onClose);
+					}}
+				>
+					Proceed to
+					<br />
+					Pay
+				</Nav>
+			</DisplayOption> */
+}

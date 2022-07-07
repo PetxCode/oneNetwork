@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import AddProducts from "./AddProducts";
 import CartPage from "./CartPage";
+import DownloadCartPage from "./DownloadCart";
 import Offerings from "./Offerings";
 import OrderNotification from "./OrderNotification";
 import Overview from "./Overview";
@@ -18,6 +19,7 @@ const MemberRoutes = () => {
 			{user?.status === "member" ? (
 				<Routes>
 					{/* <Route path="/" element={<Overview />} /> */}
+					<Route path="/downloadcart/:token" element={<DownloadCartPage />} />
 					<Route path="/to-cart" element={<CartPage />} />
 					<Route path="/order-notification" element={<OrderNotification />} />
 					<Route path="/" element={<Product />} />

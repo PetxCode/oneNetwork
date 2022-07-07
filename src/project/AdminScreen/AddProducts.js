@@ -18,6 +18,8 @@ import { storage } from "./base";
 import AddEbook from "./AddEbook";
 import LoadingState from "../../LoadingState";
 
+import { SpinningCircles, BallTriangle } from "react-loading-icons";
+
 const url = "https://onechurch1.herokuapp.com";
 
 const AddProducts = () => {
@@ -37,6 +39,7 @@ const AddProducts = () => {
 
 	const [audioFile, setAudioFile] = useState("");
 	const [eBookFile, setEBookFile] = useState("");
+	const [percentage, setPercentage] = useState(0);
 
 	const onHandleImage = (e) => {
 		const file = e.target.files[0];
@@ -61,6 +64,7 @@ const AddProducts = () => {
 				const progress =
 					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 				console.log("Upload is " + progress + "% done");
+				setPercentage(progress);
 			},
 			(error) => {
 				console.log(error.message);
@@ -87,7 +91,7 @@ const AddProducts = () => {
 	} = useForm({ resolver: yupResolver(yupSchema) });
 
 	const onSubmitAudio = handleSubmit(async (value) => {
-		const { title, description, cost, audioFile } = value;
+		const { title, description, cost } = value;
 
 		console.log(value);
 
@@ -109,11 +113,11 @@ const AddProducts = () => {
 			})
 			.catch((error) => {
 				new Swal({
-					title: error.message,
-					text: "Please check your Network",
+					title: error.response.data.message,
+					text: "Please check and fix this ERROR",
 					icon: "error",
 					showConfirmButton: false,
-					timer: 2500,
+					timer: 3500,
 				}).then(() => {
 					setLoading(false);
 				});
@@ -177,7 +181,22 @@ const AddProducts = () => {
 								{image === "" ? (
 									<LogoImage src={pix} br />
 								) : (
-									<LogoImageAudio>Audio File Loaded</LogoImageAudio>
+									<LogoImageAudio>
+										<div style={{ marginTop: "10px" }}>Audio File Loaded</div>
+										<div>
+											{percentage > 0 && percentage <= 99.9999 ? (
+												<SpinningCircles
+													stroke="white"
+													strokeOpacity={1}
+													speed={0.75}
+													fill="white"
+													strokeWidth={3}
+													width={30}
+												/>
+											) : null}
+										</div>{" "}
+										{Math.floor(percentage)}% done
+									</LogoImageAudio>
 								)}
 								<LogoImageInput
 									id="pix"
@@ -186,10 +205,9 @@ const AddProducts = () => {
 									accept=".mp3,audio/*"
 								/>
 								<LogoImageLabel htmlFor="pix">
-									Choose the Message
+									<span>Choose the Message</span>
 								</LogoImageLabel>
 							</LogoImageHolder>
-
 							<InputRow>
 								<InputHolder1>
 									<Label>Title</Label>
@@ -202,7 +220,6 @@ const AddProducts = () => {
 									<Error>{errors?.cost?.message}</Error>
 								</InputHolder2>
 							</InputRow>
-
 							<InputHolderArea>
 								<Label>Brief Description</Label>
 								<InputArea
@@ -211,17 +228,17 @@ const AddProducts = () => {
 								/>
 								<Error>{errors?.description?.message}</Error>
 							</InputHolderArea>
-
 							<ButtonHolder>
-								<BUtton
-									type="submit"
-									bg
-									onClick={() => {
-										console.log("clicked 2");
-									}}
-								>
-									Upload Message
-								</BUtton>
+								{audioFile === "" ? (
+									<BUtton type="submit" disabled>
+										Upload Message
+									</BUtton>
+								) : (
+									<BUtton type="submit" bg>
+										Upload Message
+									</BUtton>
+								)}
+
 								<Div>{errorState}</Div>
 							</ButtonHolder>
 						</Card>
@@ -248,6 +265,8 @@ const LogoImageLabel = styled.label`
 	color: white;
 	margin: 10px 0;
 	transition: all 350ms;
+	display: flex;
+	align-items: center;
 
 	:hover {
 		transform: scale(1.02);
@@ -270,6 +289,8 @@ const LogoImageAudio = styled.div`
 	color: white;
 	display: flex;
 	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 	align-items: center;
 `;
 

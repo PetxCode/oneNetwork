@@ -131,11 +131,11 @@ const Product = () => {
 			})
 			.catch((error) => {
 				new Swal({
-					title: error.message,
-					text: "Please check your Network",
+					title: error.response.data.message,
+					text: "Please check and fix this ERROR",
 					icon: "error",
 					showConfirmButton: false,
-					timer: 2500,
+					timer: 3500,
 				}).then(() => {
 					setLoading(false);
 				});
@@ -187,7 +187,7 @@ const Product = () => {
 		await axios
 			.post(url)
 			.then((res) => {
-				// setProductDisplay(res.data.data);
+				window.location.reload();
 			})
 			.catch((err) => console.log(err.message));
 	};
@@ -200,7 +200,7 @@ const Product = () => {
 		await axios
 			.post(url)
 			.then((res) => {
-				// setProductDisplay(res.data.data);
+				window.location.reload();
 			})
 			.catch((err) => console.log(err.message));
 	};
@@ -236,7 +236,6 @@ const Product = () => {
 	const initializePayment = usePaystackPayment(config);
 
 	useEffect(() => {
-		// getAllAudio();
 		getAllEbook();
 		getAllAnnouncementOne();
 		getAlleBookProducts();
