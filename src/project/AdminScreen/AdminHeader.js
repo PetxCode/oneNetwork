@@ -93,7 +93,7 @@ const AdminHeader = () => {
 	const getMainUsers = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
 
-		const url = `${mainURL}/api/member/${user?._id}`;
+		const url = `${mainURL}/api/admin/${user?._id}`;
 
 		await axios
 			.get(url)

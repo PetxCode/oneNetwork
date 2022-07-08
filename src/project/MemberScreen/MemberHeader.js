@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { logOut } from "../../compoents/Global/Global";
@@ -13,6 +13,10 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import pix from "./avatar.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import MemberSiderMain from "./MemberSiderMain";
+import axios from "axios";
+import Swal from "sweetalert2";
+
+const mainURL = "https://onechurch1.herokuapp.com";
 
 const MemberHeader = () => {
 	const navigate = useNavigate();
@@ -88,6 +92,33 @@ const MemberHeader = () => {
 		});
 	});
 
+	const [mainUser, setMainUser] = useState({});
+
+	const getMainUsers = async () => {
+		// const url = `${newURL}/api/admin/${user._id}`;
+
+		const url = `${mainURL}/api/member/${user?._id}`;
+
+		await axios
+			.get(url)
+			.then((res) => {
+				setMainUser(res.data.data);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {});
+			});
+	};
+
+	useEffect(() => {
+		getMainUsers();
+	}, []);
+
 	return (
 		<Container>
 			<Wrapper>
@@ -144,7 +175,11 @@ const MemberHeader = () => {
 					</Diva>
 
 					<ImageHolder>
-						<Image src={pix} />
+						{mainUser?.avatar ? (
+							<Image src={mainUser?.avatar} />
+						) : (
+							<Image src={pix} />
+						)}
 						<Green />
 					</ImageHolder>
 					<Button

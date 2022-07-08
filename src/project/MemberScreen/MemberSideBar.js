@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -9,14 +9,43 @@ import {
 import { BsFillBagFill, BsPersonCircle, BsFillCartFill } from "react-icons/bs";
 import { GiPayMoney } from "react-icons/gi";
 import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 const MemberSideBar = () => {
 	const user = useSelector((state) => state.user);
+
+	const [mainUser, setMainUser] = useState({});
+
+	const getMainUsers = async () => {
+		const mainURL = "https://onechurch1.herokuapp.com";
+		const url = `${mainURL}/api/admin/${user?.admin}`;
+
+		await axios
+			.get(url)
+			.then((res) => {
+				setMainUser(res.data.data);
+			})
+			.catch((error) => {
+				new Swal({
+					title: error.message,
+					text: "Please check your Network",
+					icon: "error",
+					showConfirmButton: false,
+					timer: 2500,
+				}).then(() => {});
+			});
+	};
+
+	useEffect(() => {
+		getMainUsers();
+	}, []);
+
 	return (
 		<Container>
 			<LogoHolder to="/">
 				{/* <Bar>One</Bar> */}
-				{user?.avatar ? <LogoImage /> : <Logo>ONE</Logo>}
+				{mainUser?.logo ? <LogoImage src={mainUser?.logo} /> : <Logo>ONE</Logo>}
 
 				<LogoTitle>
 					{user?.churchName ? user?.churchName : <div>One Church Network</div>}
@@ -197,13 +226,14 @@ const LogoTitle = styled.div`
 `;
 
 const LogoImage = styled.img`
-	padding: 20px;
+	width: 80px;
+	height: 80px;
 	background-color: #742e9d;
 	color: white;
-	border-radius: 3px;
+	border-radius: 5px;
 	margin-right: 5px;
 	font-weight: 700;
-	object-fit: contain;
+	object-fit: cover;
 `;
 
 const Logo = styled.div`

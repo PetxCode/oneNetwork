@@ -12,10 +12,12 @@ import left from "./left.png";
 import right from "./Right.png";
 import { useSelector } from "react-redux";
 
-import pix from "./pix.jpeg";
+import pix from "./avatar.jpg";
+import one from "./one.png";
 import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
+// const url = "http://localhost:2233";
 
 const UpdateSettings = () => {
 	const navigate = useNavigate();
@@ -28,7 +30,7 @@ const UpdateSettings = () => {
 	const [myImage, setMyImage] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	const [image, setImage] = useState(pix);
+	const [image, setImage] = useState(one);
 	const [avatar, setAvatar] = useState("");
 
 	const [imageLogo, setImageLogo] = useState(pix);
@@ -46,6 +48,7 @@ const UpdateSettings = () => {
 		const save = URL.createObjectURL(file);
 		setImageLogo(save);
 		setAvatarLogo(file);
+		console.log(avatarLogo);
 	};
 
 	const yupSchema = yup.object().shape({
@@ -62,11 +65,10 @@ const UpdateSettings = () => {
 
 	const onSubmit = handleSubmit(async (value) => {
 		const newURL = `${url}/api/admin/${user._id}/`;
-
+		setLoading(true);
 		await axios
 			.post(newURL, value)
 			.then((res) => {
-				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",
@@ -101,11 +103,10 @@ const UpdateSettings = () => {
 		const config = {
 			"Content-Type": "multipart/form-data",
 		};
-
+		setLoading(true);
 		await axios
 			.patch(newURL, formData, config)
 			.then((res) => {
-				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",
@@ -114,6 +115,7 @@ const UpdateSettings = () => {
 					timer: 2500,
 				}).then(() => {
 					navigate("/");
+					window.location.reload();
 				});
 				setLoading(false);
 			})
@@ -135,16 +137,15 @@ const UpdateSettings = () => {
 		const newURL = `${url}/api/admin/${user._id}/logo`;
 
 		const formData = new FormData();
-		formData.append("logo", avatarLogo);
+		formData.append("avatar", avatarLogo);
 
 		const config = {
 			"Content-Type": "multipart/form-data",
 		};
-
+		setLoading(true);
 		await axios
 			.patch(newURL, formData, config)
 			.then((res) => {
-				setLoading(true);
 				Swal.fire({
 					position: "center",
 					icon: "success",
@@ -264,10 +265,10 @@ const UpdateSettings = () => {
 							<br />
 
 							<LogoImageHolder>
-								<LogoImage src={image} br />
+								<LogoImage src={imageLogo} />
 								<LogoImageInput
 									id="pix"
-									onChange={onHandleImage}
+									onChange={onHandleImageLogo}
 									type="file"
 									name="myImage"
 									accept="image/x-png,image/gif,image/jpeg"
@@ -276,7 +277,7 @@ const UpdateSettings = () => {
 							</LogoImageHolder>
 
 							<ButtonHolder>
-								<BUtton type="submit" bg onClick={onSubmitImage}>
+								<BUtton type="submit" bg onClick={onSubmitLogo}>
 									Upload
 								</BUtton>
 								<Div>{errorState}</Div>
@@ -298,10 +299,10 @@ const UpdateSettings = () => {
 							<br />
 
 							<LogoImageHolder>
-								<LogoImage src={imageLogo} />
+								<LogoImage src={image} />
 								<LogoImageInput
 									id="pix"
-									onChange={onHandleImageLogo}
+									onChange={onHandleImage}
 									type="file"
 									name="myImage"
 									accept="image/x-png,image/gif,image/jpeg"
@@ -312,7 +313,7 @@ const UpdateSettings = () => {
 							</LogoImageHolder>
 
 							<ButtonHolder>
-								<BUtton type="submit" bg onClick={onSubmitLogo}>
+								<BUtton type="submit" bg onClick={onSubmitImage}>
 									Upload DP
 								</BUtton>
 								<Div>{errorState}</Div>
@@ -354,12 +355,25 @@ const LogoImageInput = styled.input`
 	display: none;
 `;
 
+const LogoImageFile = styled.div`
+	width: 50%;
+	height: 200px;
+	border-radius: ${({ br }) => (br ? "5px" : "50%")};
+	object-fit: cover;
+	background-color: #742e9d;
+	border: 1px solid silver;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
 const LogoImage = styled.img`
 	width: 50%;
 	height: 200px;
 	border-radius: ${({ br }) => (br ? "5px" : "50%")};
 	object-fit: cover;
 	background-color: #742e9d;
+	border: 1px solid silver;
 `;
 
 const LogoImageHolder = styled.div`
@@ -426,7 +440,7 @@ const Mini = styled.div`
 	font-size: 20px;
 	text-transform: uppercase;
 	font-weight: bold;
-	width: 100%;
+	width: 90%;
 	display: flex;
 	margin-left: 80px;
 	margin-top: 50px;

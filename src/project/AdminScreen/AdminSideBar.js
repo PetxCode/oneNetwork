@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { AiFillPieChart, AiFillSetting, AiFillAudio } from "react-icons/ai";
@@ -8,13 +8,29 @@ import { GiPayMoney } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import { FaChurch } from "react-icons/fa";
 
+import axios from "axios";
+
+const mainURL = "https://onechurch1.herokuapp.com";
+
 const AdminSideBar = () => {
 	const user = useSelector((state) => state.user);
+	const [mainUser, setMainUser] = useState({});
+
+	const getUsers = async () => {
+		const newURL = `${mainURL}/api/admin/${user._id}`;
+		await axios.get(newURL).then((res) => {
+			setMainUser(res.data.data);
+		});
+	};
+
+	useEffect(() => {
+		getUsers();
+	}, []);
 	return (
 		<Container>
 			<LogoHolder to="/">
 				{/* <Bar>One</Bar> */}
-				{user?.avatar ? <LogoImage /> : <Logo>ONE</Logo>}
+				{mainUser?.logo ? <LogoImage src={mainUser?.logo} /> : <Logo>ONE</Logo>}
 
 				<LogoTitle>
 					{user?.churchName ? user?.churchName : <div>One Church Network</div>}
@@ -215,13 +231,14 @@ const LogoTitle = styled.div`
 `;
 
 const LogoImage = styled.img`
-	padding: 20px;
+	width: 80px;
+	height: 80px;
 	background-color: #742e9d;
 	color: white;
-	border-radius: 3px;
+	border-radius: 5px;
 	margin-right: 5px;
 	font-weight: 700;
-	object-fit: contain;
+	object-fit: cover;
 `;
 
 const Logo = styled.div`
