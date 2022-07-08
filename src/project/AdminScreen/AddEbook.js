@@ -61,6 +61,7 @@ const AddEbook = () => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 					console.log("File available at", downloadURL);
 					setEBookFile(downloadURL);
+					console.log("Getting the Cover: ", eBookFile);
 				});
 			}
 		);
@@ -80,17 +81,16 @@ const AddEbook = () => {
 
 	const onSubmitEbook = handleSubmit(async (value) => {
 		const { eBookDescription, eBookTitle, eBookCost } = value;
-
-		console.log(value);
-
-		const newURL = `${url}/api/eBook/${user._id}/create`;
+		const url24 = "http://localhost:2233";
+		const newURL = `${url24}/api/eBook/${user._id}/create`;
 		setLoading(true);
 		await axios
 			.post(newURL, {
 				description: eBookDescription,
 				title: eBookTitle,
 				cost: eBookCost,
-				eBook: eBookFile,
+
+				eBookCover: eBookFile,
 			})
 			.then((res) => {
 				Swal.fire({
