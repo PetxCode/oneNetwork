@@ -24,9 +24,11 @@ const Product = () => {
 
 	const getAllAudio = async () => {
 		// const url = `${newURL}/api/admin/${user._id}`;
-		const localURL = "http://localhost:2233";
-		// const url = `${MianURL}/api/content/${user?._id}`;
-		const url = `${localURL}/api/content/${user?._id}`;
+		// const localURL = "http://localhost:2233";
+
+		// const url = `${localURL}/api/content/${user?._id}`;
+
+		const url = `${MianURL}/api/content/${user?._id}`;
 		await axios
 			.get(url)
 			.then((res) => {
