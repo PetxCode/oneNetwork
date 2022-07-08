@@ -445,7 +445,7 @@ const Product = () => {
 									{props?.eBookCover ? (
 										<Image src={props.eBookCover} />
 									) : (
-										<Image src={pix} />
+										<Image src={pixx} />
 									)}
 
 									{/* {user?.avatar ? (
