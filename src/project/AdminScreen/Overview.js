@@ -268,7 +268,9 @@ const Overview = () => {
 		getAllGiversData();
 		getAllGivers7();
 		getAllGiversDataSinge();
-	}, []);
+
+		// console.log(dataUser);
+	}, [dataUser]);
 
 	const dataFiles = { Love: 50000, "Love world": 300, Gamers: 900 };
 

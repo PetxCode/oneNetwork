@@ -50,7 +50,7 @@ const MakeAnnouncement = () => {
 				Swal.fire({
 					position: "center",
 					icon: "success",
-					title: "announcement has been added",
+					title: "announcement has been added ",
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
