@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -29,6 +29,7 @@ import {
 } from "../../compoents/Global/Global";
 import { v4 as uuidv4 } from "uuid";
 import fileDownload from "js-file-download";
+import { AuthContext } from "../../compoents/Global/GlobalProvider";
 
 const DownloadCartPage = () => {
 	const dispatch = useDispatch();
@@ -37,8 +38,10 @@ const DownloadCartPage = () => {
 	const cart = useSelector((state) => state.downloadCart);
 	const totalCost = useSelector((state) => state.tatalMaterialCost);
 	const myToken = useSelector((state) => state.tokenData);
+
 	const { token } = useParams();
 
+	const { myPaidToken } = useContext(AuthContext);
 	console.log(uuidv4());
 
 	const config = {
@@ -67,7 +70,7 @@ const DownloadCartPage = () => {
 		<Container>
 			<DivText>Thanks for paying to download this Message(ses)... </DivText>
 			<WrapperHolder>
-				{myToken === token ? (
+				{myPaidToken === token ? (
 					<CardHolder24>
 						{cart?.map((props) => (
 							<Card key={props._id}>

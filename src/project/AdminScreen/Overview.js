@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import pix from "./pii.png";
 import { AiFillAudio } from "react-icons/ai";
@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import moment from "moment";
 import Swal from "sweetalert2";
 import LoadingState from "../../LoadingState";
+import { AuthContext } from "../../compoents/Global/GlobalProvider";
 
 const mainURL = "https://onechurch1.herokuapp.com";
 
@@ -274,10 +275,12 @@ const Overview = () => {
 
 	const dataFiles = { Love: 50000, "Love world": 300, Gamers: 900 };
 
+	const { text } = useContext(AuthContext);
 	return (
 		<Container>
 			{loading ? <LoadingState /> : null}
 			<Wrapper>
+				{text}
 				<Top>
 					<TopSider>
 						<NoticeHolder>

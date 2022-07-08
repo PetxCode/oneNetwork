@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -28,6 +28,7 @@ import {
 	totalMaterialCost,
 } from "../../compoents/Global/Global";
 import { v4 as uuidv4 } from "uuid";
+import { AuthContext } from "../../compoents/Global/GlobalProvider";
 
 const CartPage = () => {
 	const dispatch = useDispatch();
@@ -35,10 +36,7 @@ const CartPage = () => {
 	const user = useSelector((state) => state.user);
 	const cart = useSelector((state) => state.materialCart);
 	const totalCost = useSelector((state) => state.tatalMaterialCost);
-
-	console.log(uuidv4());
-
-	const tokenValue = uuidv4();
+	const { setMyPaidToken } = useContext(AuthContext);
 
 	const config = {
 		reference: uuidv4(),
@@ -48,7 +46,9 @@ const CartPage = () => {
 	};
 
 	const onSuccess = (reference) => {
-		dispatch(createToken(tokenValue));
+		const tokenValue = uuidv4();
+		setMyPaidToken(tokenValue);
+		// dispatch(createToken(tokenValue));
 		navigate(`/downloadcart/${tokenValue}`);
 		console.log(reference);
 	};
