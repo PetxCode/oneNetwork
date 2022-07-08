@@ -977,10 +977,10 @@ const TextBook = styled.div`
 
 const Text = styled.div`
 	font-weight: 500;
-	font-size: 20px;
+	font-size: 13px;
 	height: 40px;
 	text-align: center;
-	margin-bottom: 20px;
+	margin-top: 20px;
 `;
 
 const SartIcon = styled(AiFillStar)`
