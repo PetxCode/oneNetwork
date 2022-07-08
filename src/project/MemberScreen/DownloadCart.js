@@ -22,6 +22,8 @@ import pix1 from "./sound.webp";
 import pix from "./pii.png";
 import moment from "moment";
 import {
+	addToCart,
+	removeAllMaterial,
 	removeMaterial,
 	totalMaterialCost,
 } from "../../compoents/Global/Global";
@@ -32,7 +34,7 @@ const DownloadCartPage = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.user);
-	const cart = useSelector((state) => state.materialCart);
+	const cart = useSelector((state) => state.downloadCart);
 	const totalCost = useSelector((state) => state.tatalMaterialCost);
 	const myToken = useSelector((state) => state.tokenData);
 	const { token } = useParams();
@@ -58,6 +60,7 @@ const DownloadCartPage = () => {
 
 	useEffect(() => {
 		dispatch(totalMaterialCost());
+		dispatch(removeAllMaterial());
 	}, [cart]);
 
 	return (
@@ -102,7 +105,7 @@ const DownloadCartPage = () => {
 											/>
 										</IconStart>
 
-										<Text> {props.like.length}</Text>
+										<Text> {props?.like?.length}</Text>
 									</IconHolder>
 									<IconHolder>
 										<IconStart>
@@ -156,6 +159,11 @@ const DivText = styled.div`
 	font-weight: 700;
 	font-size: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 15px;
+		text-align: center;
+	}
 `;
 
 const HolderState = styled.div`

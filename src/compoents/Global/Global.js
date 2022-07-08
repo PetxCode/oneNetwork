@@ -5,6 +5,7 @@ const initialState = {
 	toggle: true,
 	material: [],
 	materialCart: [],
+	downloadCart: [],
 	book: {},
 	tokenData: "",
 };
@@ -55,10 +56,18 @@ const Global = createSlice({
 			}
 		},
 
+		payCart: (state, { payload }) => {
+			state.downloadCart = payload;
+		},
+
 		removeMaterial: (state, { payload }) => {
 			state.materialCart = state.materialCart.filter(
 				(fl) => fl._id !== payload._id
 			);
+		},
+
+		removeAllMaterial: (state, { payload }) => {
+			state.materialCart = [];
 		},
 
 		totalMaterialCost: (state) => {
@@ -96,6 +105,8 @@ export const {
 	onToggleTrue,
 	createBook,
 	createToken,
+	removeAllMaterial,
+	payCart,
 } = Global.actions;
 
 export default Global.reducer;

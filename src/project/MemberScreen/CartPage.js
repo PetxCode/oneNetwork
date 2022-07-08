@@ -23,6 +23,7 @@ import pix from "./pii.png";
 import moment from "moment";
 import {
 	createToken,
+	payCart,
 	removeMaterial,
 	totalMaterialCost,
 } from "../../compoents/Global/Global";
@@ -80,6 +81,7 @@ const CartPage = () => {
 				<Nav
 					bg="red"
 					onClick={() => {
+						dispatch(payCart(cart));
 						initializePayment(onSuccess, onClose);
 					}}
 				>
