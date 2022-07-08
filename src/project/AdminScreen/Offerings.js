@@ -123,7 +123,7 @@ const TextHolder = styled.div`
 	align-items: center;
 	flex-direction: column;
 	position: absolute;
-	bottom: 50px;
+	bottom: 0px;
 `;
 
 const ButtonHolder = styled.div`
@@ -233,7 +233,7 @@ const Wrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin-top: 80px;
+	margin-top: 120px;
 
 	@media screen and (max-width: 500px) {
 		width: 90%;
@@ -281,6 +281,10 @@ const Sub = styled.div`
 	font-weight: 700;
 	margin-top: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 20px;
+	}
 `;
 
 const Title1 = styled.div`
@@ -289,6 +293,11 @@ const Title1 = styled.div`
 	text-align: center;
 	font-size: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 14px;
+		width: 90%;
+	}
 `;
 
 const Container = styled.div`

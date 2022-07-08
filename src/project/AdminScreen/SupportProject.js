@@ -270,6 +270,12 @@ const Mini = styled.div`
 	display: flex;
 	margin-top: 50px;
 	margin-left: 50px;
+
+	@media screen and (max-width: 450px) {
+		text-align: center;
+		width: 100%;
+		margin-left: 0px;
+	}
 `;
 
 const WrapperHolder = styled.div`
@@ -277,6 +283,10 @@ const WrapperHolder = styled.div`
 	flex-wrap: wrap;
 	justify-content: center;
 	margin-top: 30px;
+
+	@media screen and (max-width: 450px) {
+		min-height: 35vh;
+	}
 `;
 
 const TextHolder = styled.div`
@@ -483,6 +493,7 @@ const Holder = styled.div`
 	background-position: center;
 	background-size: cover;
 	margin-top: 100px;
+	bottom: 0;
 `;
 
 const Space = styled.div`
@@ -503,6 +514,10 @@ const Sub = styled.div`
 	font-weight: 700;
 	margin-top: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 20px;
+	}
 `;
 
 const Title1 = styled.div`
@@ -511,6 +526,11 @@ const Title1 = styled.div`
 	text-align: center;
 	font-size: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 14px;
+		width: 90%;
+	}
 `;
 
 const Container = styled.div`

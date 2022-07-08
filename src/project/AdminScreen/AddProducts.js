@@ -341,12 +341,17 @@ const LogoImageLabel = styled.label`
 	transition: all 350ms;
 	display: flex;
 	align-items: center;
+	text-align: center;
 
 	:hover {
 		transform: scale(1.02);
 		cursor: pointer;
 		box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
 			rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+	}
+
+	@media screen and (max-width: 450px) {
+		font-size: 12px;
 	}
 `;
 

@@ -374,6 +374,11 @@ const LogoImage = styled.img`
 	object-fit: cover;
 	background-color: #742e9d;
 	border: 1px solid silver;
+
+	@media screen and (max-width: 450px) {
+		width: 150px;
+		height: 150px;
+	}
 `;
 
 const LogoImageHolder = styled.div`

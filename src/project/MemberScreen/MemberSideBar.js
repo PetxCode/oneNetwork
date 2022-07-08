@@ -44,7 +44,6 @@ const MemberSideBar = () => {
 	return (
 		<Container>
 			<LogoHolder to="/">
-				{/* <Bar>One</Bar> */}
 				{mainUser?.logo ? <LogoImage src={mainUser?.logo} /> : <Logo>ONE</Logo>}
 
 				<LogoTitle>
