@@ -122,7 +122,7 @@ const UpdateSettings = () => {
 					showConfirmButton: false,
 					timer: 2500,
 				}).then(() => {
-					// navigate("/");
+					navigate("/");
 				});
 				setLoading(false);
 			})

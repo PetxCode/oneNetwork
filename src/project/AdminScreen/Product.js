@@ -13,6 +13,7 @@ import pix1 from "./eBook.jpg";
 import moment from "moment";
 
 const MianURL = "https://onechurch1.herokuapp.com";
+// const MianURL = "http://localhost:2233";
 
 const Product = () => {
 	const user = useSelector((state) => state.user);
@@ -129,7 +130,11 @@ const Product = () => {
 						{eBookContent?.eBookContent?.map((props) => (
 							<Card key={props._id}>
 								<ImageHolder>
-									<Image src={pix1} />
+									{props?.eBookCover ? (
+										<Image src={props?.eBookCover} />
+									) : (
+										<Image src={pix1} />
+									)}
 
 									{user?.avatar ? (
 										<ImageAvatar src={user?.avatar} />

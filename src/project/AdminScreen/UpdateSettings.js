@@ -12,8 +12,9 @@ import left from "./left.png";
 import right from "./Right.png";
 import { useSelector } from "react-redux";
 
-import pix from "./avatar.jpg";
-import one from "./one.png";
+import pix from "./one.png";
+import one from "./avatar.jpg";
+
 import LoadingState from "../../LoadingState";
 
 const url = "https://onechurch1.herokuapp.com";
@@ -52,7 +53,7 @@ const UpdateSettings = () => {
 	};
 
 	const yupSchema = yup.object().shape({
-		churchName: yup.string().required("Please enter your Church Name!"),
+		displayName: yup.string().required("Please enter your display Name!"),
 		fullName: yup.string().required("Please enter your Full Name!"),
 		careLine: yup.string().required("Please enter your Church care-line!"),
 	});
@@ -67,7 +68,7 @@ const UpdateSettings = () => {
 		const newURL = `${url}/api/admin/${user._id}/`;
 		setLoading(true);
 		await axios
-			.post(newURL, value)
+			.patch(newURL, value)
 			.then((res) => {
 				Swal.fire({
 					position: "center",
@@ -214,7 +215,7 @@ const UpdateSettings = () => {
 					<Wrapper>
 						<Card onSubmit={onSubmit}>
 							<Title>
-								<TitleHead>Church Profile 💸</TitleHead>
+								<TitleHead>Display Profile 💸</TitleHead>
 								<br />
 								<TitleSub>
 									We are <span>GLAD</span>, You've considered giving to Our{" "}
@@ -224,9 +225,12 @@ const UpdateSettings = () => {
 							<br />
 							<br />
 							<InputHolder>
-								<Label>Church Name</Label>
-								<Input placeholder="Church Name" {...register("churchName")} />
-								<Error>{errors?.churchName?.message}</Error>
+								<Label>display Name</Label>
+								<Input
+									placeholder="display Name"
+									{...register("displayName")}
+								/>
+								<Error>{errors?.displayName?.message}</Error>
 							</InputHolder>
 
 							<InputRow>

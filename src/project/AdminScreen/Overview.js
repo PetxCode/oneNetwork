@@ -282,7 +282,7 @@ const Overview = () => {
 						<NoticeHolder>
 							<Notice>
 								<NoticeTitle>
-									Welcome Back <span>{user.fullName}</span> 🎉
+									Welcome Back <span>{announcementOne.fullName}</span> 🎉
 								</NoticeTitle>
 								<Space />
 								{announcementOne?.announcement?.map((props) => (

@@ -29,6 +29,7 @@ import LoadingState from "../../LoadingState";
 import TableHolder from "./TableHolder";
 
 const mainURL = "https://onechurch1.herokuapp.com";
+// const mainURL = "http//localhost:2233";
 
 const Product = () => {
 	const dispatch = useDispatch();
@@ -113,9 +114,8 @@ const Product = () => {
 	};
 
 	const placeEbookOrder = async () => {
-		// const url = `${newURL}/api/admin/${user._id}`;
 		const url = `${mainURL}/api/order/${user?._id}/${book._id}/create`;
-		setLoading(true);
+		// setLoading(true);
 		await axios
 			.post(url)
 			.then((res) => {
@@ -448,9 +448,6 @@ const Product = () => {
 										<Image src={pixx} />
 									)}
 
-									{/* {user?.avatar ? (
-										<ImageAvatar src={user?.avatar} />
-									) : ( */}
 									<ImageAvatarMe>One</ImageAvatarMe>
 									{/* )} */}
 								</ImageHolder>

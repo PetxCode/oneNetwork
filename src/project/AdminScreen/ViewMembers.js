@@ -95,10 +95,23 @@ const ViewMembers = () => {
 										minWidth: "200px",
 									}}
 								>
-									<Image1 src={pix} />
+									{props?.avatar ? (
+										<Image1 src={props?.avatar} />
+									) : (
+										<Image1 src={pix} />
+									)}
 									<div>
-										<div style={{ fontWeight: "700" }}>Name</div>
-										<div style={{ fontSize: "12px" }}>DisplayName</div>
+										<div style={{ fontWeight: "700" }}>{props?.fullName}</div>
+										{props?.displayName ? (
+											<div style={{ fontSize: "12px" }}>
+												{props?.displayName}
+											</div>
+										) : (
+											<div style={{ fontSize: "12px" }}>
+												{" "}
+												No DisplayName Yet
+											</div>
+										)}
 									</div>
 								</div>
 							</td>
@@ -108,9 +121,10 @@ const ViewMembers = () => {
 									fontSize: "15px",
 									padding: "0 15px",
 									minWidth: "250px",
+									fontWeight: "bold",
 								}}
 							>
-								brighterdayscodelab@gmail.com
+								{props?.email}
 							</td>
 
 							<td
