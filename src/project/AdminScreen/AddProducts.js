@@ -133,12 +133,13 @@ const AddProducts = () => {
 
 		const newURL = `${url}/api/content/${user._id}/create`;
 		setLoading(true);
+
 		await axios
 			.post(newURL, {
 				title,
 				description,
 				cost,
-				audioFile,
+				audioFile: audioFile,
 				audioCover: audioFile1,
 			})
 			.then((res) => {
@@ -154,6 +155,7 @@ const AddProducts = () => {
 				setLoading(false);
 			})
 			.catch((error) => {
+				console.log(error.message);
 				new Swal({
 					title: error.response.data.message,
 					text: "Please check and fix this ERROR",

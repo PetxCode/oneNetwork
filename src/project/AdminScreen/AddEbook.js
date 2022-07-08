@@ -23,8 +23,17 @@ const AddEbook = () => {
 
 	const [eBookFile, setEBookFile] = useState("");
 	const [errorState, setErrorState] = useState("");
-	const [imageBook, setImageBook] = useState("");
+
+	const [count, setCount] = useState(0);
+	const [counter, setCounter] = useState(0);
+
+	const [imageBook, setImageBook] = useState(pix);
+	const [imageBookCover, setImageBookCover] = useState(pix);
 	const [avatar, setAvatar] = useState("");
+
+	const [imageBookCoverMain, setImageBookCoverMain] = useState("");
+	const [avatarCover, setAvatarCover] = useState("");
+
 	const [loading, setLoading] = useState(false);
 
 	const handleEbookUpload = (e) => {
@@ -43,6 +52,7 @@ const AddEbook = () => {
 				const progress =
 					(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 				console.log("Upload is " + progress + "% done");
+				setCounter(progress);
 			},
 			(error) => {
 				console.log(error.message);
@@ -95,6 +105,7 @@ const AddEbook = () => {
 				setLoading(false);
 			})
 			.catch((error) => {
+				console.log(error.message);
 				new Swal({
 					title: error.response.data.message,
 					text: "Please check and fix this ERROR",
@@ -123,22 +134,22 @@ const AddEbook = () => {
 						</Title>
 						<br />
 						<br />
+						<PartHolder>
+							<LogoImageHolder>
+								<LogoImage src={imageBook} />
 
-						<LogoImageHolder>
-							{imageBook === "" ? (
-								<LogoImage src={pix} />
-							) : (
-								<LogoImageAudio>eBook File Loaded</LogoImageAudio>
-							)}
+								<LogoImageInput
+									id="pix"
+									onChange={handleEbookUpload}
+									type="file"
+									accept="image/*"
+								/>
+								<LogoImageLabel htmlFor="pix">
+									Choose the eBook Cover
+								</LogoImageLabel>
+							</LogoImageHolder>
+						</PartHolder>
 
-							<LogoImageInput
-								id="pix"
-								onChange={handleEbookUpload}
-								type="file"
-								accept="application/pdf,application/msword"
-							/>
-							<LogoImageLabel htmlFor="pix">Choose the eBook</LogoImageLabel>
-						</LogoImageHolder>
 						<InputRow>
 							<InputHolder1>
 								<Label>Title</Label>
@@ -177,6 +188,12 @@ const AddEbook = () => {
 
 export default AddEbook;
 
+const PartHolder = styled.div`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`;
+
 const LogoImageLabel = styled.label`
 	padding: 15px 20px;
 	border-radius: 50px;
@@ -184,6 +201,8 @@ const LogoImageLabel = styled.label`
 	color: white;
 	margin: 10px 0;
 	transition: all 350ms;
+	font-size: 13px;
+	text-align: center;
 
 	:hover {
 		transform: scale(1.02);
@@ -198,8 +217,8 @@ const LogoImageInput = styled.input`
 `;
 
 const LogoImageAudio = styled.div`
-	width: 50%;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 	border-radius: ${({ br }) => (br ? "5px" : "50%")};
 	object-fit: cover;
 	background-color: #742e9d;
@@ -210,8 +229,8 @@ const LogoImageAudio = styled.div`
 `;
 
 const LogoImage = styled.img`
-	width: 50%;
-	height: 200px;
+	width: 150px;
+	height: 150px;
 	border-radius: ${({ br }) => (br ? "5px" : "50%")};
 	object-fit: cover;
 	background-color: #742e9d;

@@ -273,14 +273,10 @@ const Overview = () => {
 		// console.log(dataUser);
 	}, [dataUser]);
 
-	const dataFiles = { Love: 50000, "Love world": 300, Gamers: 900 };
-
-	const { text } = useContext(AuthContext);
 	return (
 		<Container>
 			{loading ? <LoadingState /> : null}
 			<Wrapper>
-				{text}
 				<Top>
 					<TopSider>
 						<NoticeHolder>
