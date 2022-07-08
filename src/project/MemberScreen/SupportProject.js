@@ -107,7 +107,7 @@ const SupportProjects = () => {
 
 	return (
 		<Container>
-			<Mini>Here are list of our ministries, you can Support</Mini>
+			<Mini>Here are list of our ministries, you can Support </Mini>
 			<WrapperHolder>
 				{newMinistry?.ministry &&
 					newMinistry?.ministry?.map((props) => (
@@ -221,6 +221,12 @@ const Mini = styled.div`
 	display: flex;
 	margin-top: 50px;
 	margin-left: 50px;
+
+	@media screen and (max-width: 450px) {
+		text-align: center;
+		width: 100%;
+		margin-left: 0px;
+	}
 `;
 
 const WrapperHolder = styled.div`
@@ -228,6 +234,10 @@ const WrapperHolder = styled.div`
 	flex-wrap: wrap;
 	justify-content: center;
 	margin-top: 30px;
+
+	@media screen and (max-width: 450px) {
+		min-height: 33vh;
+	}
 `;
 
 const TextHolder = styled.div`
@@ -454,6 +464,10 @@ const Sub = styled.div`
 	font-weight: 700;
 	margin-top: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 20px;
+	}
 `;
 
 const Title1 = styled.div`
@@ -462,6 +476,11 @@ const Title1 = styled.div`
 	text-align: center;
 	font-size: 20px;
 	color: #742e9d;
+
+	@media screen and (max-width: 450px) {
+		font-size: 14px;
+		width: 90%;
+	}
 `;
 
 const Container = styled.div`
